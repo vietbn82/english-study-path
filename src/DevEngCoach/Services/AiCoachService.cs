@@ -11,6 +11,7 @@ public interface IAiCoachService
     Task<StandupSimulationResponse> SimulateStandupAsync(StandupSimulationRequest request, CancellationToken ct = default);
     Task<DemoSimulationResponse> SimulateDemoAsync(DemoSimulationRequest request, CancellationToken ct = default);
     Task<PingPongSimulationResponse> SimulatePingPongAsync(PingPongSimulationRequest request, CancellationToken ct = default);
+    Task<QuickLookupResponse> LookupAsync(QuickLookupRequest request, CancellationToken ct = default);
 }
 
 public sealed class AiCoachService(ICurriculumService curriculumService, ILogger<AiCoachService> logger) : IAiCoachService
@@ -119,6 +120,75 @@ public sealed class AiCoachService(ICurriculumService curriculumService, ILogger
 
         return GenerateHeuristicPingPong(request);
     }
+
+    public async Task<QuickLookupResponse> LookupAsync(QuickLookupRequest request, CancellationToken ct = default)
+    {
+        var text = request.Text?.Trim() ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return new QuickLookupResponse(false, "", "", "Không có từ được chọn", "");
+        }
+
+        // 1. Check curriculum drills dictionary (0ms instant lookup)
+        var curriculumMatch = curriculumService.LookupWordInCurriculum(text);
+        if (curriculumMatch is not null)
+        {
+            return curriculumMatch;
+        }
+
+        // 2. Check built-in dev terms
+        if (KnownDevTerms.TryGetValue(text, out var termData))
+        {
+            return new QuickLookupResponse(true, text, termData.Ipa, termData.MeaningVi, termData.Cue);
+        }
+
+        // 3. Attempt AGY CLI lookup for arbitrary sentence or word
+        var agyPath = FindAgyExecutable();
+        if (agyPath is not null)
+        {
+            try
+            {
+                var agyResult = await RunAgyLookupAsync(agyPath, text, ct);
+                if (agyResult is not null)
+                {
+                    return agyResult;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex, "AGY lookup failed for '{Text}'", text);
+            }
+        }
+
+        // 4. Heuristic Fallback
+        return GenerateHeuristicLookup(text);
+    }
+
+    private static readonly Dictionary<string, (string Ipa, string MeaningVi, string Cue)> KnownDevTerms = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["middleware"] = ("/ˈmɪd.əl.weər/", "Phần mềm trung gian xử lý request trong pipeline HTTP", "Khép nhẹ môi cho /m/, cuộn lưỡi nhẹ cho /l/"),
+        ["concurrency"] = ("/kənˈkʌr.ən.si/", "Xử lý đồng thời nhiều tác vụ (đa luồng)", "Âm /k/ nổ vòm mềm, nhấn trọng âm 2"),
+        ["asynchronous"] = ("/eɪˈsɪŋ.krə.nəs/", "Bất đồng bộ (không chặn luồng thực thi)", "Ngắt âm đuôi /s/ dứt khoát không nuốt âm"),
+        ["deployment"] = ("/dɪˈplɔɪ.mənt/", "Triển khai phần mềm lên môi trường đích", "Bật /d/ và kết /t/ rõ ràng tại gờ lợi"),
+        ["repository"] = ("/rɪˈpɒz.ɪ.tər.i/", "Mẫu thiết kế đóng gói tầng truy cập dữ liệu", "Âm /z/ rung mạnh dây thanh quản"),
+        ["interface"] = ("/ˈɪn.tə.feɪs/", "Giao diện hợp đồng phương thức trong OOP", "Xì hơi /s/ ở cuối không rụng"),
+        ["polymorphism"] = ("/ˌpɒl.iˈmɔː.fɪ.zəm/", "Tính đa hình trong lập trình hướng đối tượng", "Nhấn trọng âm /mɔː/, âm cuối /zəm/ rung cổ"),
+        ["encapsulation"] = ("/ɪnˌkæp.sjʊˈleɪ.ʃən/", "Tính đóng gói dữ liệu và ẩn giấu chi tiết", "Bật hơi /p/ ở âm tiết thứ 2"),
+        ["refactor"] = ("/ˌriːˈfæk.tər/", "Tái cấu trúc mã nguồn giữ nguyên hành vi", "Bật /k/ chặn rồi nối sang /t/"),
+        ["pipeline"] = ("/ˈpaɪp.laɪn/", "Chuỗi xử lý dữ liệu liên hoàn (CI/CD / Request)", "Bật /p/ đôi dứt khoát"),
+        ["exception"] = ("/ɪkˈsɛp.ʃən/", "Ngoại lệ phát sinh khi chạy chương trình", "Chặn /k/ rồi xì /s/, tròn môi cho /ʃ/"),
+        ["deadlock"] = ("/ˈdɛd.lɒk/", "Khóa chết tài nguyên giữa các luồng đồng thời", "Đóng /d/ và bật /k/ ở cuối"),
+        ["scalability"] = ("/ˌskeɪ.ləˈbɪl.ə.ti/", "Khả năng mở rộng chịu tải của hệ thống", "Xì /s/ nối /k/, gõ nhẹ flap T"),
+        ["latency"] = ("/ˈleɪ.tən.si/", "Độ trễ phản hồi của hệ thống hoặc mạng", "Bật /t/ gờ lợi, âm cuối /si/"),
+        ["throughput"] = ("/ˈθruː.pʊt/", "Thông lượng dữ liệu xử lý trên đơn vị thời gian", "Đầu lưỡi giữa răng cho /θ/, bật /t/ cuối"),
+        ["observability"] = ("/əbˌzɜː.vəˈbɪl.ə.ti/", "Khả năng quan sát trạng thái nội tại hệ thống", "Rung /z/, cắn môi dưới cho /v/"),
+        ["telemetry"] = ("/təˈlɛm.ɪ.tri/", "Dữ liệu đo đạc chỉ số vận hành tự động (Metrics/Traces)", "Bật /t/ gờ lợi, rung nhẹ /r/"),
+        ["distributed"] = ("/dɪˈstrɪb.jʊ.tɪd/", "Kiến trúc phân tán trên nhiều node máy chủ", "Bật /tɪd/ rõ ràng ở cuối"),
+        ["controller"] = ("/kənˈtrəʊ.lər/", "Bộ điều hướng tiếp nhận request trong MVC / Web API", "Âm /k/ bật dứt khoát"),
+        ["caching"] = ("/ˈkæʃ.ɪŋ/", "Bộ nhớ đệm tăng tốc độ truy xuất dữ liệu", "Bật /k/, chu môi tròn cho /ʃ/"),
+        ["authentication"] = ("/ɔːˌθen.tɪˈkeɪ.ʃən/", "Xác thực danh tính người dùng", "Đặt đầu lưỡi giữa răng cho /θ/"),
+        ["authorization"] = ("/ˌɔː.θər.aɪˈzeɪ.ʃən/", "Phân quyền truy cập tài nguyên", "Âm /θ/ không rung và /z/ rung mạnh")
+    };
 
     private static string? FindAgyExecutable()
     {
@@ -699,6 +769,52 @@ How about yourself? How is your week shaping up? (Question back)"
 
             return $"Prioritizing {t} with target completion before EOD.";
         }
+    }
+
+    private async Task<QuickLookupResponse?> RunAgyLookupAsync(string agyPath, string text, CancellationToken ct)
+    {
+        var prompt = $$"""
+You are an expert English Speech Coach for Vietnamese Developers.
+Analyze the following English word or sentence: "{{text}}"
+
+Return ONLY a JSON object (no markdown, no backticks) with:
+{
+  "ipa": "Accurate IPA transcription",
+  "meaningVi": "Clear, concise Vietnamese meaning in software engineering or daily tech context",
+  "phoneticCue": "Physical mouth/tongue mechanical advice for Vietnamese learners"
+}
+""";
+
+        var output = await ExecuteAgyProcessAsync(agyPath, prompt, ct);
+        if (string.IsNullOrWhiteSpace(output)) return null;
+
+        var jsonMatch = Regex.Match(output, @"\{[\s\S]*\}");
+        if (!jsonMatch.Success) return null;
+
+        try
+        {
+            using var doc = JsonDocument.Parse(jsonMatch.Value);
+            var root = doc.RootElement;
+            var ipa = root.TryGetProperty("ipa", out var ipaElem) ? ipaElem.GetString() ?? "" : "";
+            var meaningVi = root.TryGetProperty("meaningVi", out var mElem) ? mElem.GetString() ?? "" : "";
+            var cue = root.TryGetProperty("phoneticCue", out var cElem) ? cElem.GetString() ?? "" : "";
+
+            return new QuickLookupResponse(true, text, ipa, meaningVi, cue);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static QuickLookupResponse GenerateHeuristicLookup(string text)
+    {
+        var isSingleWord = !text.Contains(' ');
+        var ipa = isSingleWord ? $"/{text.ToLowerInvariant()}/" : "Connected speech / Phrase";
+        var meaning = isSingleWord ? $"Từ vựng kỹ thuật: \"{text}\"" : $"Cụm từ / Câu: \"{text}\"";
+        var cue = "Chú ý phát âm rõ âm đuôi (coda /t/, /d/, /s/, /z/), đặt đầu lưỡi đúng gờ lợi trên.";
+
+        return new QuickLookupResponse(true, text, ipa, meaning, cue);
     }
 
     #endregion

@@ -138,4 +138,20 @@ public class ApiIntegrationTests : IClassFixture<WebApplicationFactory<Program>>
         result.HasQuestionBack.Should().BeTrue();
         result.NaturalnessScore.Should().BeInRange(50, 100);
     }
+
+    [Fact]
+    public async Task PostQuickLookup_ReturnsIpaAndMeaning()
+    {
+        var request = new QuickLookupRequest("commit");
+
+        var response = await _client.PostAsJsonAsync("/api/ai/lookup", request);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<QuickLookupResponse>();
+        result.Should().NotBeNull();
+        result!.Success.Should().BeTrue();
+        result.Text.Should().Be("commit");
+        result.Ipa.Should().Contain("/kəˈmɪt/");
+        result.MeaningVi.Should().NotBeNullOrWhiteSpace();
+    }
 }

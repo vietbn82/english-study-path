@@ -112,6 +112,18 @@ app.MapPost("/api/ai/pingpong-simulate", async ([FromBody] PingPongSimulationReq
     return Results.Ok(result);
 });
 
+// Quick Selection Lookup Endpoint (FR-012: Tra cứu tức thì khi bôi đen chữ)
+app.MapPost("/api/ai/lookup", async ([FromBody] QuickLookupRequest request, IAiCoachService aiCoach, CancellationToken ct) =>
+{
+    if (string.IsNullOrWhiteSpace(request.Text))
+    {
+        return Results.BadRequest(new { Message = "Text is required for lookup." });
+    }
+
+    var result = await aiCoach.LookupAsync(request, ct);
+    return Results.Ok(result);
+});
+
 // Reminder Service Endpoints
 var reminderApi = app.MapGroup("/api/reminder");
 

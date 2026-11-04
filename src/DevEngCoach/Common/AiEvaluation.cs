@@ -74,3 +74,14 @@ public sealed record PingPongSimulationResponse(
     string Feedback,
     string SeniorDevRefactoring
 );
+
+// 4. Quick Selection Lookup (Bôi đen để tra cứu IPA & Nghĩa)
+public sealed record QuickLookupRequest(string Text);
+
+public sealed record QuickLookupResponse(
+    bool Success,
+    string Text,
+    string Ipa,
+    string MeaningVi,
+    string PhoneticCue
+);

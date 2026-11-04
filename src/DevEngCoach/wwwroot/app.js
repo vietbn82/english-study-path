@@ -276,6 +276,7 @@
   async function init() {
     setupEventListeners();
     setupSpeechRecognition();
+    setupSelectionLookup();
 
     // 1. Immediately paint Day 1 with zero delay (no more Loading lesson...)
     loadDayLesson(1);
@@ -427,6 +428,139 @@
         return;
       }
     });
+  }
+
+  // Selection Quick Lookup Popover (FR-012: Bôi đen để tra cứu IPA & Nghĩa & Phát âm)
+  function setupSelectionLookup() {
+    let popup = document.getElementById('selection-lookup-popup');
+    if (!popup) {
+      popup = document.createElement('div');
+      popup.id = 'selection-lookup-popup';
+      popup.className = 'selection-lookup-popup hidden';
+      document.body.appendChild(popup);
+    }
+
+    let currentLookupText = '';
+    let currentLookupData = null;
+
+    // Hide on click outside
+    document.addEventListener('mousedown', (e) => {
+      if (popup && !popup.contains(e.target)) {
+        popup.classList.add('hidden');
+      }
+    });
+
+    document.addEventListener('mouseup', handleSelection);
+    document.addEventListener('keyup', (e) => {
+      if (e.key === 'Shift' || e.key.startsWith('Arrow')) {
+        handleSelection();
+      }
+    });
+
+    function handleSelection() {
+      // Delay slightly for browser to finalize selection
+      setTimeout(async () => {
+        const selection = window.getSelection();
+        if (!selection || selection.isCollapsed) return;
+
+        const text = selection.toString().trim();
+        if (!text || text.length < 2 || text.length > 150) return;
+
+        // Ignore if selection is inside an interactive input or the popup itself
+        const anchorNode = selection.anchorNode;
+        if (anchorNode && anchorNode.parentElement && (
+            anchorNode.parentElement.closest('#selection-lookup-popup') ||
+            anchorNode.parentElement.closest('textarea') ||
+            anchorNode.parentElement.closest('input')
+        )) {
+          return;
+        }
+
+        currentLookupText = text;
+
+        const range = selection.getRangeAt(0);
+        const rect = range.getBoundingClientRect();
+        if (rect.width === 0 && rect.height === 0) return;
+
+        // Render loading state in popup
+        popup.innerHTML = `
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-2">
+            <div class="flex items-center gap-1.5 overflow-hidden">
+              <span class="font-bold text-white text-xs truncate max-w-[170px]" title="${text}">"${text}"</span>
+              <button id="sel-pop-btn-speak" class="px-2 py-0.5 rounded bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-800 text-[11px] font-semibold transition shrink-0 flex items-center gap-1">
+                🔊 <span>Nghe</span>
+              </button>
+            </div>
+            <button id="sel-pop-btn-close" class="text-slate-400 hover:text-white text-xs font-mono ml-2">✕</button>
+          </div>
+          <div class="space-y-1.5 text-xs">
+            <div class="text-cyan-400 font-mono text-[11px] font-semibold" id="sel-pop-ipa">⏳ Đang tra IPA...</div>
+            <div class="text-slate-200 text-xs" id="sel-pop-meaning">Đang tải nghĩa...</div>
+            <div class="text-slate-400 italic text-[11px]" id="sel-pop-cue"></div>
+          </div>
+          <button id="sel-pop-btn-practice" class="w-full mt-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 text-xs font-semibold flex items-center justify-center gap-1.5 transition">
+            🎤 Luyện phát âm từ này
+          </button>
+        `;
+
+        // Position popup above selection (or below if near top of screen)
+        popup.classList.remove('hidden');
+        const popRect = popup.getBoundingClientRect();
+        let top = window.scrollY + rect.top - popRect.height - 10;
+        if (rect.top - popRect.height - 10 < 10) {
+          top = window.scrollY + rect.bottom + 10;
+        }
+        let left = window.scrollX + rect.left + (rect.width / 2) - (popRect.width / 2);
+        left = Math.max(10, Math.min(left, window.innerWidth - popRect.width - 20));
+
+        popup.style.top = `${top}px`;
+        popup.style.left = `${left}px`;
+
+        // Wire popup controls
+        document.getElementById('sel-pop-btn-speak')?.addEventListener('click', (e) => {
+          e.stopPropagation();
+          speakWord(text);
+        });
+
+        document.getElementById('sel-pop-btn-close')?.addEventListener('click', (e) => {
+          e.stopPropagation();
+          popup.classList.add('hidden');
+        });
+
+        document.getElementById('sel-pop-btn-practice')?.addEventListener('click', (e) => {
+          e.stopPropagation();
+          popup.classList.add('hidden');
+          const ipa = currentLookupData?.ipa || `/${text}/`;
+          const cue = currentLookupData?.phoneticCue || 'Kiểm soát chặt chẽ điểm tiếp xúc lưỡi và luồng hơi';
+          openSoundPracticeModal(ipa, text, ipa, cue);
+        });
+
+        // Fetch IPA & Meaning from /api/ai/lookup
+        try {
+          const res = await fetch('/api/ai/lookup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text })
+          });
+          const data = await res.json();
+          currentLookupData = data;
+
+          const ipaEl = document.getElementById('sel-pop-ipa');
+          const meaningEl = document.getElementById('sel-pop-meaning');
+          const cueEl = document.getElementById('sel-pop-cue');
+
+          if (ipaEl) ipaEl.textContent = data.ipa || `/${text}/`;
+          if (meaningEl) meaningEl.textContent = data.meaningVi || 'Thuật ngữ kỹ thuật tiếng Anh';
+          if (cueEl && data.phoneticCue) cueEl.textContent = `💡 ${data.phoneticCue}`;
+        } catch (err) {
+          console.warn('Selection lookup error:', err);
+          const ipaEl = document.getElementById('sel-pop-ipa');
+          const meaningEl = document.getElementById('sel-pop-meaning');
+          if (ipaEl) ipaEl.textContent = `/${text}/`;
+          if (meaningEl) meaningEl.textContent = `Bấm 🔊 để nghe phát âm chuẩn`;
+        }
+      }, 150);
+    }
   }
 
   // View Switching

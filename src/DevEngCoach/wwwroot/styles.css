@@ -393,6 +393,27 @@ button { cursor: pointer; border: none; outline: none; }
   100% { transform: translateY(-4px); }
 }
 
+/* Quick Selection Lookup Popup (FR-012) */
+.selection-lookup-popup {
+  position: absolute;
+  z-index: 99999;
+  background-color: #0f172a; /* slate-900 */
+  border: 1px solid rgba(34, 211, 238, 0.7); /* cyan-400 */
+  border-radius: 0.75rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5), 0 0 15px rgba(34, 211, 238, 0.25);
+  max-width: 340px;
+  min-width: 240px;
+  padding: 0.75rem;
+  pointer-events: auto;
+  animation: popoverFadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: center bottom;
+}
+
+@keyframes popoverFadeIn {
+  from { opacity: 0; transform: translateY(4px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 /* Responsive Media Queries */
 @media (min-width: 640px) {
   .sm\:block { display: block; }
