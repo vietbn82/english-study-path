@@ -77,4 +77,65 @@ public class ApiIntegrationTests : IClassFixture<WebApplicationFactory<Program>>
         var json = await response.Content.ReadAsStringAsync();
         json.Should().Contain("22:00");
     }
+
+    [Fact]
+    public async Task PostStandupSimulate_ReturnsStructuredFeedback()
+    {
+        var request = new StandupSimulationRequest(
+            Yesterday: "Yesterday I fix bug in auth controller.",
+            Today: "Today I will deploy the hotfix to staging.",
+            Blockers: "No blockers currently."
+        );
+
+        var response = await _client.PostAsJsonAsync("/api/ai/standup-simulate", request);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<StandupSimulationResponse>();
+        result.Should().NotBeNull();
+        result!.Success.Should().BeTrue();
+        result.GrammarFeedback.Should().NotBeNullOrWhiteSpace();
+        result.SeniorTechLeadRefactor.Should().NotBeNullOrWhiteSpace();
+        result.FluencyScore.Should().BeInRange(50, 100);
+    }
+
+    [Fact]
+    public async Task PostDemoSimulate_ReturnsConnectedSpeechFeedback()
+    {
+        var request = new DemoSimulationRequest(
+            Context: "In this sprint, we implemented Redis distributed caching.",
+            Architecture: "Under the hood, we used the decorator pattern around our repository.",
+            TechnicalHighlights: "Latency dropped by 65 percent.",
+            QaInvite: "I would like to open the floor for any questions."
+        );
+
+        var response = await _client.PostAsJsonAsync("/api/ai/demo-simulate", request);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<DemoSimulationResponse>();
+        result.Should().NotBeNull();
+        result!.Success.Should().BeTrue();
+        result.ConnectedSpeech.Should().NotBeNull();
+        result.SeniorDevPresentationScript.Should().NotBeNullOrWhiteSpace();
+    }
+
+    [Fact]
+    public async Task PostPingPongSimulate_ReturnsADQEvaluation()
+    {
+        var request = new PingPongSimulationRequest(
+            Answer: "I had a productive weekend hiking in the mountains.",
+            Detail: "The weather was crisp and clear, which really helped recharge after the release.",
+            QuestionBack: "Did you get a chance to take some time off over the weekend?"
+        );
+
+        var response = await _client.PostAsJsonAsync("/api/ai/pingpong-simulate", request);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<PingPongSimulationResponse>();
+        result.Should().NotBeNull();
+        result!.Success.Should().BeTrue();
+        result.HasDirectAnswer.Should().BeTrue();
+        result.HasDetail.Should().BeTrue();
+        result.HasQuestionBack.Should().BeTrue();
+        result.NaturalnessScore.Should().BeInRange(50, 100);
+    }
 }

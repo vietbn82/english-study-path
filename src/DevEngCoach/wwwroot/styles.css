@@ -355,6 +355,33 @@ button { cursor: pointer; border: none; outline: none; }
 }
 .animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
 
+/* SVG Vocal Tract Dynamic Illumination */
+.svg-active-glow {
+  filter: drop-shadow(0 0 8px #22d3ee) drop-shadow(0 0 16px rgba(34, 211, 238, 0.6));
+  stroke: #22d3ee !important;
+  stroke-width: 5px !important;
+  transition: all 0.3s ease;
+}
+
+.svg-active-glow-voiced {
+  filter: drop-shadow(0 0 8px #c084fc) drop-shadow(0 0 16px rgba(192, 132, 252, 0.6));
+  stroke: #c084fc !important;
+  stroke-width: 5px !important;
+  transition: all 0.3s ease;
+}
+
+/* Audio Player and Simulator Utilities */
+.audio-compare-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
 /* Floating AI Action Button (FAB) */
 .floating-ai-fab {
   box-shadow: 0 10px 25px -5px rgba(147, 51, 234, 0.5), 0 8px 10px -6px rgba(147, 51, 234, 0.5);

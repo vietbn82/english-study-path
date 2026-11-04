@@ -123,6 +123,9 @@
     },
     isRecording: false,
     recognition: null,
+    mediaRecorder: null,
+    audioChunks: [],
+    recordedAudioUrl: null,
     soundPractice: {
       targetWord: "test",
       targetSymbol: "/t/",
@@ -139,8 +142,10 @@
   const el = {
     navWorkspace: document.getElementById('nav-workspace'),
     navCurriculum: document.getElementById('nav-curriculum'),
+    navSimulators: document.getElementById('nav-simulators'),
     viewWorkspace: document.getElementById('view-workspace'),
     viewCurriculum: document.getElementById('view-curriculum'),
+    viewSimulators: document.getElementById('view-simulators'),
     statStreak: document.getElementById('stat-streak'),
     statVariance: document.getElementById('stat-variance'),
     statProgress: document.getElementById('stat-progress'),
@@ -193,6 +198,12 @@
     aiPhoneticAlerts: document.getElementById('ai-phonetic-alerts'),
     aiSeniorRefactor: document.getElementById('ai-senior-refactor'),
 
+    // Side-by-Side Audio Comparison (FR-011)
+    btnPlayNativeVoice: document.getElementById('btn-play-native-voice'),
+    btnReplayUserVoice: document.getElementById('btn-replay-user-voice'),
+    audioUserRecorded: document.getElementById('audio-user-recorded'),
+    audioPlaybackStatus: document.getElementById('audio-playback-status'),
+
     // Completion
     inputActualMinutes: document.getElementById('input-actual-minutes'),
     btnCompleteSession: document.getElementById('btn-complete-session'),
@@ -222,7 +233,43 @@
     floatingChatMessages: document.getElementById('floating-chat-messages'),
     floatingAiInput: document.getElementById('floating-ai-input'),
     floatingBtnMic: document.getElementById('floating-btn-mic'),
-    floatingBtnSend: document.getElementById('floating-btn-send')
+    floatingBtnSend: document.getElementById('floating-btn-send'),
+
+    // Simulators
+    tabSimStandup: document.getElementById('tab-sim-standup'),
+    tabSimDemo: document.getElementById('tab-sim-demo'),
+    tabSimPingpong: document.getElementById('tab-sim-pingpong'),
+    panelSimStandup: document.getElementById('panel-sim-standup'),
+    panelSimDemo: document.getElementById('panel-sim-demo'),
+    panelSimPingpong: document.getElementById('panel-sim-pingpong'),
+    simStandupYesterday: document.getElementById('sim-standup-yesterday'),
+    simStandupToday: document.getElementById('sim-standup-today'),
+    simStandupBlockers: document.getElementById('sim-standup-blockers'),
+    btnSimStandupSubmit: document.getElementById('btn-sim-standup-submit'),
+    simStandupResult: document.getElementById('sim-standup-result'),
+    simStandupScore: document.getElementById('sim-standup-score'),
+    simStandupGrammar: document.getElementById('sim-standup-grammar'),
+    simStandupConsonants: document.getElementById('sim-standup-consonants'),
+    simStandupRefactor: document.getElementById('sim-standup-refactor'),
+    simDemoContext: document.getElementById('sim-demo-context'),
+    simDemoArch: document.getElementById('sim-demo-arch'),
+    simDemoHighlights: document.getElementById('sim-demo-highlights'),
+    simDemoQa: document.getElementById('sim-demo-qa'),
+    btnSimDemoSubmit: document.getElementById('btn-sim-demo-submit'),
+    simDemoResult: document.getElementById('sim-demo-result'),
+    simDemoScore: document.getElementById('sim-demo-score'),
+    simDemoLinking: document.getElementById('sim-demo-linking'),
+    simDemoFlapt: document.getElementById('sim-demo-flapt'),
+    simDemoScript: document.getElementById('sim-demo-script'),
+    simPingpongAnswer: document.getElementById('sim-pingpong-answer'),
+    simPingpongDetail: document.getElementById('sim-pingpong-detail'),
+    simPingpongQuestion: document.getElementById('sim-pingpong-question'),
+    btnSimPingpongSubmit: document.getElementById('btn-sim-pingpong-submit'),
+    simPingpongResult: document.getElementById('sim-pingpong-result'),
+    simPingpongScore: document.getElementById('sim-pingpong-score'),
+    simPingpongQuality: document.getElementById('sim-pingpong-quality'),
+    simPingpongFeedback: document.getElementById('sim-pingpong-feedback'),
+    simPingpongRefactor: document.getElementById('sim-pingpong-refactor')
   };
 
   // Initialize
@@ -241,6 +288,32 @@
   function setupEventListeners() {
     if (el.navWorkspace) el.navWorkspace.addEventListener('click', () => switchView('workspace'));
     if (el.navCurriculum) el.navCurriculum.addEventListener('click', () => switchView('curriculum'));
+    if (el.navSimulators) el.navSimulators.addEventListener('click', () => switchView('simulators'));
+
+    // Audio Comparison Controls (FR-011)
+    if (el.btnPlayNativeVoice) {
+      el.btnPlayNativeVoice.addEventListener('click', () => {
+        const text = el.aiInputText && el.aiInputText.value.trim() ? el.aiInputText.value.trim() : (state.lessons.find(l => l.dayNumber === state.currentDay) || FALLBACK_DAY_1).vocabularyDrills[0].word;
+        speakWord(text);
+      });
+    }
+
+    if (el.btnReplayUserVoice) {
+      el.btnReplayUserVoice.addEventListener('click', () => {
+        if (el.audioUserRecorded && el.audioUserRecorded.src) {
+          el.audioUserRecorded.play();
+        }
+      });
+    }
+
+    // Simulator Tab & Submit Listeners
+    if (el.tabSimStandup) el.tabSimStandup.addEventListener('click', () => switchSimulatorTab('standup'));
+    if (el.tabSimDemo) el.tabSimDemo.addEventListener('click', () => switchSimulatorTab('demo'));
+    if (el.tabSimPingpong) el.tabSimPingpong.addEventListener('click', () => switchSimulatorTab('pingpong'));
+
+    if (el.btnSimStandupSubmit) el.btnSimStandupSubmit.addEventListener('click', submitStandupSimulation);
+    if (el.btnSimDemoSubmit) el.btnSimDemoSubmit.addEventListener('click', submitDemoSimulation);
+    if (el.btnSimPingpongSubmit) el.btnSimPingpongSubmit.addEventListener('click', submitPingPongSimulation);
 
     if (el.btnTimerStart) el.btnTimerStart.addEventListener('click', startTimer);
     if (el.btnTimerPause) el.btnTimerPause.addEventListener('click', pauseTimer);
@@ -358,17 +431,26 @@
 
   // View Switching
   function switchView(view) {
+    // Reset all views & tabs
+    if (el.viewWorkspace) el.viewWorkspace.classList.add('hidden');
+    if (el.viewCurriculum) el.viewCurriculum.classList.add('hidden');
+    if (el.viewSimulators) el.viewSimulators.classList.add('hidden');
+
+    if (el.navWorkspace) el.navWorkspace.className = 'px-3 py-1.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 transition';
+    if (el.navCurriculum) el.navCurriculum.className = 'px-3 py-1.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 transition';
+    if (el.navSimulators) el.navSimulators.className = 'px-3 py-1.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 transition';
+
     if (view === 'workspace') {
       if (el.viewWorkspace) el.viewWorkspace.classList.remove('hidden');
-      if (el.viewCurriculum) el.viewCurriculum.classList.add('hidden');
       if (el.navWorkspace) el.navWorkspace.className = 'px-3 py-1.5 rounded-lg text-sm font-medium bg-cyan-500 text-slate-950 shadow-sm transition';
-      if (el.navCurriculum) el.navCurriculum.className = 'px-3 py-1.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 transition';
-    } else {
-      if (el.viewWorkspace) el.viewWorkspace.classList.add('hidden');
+    } else if (view === 'curriculum') {
       if (el.viewCurriculum) el.viewCurriculum.classList.remove('hidden');
-      if (el.navWorkspace) el.navWorkspace.className = 'px-3 py-1.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 transition';
       if (el.navCurriculum) el.navCurriculum.className = 'px-3 py-1.5 rounded-lg text-sm font-medium bg-cyan-500 text-slate-950 shadow-sm transition';
       renderCurriculumGrid('all');
+    } else if (view === 'simulators') {
+      if (el.viewSimulators) el.viewSimulators.classList.remove('hidden');
+      if (el.navSimulators) el.navSimulators.className = 'px-3 py-1.5 rounded-lg text-sm font-medium bg-cyan-500 text-slate-950 shadow-sm transition';
+      switchSimulatorTab('standup');
     }
   }
 
@@ -459,6 +541,9 @@
 
     // Render Contrastive Minimal Pairs (FR-010)
     renderContrastivePairs(lesson);
+
+    // Dynamic Vocal Tract SVG Illumination (FR-007)
+    updateVocalTractSVG(lesson);
 
     // Drills (With Omnipresent Audio & Practice buttons)
     if (el.drillsContainer) {
@@ -773,8 +858,9 @@
 
     state.recognition.onstart = () => {
       state.isRecording = true;
-      if (el.recordLabel) el.recordLabel.textContent = 'Đang nghe...';
+      if (el.recordLabel) el.recordLabel.textContent = 'Đang nghe & ghi âm...';
       if (el.btnSpeechRecord) el.btnSpeechRecord.className = 'text-xs px-2.5 py-1 bg-red-950 text-red-400 border border-red-800 rounded flex items-center gap-1 animate-pulse';
+      startMediaRecording();
     };
 
     state.recognition.onresult = (event) => {
@@ -786,12 +872,17 @@
       state.isRecording = false;
       if (el.recordLabel) el.recordLabel.textContent = 'Nói vào mic';
       if (el.btnSpeechRecord) el.btnSpeechRecord.className = 'text-xs px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded border border-slate-700 flex items-center gap-1 transition';
+      stopMediaRecording();
     };
 
     if (el.btnSpeechRecord) {
       el.btnSpeechRecord.addEventListener('click', () => {
-        if (state.isRecording) state.recognition.stop();
-        else state.recognition.start();
+        if (state.isRecording) {
+          state.recognition.stop();
+          stopMediaRecording();
+        } else {
+          state.recognition.start();
+        }
       });
     }
 
@@ -983,6 +1074,250 @@
         el.timerPhaseHint.textContent = 'Phase 2 (10-20m): Nạp Khung Câu Đóng Băng';
       } else {
         el.timerPhaseHint.textContent = 'Phase 3 (20-30m): Nói & Chấm Điểm Cùng AGY AI';
+      }
+    }
+  }
+
+  // Real Audio Capture via MediaRecorder (Side-by-Side Audio)
+  async function startMediaRecording() {
+    try {
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        state.mediaRecorder = new MediaRecorder(stream);
+        state.audioChunks = [];
+        state.mediaRecorder.ondataavailable = (e) => {
+          if (e.data.size > 0) state.audioChunks.push(e.data);
+        };
+        state.mediaRecorder.onstop = () => {
+          const blob = new Blob(state.audioChunks, { type: 'audio/webm' });
+          if (state.recordedAudioUrl) URL.revokeObjectURL(state.recordedAudioUrl);
+          state.recordedAudioUrl = URL.createObjectURL(blob);
+          if (el.audioUserRecorded) el.audioUserRecorded.src = state.recordedAudioUrl;
+          if (el.btnReplayUserVoice) el.btnReplayUserVoice.disabled = false;
+          if (el.audioPlaybackStatus) el.audioPlaybackStatus.textContent = "✓ Thu âm thành công! Bấm '▶ Nghe lại giọng Của Bạn' hoặc '🔊 Nghe giọng Bản Xứ' để so sánh trực diện.";
+          stream.getTracks().forEach(track => track.stop());
+        };
+        state.mediaRecorder.start();
+      }
+    } catch (err) {
+      console.warn('Microphone permission or MediaRecorder error:', err);
+    }
+  }
+
+  function stopMediaRecording() {
+    if (state.mediaRecorder && state.mediaRecorder.state !== 'inactive') {
+      state.mediaRecorder.stop();
+    }
+  }
+
+  // Dynamic Vocal Tract SVG Illumination
+  function updateVocalTractSVG(lesson) {
+    const parts = [
+      'svg-part-lips',
+      'svg-part-teeth',
+      'svg-part-alveolar',
+      'svg-part-hard-palate',
+      'svg-part-velum',
+      'svg-part-tongue-tip',
+      'svg-part-tongue-back',
+      'svg-part-vocal-cords'
+    ];
+
+    parts.forEach(id => {
+      const elem = document.getElementById(id);
+      if (elem) {
+        elem.classList.remove('svg-active-glow', 'svg-active-glow-voiced');
+      }
+    });
+
+    const active = (lesson?.phonetics?.activeArticulator || '').toLowerCase();
+    const passive = (lesson?.phonetics?.passiveArticulator || '').toLowerCase();
+    const symbol = (lesson?.phonetics?.phoneticSymbol || '').toLowerCase();
+    const isVoiced = lesson?.phonetics?.isVoiced || false;
+
+    // Alveolar
+    if (passive.includes('alveolar') || passive.includes('gờ lợi') || symbol.includes('/t/') || symbol.includes('/d/') || symbol.includes('/s/') || symbol.includes('/z/')) {
+      document.getElementById('svg-part-alveolar')?.classList.add('svg-active-glow');
+      document.getElementById('svg-part-tongue-tip')?.classList.add('svg-active-glow');
+    }
+    // Dental
+    else if (passive.includes('teeth') || passive.includes('răng') || symbol.includes('/θ/') || symbol.includes('/ð/')) {
+      document.getElementById('svg-part-teeth')?.classList.add('svg-active-glow');
+      document.getElementById('svg-part-tongue-tip')?.classList.add('svg-active-glow');
+    }
+    // Bilabial
+    else if (active.includes('môi') || active.includes('lip') || symbol.includes('/p/') || symbol.includes('/b/') || symbol.includes('/m/')) {
+      document.getElementById('svg-part-lips')?.classList.add('svg-active-glow');
+    }
+    // Velar
+    else if (passive.includes('velum') || passive.includes('ngạc mềm') || symbol.includes('/k/') || symbol.includes('/g/') || symbol.includes('/ŋ/')) {
+      document.getElementById('svg-part-velum')?.classList.add('svg-active-glow');
+      document.getElementById('svg-part-tongue-back')?.classList.add('svg-active-glow');
+    }
+    // Palatal
+    else if (passive.includes('palate') || passive.includes('ngạc cứng') || symbol.includes('/ʃ/') || symbol.includes('/tʃ/')) {
+      document.getElementById('svg-part-hard-palate')?.classList.add('svg-active-glow');
+      document.getElementById('svg-part-tongue-tip')?.classList.add('svg-active-glow');
+    }
+
+    // Voicing illumination
+    if (isVoiced) {
+      document.getElementById('svg-part-vocal-cords')?.classList.add('svg-active-glow-voiced');
+    }
+  }
+
+  // Simulators Tab Switching
+  function switchSimulatorTab(tab) {
+    const tabs = ['standup', 'demo', 'pingpong'];
+    tabs.forEach(t => {
+      const tabBtn = document.getElementById(`tab-sim-${t}`);
+      const panel = document.getElementById(`panel-sim-${t}`);
+      if (t === tab) {
+        if (tabBtn) tabBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-cyan-500 text-slate-950 shadow transition';
+        if (panel) panel.classList.remove('hidden');
+      } else {
+        if (tabBtn) tabBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition';
+        if (panel) panel.classList.add('hidden');
+      }
+    });
+  }
+
+  // Standup Simulate Submit
+  async function submitStandupSimulation() {
+    const yesterday = el.simStandupYesterday ? el.simStandupYesterday.value.trim() : '';
+    const today = el.simStandupToday ? el.simStandupToday.value.trim() : '';
+    const blockers = el.simStandupBlockers ? el.simStandupBlockers.value.trim() : '';
+
+    if (!yesterday && !today) {
+      alert('Vui lòng nhập ít nhất thông tin Yesterday hoặc Today.');
+      return;
+    }
+
+    if (el.btnSimStandupSubmit) {
+      el.btnSimStandupSubmit.disabled = true;
+      el.btnSimStandupSubmit.textContent = '⏳ AGY AI đang phân tích Standup...';
+    }
+
+    try {
+      const res = await fetch('/api/ai/standup-simulate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ yesterday, today, blockers })
+      });
+      const data = await res.json();
+      if (el.simStandupResult) el.simStandupResult.classList.remove('hidden');
+      if (el.simStandupScore) el.simStandupScore.textContent = `Score: ${data.fluencyScore}/100`;
+      if (el.simStandupGrammar) el.simStandupGrammar.textContent = data.grammarFeedback || 'Ngữ pháp cơ bản tốt.';
+      if (el.simStandupConsonants) {
+        el.simStandupConsonants.innerHTML = '';
+        (data.endingConsonantsFeedback || []).forEach(item => {
+          const li = document.createElement('li');
+          li.textContent = item;
+          el.simStandupConsonants.appendChild(li);
+        });
+      }
+      if (el.simStandupRefactor) el.simStandupRefactor.textContent = data.seniorTechLeadRefactor || '';
+    } catch (err) {
+      console.error(err);
+      alert('Lỗi kết nối Standup Simulation.');
+    } finally {
+      if (el.btnSimStandupSubmit) {
+        el.btnSimStandupSubmit.disabled = false;
+        el.btnSimStandupSubmit.textContent = '🚀 Chấm điểm Standup & Nhận Refactor từ Senior Lead';
+      }
+    }
+  }
+
+  // Demo Simulate Submit
+  async function submitDemoSimulation() {
+    const context = el.simDemoContext ? el.simDemoContext.value.trim() : '';
+    const architecture = el.simDemoArch ? el.simDemoArch.value.trim() : '';
+    const technicalHighlights = el.simDemoHighlights ? el.simDemoHighlights.value.trim() : '';
+    const qaInvite = el.simDemoQa ? el.simDemoQa.value.trim() : '';
+
+    if (!context && !architecture) {
+      alert('Vui lòng nhập bối cảnh Context hoặc kiến trúc Architecture.');
+      return;
+    }
+
+    if (el.btnSimDemoSubmit) {
+      el.btnSimDemoSubmit.disabled = true;
+      el.btnSimDemoSubmit.textContent = '⏳ AGY AI đang phân tích Connected Speech...';
+    }
+
+    try {
+      const res = await fetch('/api/ai/demo-simulate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ context, architecture, technicalHighlights, qaInvite })
+      });
+      const data = await res.json();
+      if (el.simDemoResult) el.simDemoResult.classList.remove('hidden');
+      if (el.simDemoScore) el.simDemoScore.textContent = `Score: ${data.fluencyScore}/100`;
+      if (el.simDemoLinking) {
+        el.simDemoLinking.innerHTML = '';
+        (data.connectedSpeech?.linkingAlerts || []).forEach(item => {
+          const li = document.createElement('li');
+          li.textContent = item;
+          el.simDemoLinking.appendChild(li);
+        });
+      }
+      if (el.simDemoFlapt) {
+        el.simDemoFlapt.innerHTML = '';
+        const combined = [...(data.connectedSpeech?.flapTAlerts || []), ...(data.connectedSpeech?.weakFormsAlerts || [])];
+        combined.forEach(item => {
+          const li = document.createElement('li');
+          li.textContent = item;
+          el.simDemoFlapt.appendChild(li);
+        });
+      }
+      if (el.simDemoScript) el.simDemoScript.textContent = data.seniorDevPresentationScript || '';
+    } catch (err) {
+      console.error(err);
+      alert('Lỗi kết nối Demo Simulation.');
+    } finally {
+      if (el.btnSimDemoSubmit) {
+        el.btnSimDemoSubmit.disabled = false;
+        el.btnSimDemoSubmit.textContent = '🚀 Phân Tích Connected Speech & Kịch Bản Demo Chuẩn Quốc Tế';
+      }
+    }
+  }
+
+  // Ping-Pong Simulate Submit
+  async function submitPingPongSimulation() {
+    const answer = el.simPingpongAnswer ? el.simPingpongAnswer.value.trim() : '';
+    const detail = el.simPingpongDetail ? el.simPingpongDetail.value.trim() : '';
+    const questionBack = el.simPingpongQuestion ? el.simPingpongQuestion.value.trim() : '';
+
+    if (!answer) {
+      alert('Vui lòng nhập câu trả lời Answer (A).');
+      return;
+    }
+
+    if (el.btnSimPingpongSubmit) {
+      el.btnSimPingpongSubmit.disabled = true;
+      el.btnSimPingpongSubmit.textContent = '⏳ Đang chấm điểm độ tự nhiên A-D-Q...';
+    }
+
+    try {
+      const res = await fetch('/api/ai/pingpong-simulate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ answer, detail, questionBack })
+      });
+      const data = await res.json();
+      if (el.simPingpongResult) el.simPingpongResult.classList.remove('hidden');
+      if (el.simPingpongScore) el.simPingpongScore.textContent = `Naturalness: ${data.naturalnessScore}/100`;
+      if (el.simPingpongQuality) el.simPingpongQuality.textContent = data.pingPongTransitionQuality || 'Chuyển tiếp tự nhiên.';
+      if (el.simPingpongFeedback) el.simPingpongFeedback.textContent = data.feedback || '';
+      if (el.simPingpongRefactor) el.simPingpongRefactor.textContent = data.seniorDevRefactoring || '';
+    } catch (err) {
+      console.error(err);
+      alert('Lỗi kết nối Ping-Pong Simulation.');
+    } finally {
+      if (el.btnSimPingpongSubmit) {
+        el.btnSimPingpongSubmit.disabled = false;
+        el.btnSimPingpongSubmit.textContent = '🚀 Chấm Điểm Độ Tự Nhiên Ping-Pong (A-D-Q)';
       }
     }
   }

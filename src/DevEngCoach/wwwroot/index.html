@@ -74,6 +74,9 @@
         <button id="nav-curriculum" class="px-3 py-1.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 transition">
           🗺️ Ma trận 90 ngày
         </button>
+        <button id="nav-simulators" class="px-3 py-1.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 transition">
+          🎙️ Thực Chiến (Standup/Demo)
+        </button>
         <a href="fundamentals.html" target="_blank" class="px-3 py-1.5 rounded-lg text-sm font-medium text-amber-300 bg-amber-950/40 border border-amber-800/60 hover:bg-amber-900/40 transition flex items-center gap-1.5">
           <span>📖 Cẩm Nang Cấu Âm (Fundamentals)</span>
         </a>
@@ -166,6 +169,51 @@
           <a href="fundamentals.html" target="_blank" class="block p-2 rounded-lg bg-cyan-950/30 border border-cyan-800/50 text-[11px] text-cyan-300 hover:bg-cyan-900/30 transition">
             💡 <strong>Bản đồ khoang miệng:</strong> Nhấp để mở <em>Cẩm Nang Cấu Âm Học</em> xem vị trí đầu lưỡi, ngạc & phân biệt voiced/voiceless.
           </a>
+
+          <!-- Interactive Anatomical Vocal Tract SVG -->
+          <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3 flex flex-col items-center">
+            <div class="flex items-center justify-between w-full mb-1.5">
+              <span class="text-xs font-bold text-cyan-400 font-mono">Giải Phẫu Cấu Âm (Sagittal Tract)</span>
+              <span class="text-[10px] text-slate-400 font-mono">Đèn sáng vị trí phát âm</span>
+            </div>
+            <svg id="vocal-tract-svg" viewBox="0 0 450 380" class="w-full max-w-xs h-auto bg-slate-900 rounded-lg p-2 border border-slate-800">
+              <!-- Head outline -->
+              <path d="M 100 35 C 220 15, 320 65, 320 180 C 320 260, 270 315, 230 345" fill="none" stroke="#334155" stroke-width="2" />
+              <!-- Nasal Cavity -->
+              <path d="M 110 90 C 150 80, 220 90, 240 125" fill="none" stroke="#475569" stroke-width="1.5" stroke-dasharray="3" />
+              
+              <!-- Upper Lip & Teeth -->
+              <path id="svg-part-lips" d="M 100 150 C 112 160, 122 170, 128 180" fill="none" stroke="#f43f5e" stroke-width="3" />
+              <rect id="svg-part-teeth" x="126" y="180" width="9" height="13" fill="#e2e8f0" rx="1.5" />
+
+              <!-- Alveolar Ridge -->
+              <path id="svg-part-alveolar" d="M 135 185 C 150 185, 168 175, 185 165" fill="none" stroke="#38bdf8" stroke-width="3.5" />
+              <circle cx="160" cy="178" r="4" fill="#38bdf8" />
+
+              <!-- Hard Palate -->
+              <path id="svg-part-hard-palate" d="M 185 165 C 215 155, 240 165, 255 180" fill="none" stroke="#a855f7" stroke-width="3" />
+
+              <!-- Soft Palate (Velum) -->
+              <path id="svg-part-velum" d="M 255 180 C 265 190, 270 205, 266 218" fill="none" stroke="#eab308" stroke-width="3" />
+
+              <!-- Tongue: Tip, Body, Back -->
+              <path id="svg-part-tongue-tip" d="M 132 225 C 150 200, 175 195, 200 205" fill="none" stroke="#0ea5e9" stroke-width="3.5" />
+              <path id="svg-part-tongue-back" d="M 200 205 C 235 215, 245 250, 235 285 C 225 310, 215 320, 205 328" fill="none" stroke="#fbbf24" stroke-width="3" />
+
+              <!-- Lower Lip & Teeth -->
+              <rect x="124" y="228" width="9" height="13" fill="#e2e8f0" rx="1.5" />
+              <path d="M 100 245 C 110 240, 122 240, 123 230" fill="none" stroke="#f43f5e" stroke-width="2.5" />
+
+              <!-- Vocal Cords (Larynx) -->
+              <ellipse id="svg-part-vocal-cords" cx="218" cy="340" rx="13" ry="6" fill="#ef4444" fill-opacity="0.5" stroke="#ef4444" stroke-width="2" />
+            </svg>
+            <div class="grid grid-cols-4 gap-1 w-full mt-2 text-[10px] text-center font-mono text-slate-400">
+              <span class="p-1 rounded bg-slate-900 border border-slate-800" id="lbl-part-lips">Môi</span>
+              <span class="p-1 rounded bg-slate-900 border border-slate-800" id="lbl-part-alveolar">Gờ lợi</span>
+              <span class="p-1 rounded bg-slate-900 border border-slate-800" id="lbl-part-velum">Ngạc mềm</span>
+              <span class="p-1 rounded bg-slate-900 border border-slate-800" id="lbl-part-vocal-cords">Thanh quản</span>
+            </div>
+          </div>
 
           <!-- Articulatory Specs Card -->
           <div class="bg-slate-950/70 border border-slate-800/80 rounded-lg p-3 space-y-2 text-xs font-mono">
@@ -295,6 +343,28 @@
             </button>
           </div>
 
+          <!-- Side-by-Side Audio Comparison Player (FR-011) -->
+          <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3 space-y-2">
+            <div class="flex items-center justify-between text-xs font-semibold text-slate-300">
+              <span>🎙️ Đối chiếu giọng nói (Side-by-Side Audio):</span>
+              <span class="text-[10px] text-cyan-400 font-mono">MediaRecorder // Native</span>
+            </div>
+            
+            <div class="flex items-center gap-2 flex-wrap">
+              <button id="btn-play-native-voice" class="audio-compare-pill bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-800 text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition">
+                <span>🔊 Nghe giọng Bản Xứ</span>
+              </button>
+              
+              <button id="btn-replay-user-voice" disabled class="audio-compare-pill bg-purple-950 hover:bg-purple-900 text-purple-300 border border-purple-800 text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition disabled:opacity-40 disabled:cursor-not-allowed">
+                <span>▶ Nghe lại giọng Của Bạn</span>
+              </button>
+            </div>
+            <audio id="audio-user-recorded" class="hidden"></audio>
+            <div id="audio-playback-status" class="text-[11px] text-slate-400 italic">
+              Bấm nút "Nói vào mic" ở trên để thu âm giọng thật và đối chiếu trực diện.
+            </div>
+          </div>
+
           <!-- AI Evaluation Feedback Result Box -->
           <div id="ai-feedback-box" class="hidden bg-slate-950 border border-purple-900/50 rounded-lg p-3 space-y-2.5 text-xs">
             <div class="flex items-center justify-between border-b border-slate-800 pb-2">
@@ -358,6 +428,189 @@
       <!-- 90 Days Grid Container -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3.5" id="curriculum-grid">
         <!-- Grid cards populated by JS -->
+      </div>
+    </section>
+
+    <!-- VIEW 3: SPRINT REAL-WORLD SIMULATORS -->
+    <section id="view-simulators" class="hidden space-y-6">
+      <div class="bg-gradient-to-r from-slate-900 via-slate-900 to-slate-850 rounded-2xl border border-slate-800 p-6 shadow-xl">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🎙️</span>
+              <h2 class="text-xl font-bold text-white tracking-tight">Chế Độ Thực Chiến Kỹ Sư (Sprint Simulators)</h2>
+            </div>
+            <p class="text-xs text-slate-400 mt-1">Luyện tập trực diện 3 tình huống giao tiếp sống còn của Senior Tech Lead trong môi trường Agile quốc tế.</p>
+          </div>
+          <!-- Simulator Tabs -->
+          <div class="flex items-center gap-2 flex-wrap">
+            <button id="tab-sim-standup" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-cyan-500 text-slate-950 shadow transition">
+              Sprint 1: Daily Standup
+            </button>
+            <button id="tab-sim-demo" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
+              Sprint 2: Sprint Demo
+            </button>
+            <button id="tab-sim-pingpong" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
+              Sprint 3: Small Talk (A-D-Q)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Content 1: Daily Standup 3-Part Simulator -->
+      <div id="panel-sim-standup" class="space-y-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <h3 class="font-bold text-sm text-cyan-400 font-mono">1. DAILY STANDUP 3-PART MASTERY (Yesterday / Today / Blockers)</h3>
+            <span class="text-xs font-mono text-slate-400">Tập trung: Âm đuôi /t/, /d/, /s/, /z/ & phong thái Senior Lead</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="space-y-1.5">
+              <label class="text-xs font-semibold text-slate-300">1. Yesterday (Hôm qua đã làm gì):</label>
+              <textarea id="sim-standup-yesterday" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-100 font-mono focus:border-cyan-500 transition resize-none" placeholder="Yesterday, I finished the Redis caching layer and tested all endpoints..."></textarea>
+            </div>
+            <div class="space-y-1.5">
+              <label class="text-xs font-semibold text-slate-300">2. Today (Hôm nay sẽ làm gì):</label>
+              <textarea id="sim-standup-today" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-100 font-mono focus:border-cyan-500 transition resize-none" placeholder="Today, my main priority is to integrate the payment webhook and write unit tests..."></textarea>
+            </div>
+            <div class="space-y-1.5">
+              <label class="text-xs font-semibold text-slate-300">3. Blockers (Trở ngại / Rào cản):</label>
+              <textarea id="sim-standup-blockers" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-100 font-mono focus:border-cyan-500 transition resize-none" placeholder="No hard blockers at the moment. Waiting on staging credentials from DevOps."></textarea>
+            </div>
+          </div>
+
+          <button id="btn-sim-standup-submit" class="w-full py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold rounded-lg text-xs shadow-md transition">
+            🚀 Chấm điểm Standup & Nhận Refactor từ Senior Lead
+          </button>
+
+          <!-- Standup Evaluation Result -->
+          <div id="sim-standup-result" class="hidden bg-slate-950 border border-cyan-900/60 rounded-xl p-4 space-y-3 text-xs">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+              <span class="font-bold text-slate-200">Đánh giá Standup:</span>
+              <span id="sim-standup-score" class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-cyan-950 text-cyan-400 border border-cyan-800">Score: 90/100</span>
+            </div>
+            <div>
+              <div class="font-semibold text-slate-400 text-[11px]">Ngữ pháp & thì động từ:</div>
+              <p id="sim-standup-grammar" class="text-slate-200 bg-slate-900 p-2 rounded mt-1 border border-slate-800">...</p>
+            </div>
+            <div>
+              <div class="font-semibold text-amber-400 text-[11px]">Cảnh báo âm đuôi /t/, /d/, /s/, /z/:</div>
+              <ul id="sim-standup-consonants" class="list-disc list-inside text-slate-300 space-y-0.5 mt-1"></ul>
+            </div>
+            <div>
+              <div class="font-semibold text-cyan-400 text-[11px]">⭐ Phiên bản Senior Tech Lead:</div>
+              <p id="sim-standup-refactor" class="text-cyan-200 font-mono bg-cyan-950/40 p-2.5 rounded mt-1 border border-cyan-900/60">...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Content 2: Sprint Demo Walkthrough Simulator -->
+      <div id="panel-sim-demo" class="hidden space-y-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <h3 class="font-bold text-sm text-cyan-400 font-mono">2. SPRINT DEMO WALKTHROUGH SIMULATOR</h3>
+            <span class="text-xs font-mono text-slate-400">Tập trung: Connected Speech (Linking, Flap T, Weak forms)</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="space-y-1.5">
+              <label class="text-xs font-semibold text-slate-300">1. Context (Bối cảnh / Vấn đề cần giải quyết):</label>
+              <textarea id="sim-demo-context" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-100 font-mono focus:border-cyan-500 resize-none" placeholder="In this sprint, we tackled high latency in product catalog search..."></textarea>
+            </div>
+            <div class="space-y-1.5">
+              <label class="text-xs font-semibold text-slate-300">2. Architecture / Under the hood (Kiến trúc giải pháp):</label>
+              <textarea id="sim-demo-arch" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-100 font-mono focus:border-cyan-500 resize-none" placeholder="Under the hood, we replaced the synchronous DB query with Redis read-through caching..."></textarea>
+            </div>
+            <div class="space-y-1.5">
+              <label class="text-xs font-semibold text-slate-300">3. Technical Highlights & Metrics (Điểm sáng kỹ thuật):</label>
+              <textarea id="sim-demo-highlights" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-100 font-mono focus:border-cyan-500 resize-none" placeholder="Response time dropped from 350ms to 24ms, cutting DB load by 70%..."></textarea>
+            </div>
+            <div class="space-y-1.5">
+              <label class="text-xs font-semibold text-slate-300">4. Q&A Invite (Lời mời đặt câu hỏi chuyển tiếp):</label>
+              <textarea id="sim-demo-qa" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-100 font-mono focus:border-cyan-500 resize-none" placeholder="I'd be glad to open the floor for any questions or architectural feedback."></textarea>
+            </div>
+          </div>
+
+          <button id="btn-sim-demo-submit" class="w-full py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-lg text-xs shadow-md transition">
+            🚀 Phân Tích Connected Speech & Kịch Bản Demo Chuẩn Quốc Tế
+          </button>
+
+          <!-- Demo Evaluation Result -->
+          <div id="sim-demo-result" class="hidden bg-slate-950 border border-blue-900/60 rounded-xl p-4 space-y-3 text-xs">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+              <span class="font-bold text-slate-200">Đánh giá Demo Walkthrough:</span>
+              <span id="sim-demo-score" class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-blue-950 text-blue-400 border border-blue-800">Score: 88/100</span>
+            </div>
+            <div>
+              <div class="font-semibold text-cyan-400 text-[11px]">Nối âm (Connected Speech & Linking):</div>
+              <ul id="sim-demo-linking" class="list-disc list-inside text-slate-300 space-y-0.5 mt-1"></ul>
+            </div>
+            <div>
+              <div class="font-semibold text-purple-400 text-[11px]">Flap T & Weak Forms:</div>
+              <ul id="sim-demo-flapt" class="list-disc list-inside text-slate-300 space-y-0.5 mt-1"></ul>
+            </div>
+            <div>
+              <div class="font-semibold text-emerald-400 text-[11px]">⭐ Kịch bản Demo mượt mà chuẩn Lead:</div>
+              <p id="sim-demo-script" class="text-emerald-200 font-mono bg-emerald-950/30 p-2.5 rounded mt-1 border border-emerald-900/60">...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Content 3: Ping-Pong Small Talk Simulator -->
+      <div id="panel-sim-pingpong" class="hidden space-y-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <h3 class="font-bold text-sm text-cyan-400 font-mono">3. SMALL TALK PING-PONG SIMULATOR (Công thức A-D-Q)</h3>
+            <span class="text-xs font-mono text-slate-400">Công thức: Answer (Trả lời) ➔ Detail (Thêm chi tiết) ➔ Question (Hỏi ngược lại)</span>
+          </div>
+
+          <div class="bg-slate-950/60 border border-slate-800 p-3 rounded-lg text-xs space-y-1">
+            <span class="text-purple-400 font-bold font-mono">Kịch bản bắt đầu cuộc họp:</span>
+            <p class="text-slate-300 italic">"Hey! How was your weekend? Did you do anything fun?"</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="space-y-1.5">
+              <label class="text-xs font-semibold text-slate-300">A - Answer (Trả lời trực diện):</label>
+              <textarea id="sim-pingpong-answer" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-100 font-mono focus:border-cyan-500 resize-none" placeholder="Pretty good and relaxing!"></textarea>
+            </div>
+            <div class="space-y-1.5">
+              <label class="text-xs font-semibold text-slate-300">D - Detail (Thêm 1-2 chi tiết thú vị):</label>
+              <textarea id="sim-pingpong-detail" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-100 font-mono focus:border-cyan-500 resize-none" placeholder="I went for a bike ride along the river and tried a new coffee shop with my family."></textarea>
+            </div>
+            <div class="space-y-1.5">
+              <label class="text-xs font-semibold text-slate-300">Q - Question back (Hỏi ngược lại tạo bóng qua lại):</label>
+              <textarea id="sim-pingpong-question" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-100 font-mono focus:border-cyan-500 resize-none" placeholder="How about you? Were you able to unwind over the weekend?"></textarea>
+            </div>
+          </div>
+
+          <button id="btn-sim-pingpong-submit" class="w-full py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-lg text-xs shadow-md transition">
+            🚀 Chấm Điểm Độ Tự Nhiên Ping-Pong (A-D-Q)
+          </button>
+
+          <!-- PingPong Evaluation Result -->
+          <div id="sim-pingpong-result" class="hidden bg-slate-950 border border-purple-900/60 rounded-xl p-4 space-y-3 text-xs">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+              <span class="font-bold text-slate-200">Đánh giá Small Talk:</span>
+              <span id="sim-pingpong-score" class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-purple-950 text-purple-400 border border-purple-800">Naturalness: 95/100</span>
+            </div>
+            <div>
+              <div class="font-semibold text-purple-400 text-[11px]">Đánh giá chất lượng chuyền bóng (Ping-Pong Quality):</div>
+              <p id="sim-pingpong-quality" class="text-slate-200 bg-slate-900 p-2 rounded mt-1 border border-slate-800">...</p>
+            </div>
+            <div>
+              <div class="font-semibold text-cyan-400 text-[11px]">Góp ý phản hồi:</div>
+              <p id="sim-pingpong-feedback" class="text-slate-300 p-1">...</p>
+            </div>
+            <div>
+              <div class="font-semibold text-pink-400 text-[11px]">⭐ Phiên bản giao tiếp tự nhiên chuẩn bản xứ:</div>
+              <p id="sim-pingpong-refactor" class="text-pink-200 font-mono bg-pink-950/30 p-2.5 rounded mt-1 border border-pink-900/60">...</p>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 

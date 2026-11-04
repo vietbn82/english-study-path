@@ -67,7 +67,7 @@ progressApi.MapPost("/reset", (IProgressService progress) =>
     return Results.Ok(new { Message = "Progress reset to Day 1." });
 });
 
-// AI Coach Evaluation Endpoint (AGY CLI integration)
+// AI Coach Evaluation Endpoints (AGY CLI integration)
 app.MapPost("/api/ai/evaluate", async ([FromBody] AiEvaluationRequest request, IAiCoachService aiCoach, CancellationToken ct) =>
 {
     if (string.IsNullOrWhiteSpace(request.InputText))
@@ -77,6 +77,39 @@ app.MapPost("/api/ai/evaluate", async ([FromBody] AiEvaluationRequest request, I
 
     var evaluation = await aiCoach.EvaluateAsync(request, ct);
     return Results.Ok(evaluation);
+});
+
+app.MapPost("/api/ai/standup-simulate", async ([FromBody] StandupSimulationRequest request, IAiCoachService aiCoach, CancellationToken ct) =>
+{
+    if (string.IsNullOrWhiteSpace(request.Yesterday) && string.IsNullOrWhiteSpace(request.Today))
+    {
+        return Results.BadRequest(new { Message = "At least Yesterday or Today must be provided." });
+    }
+
+    var result = await aiCoach.SimulateStandupAsync(request, ct);
+    return Results.Ok(result);
+});
+
+app.MapPost("/api/ai/demo-simulate", async ([FromBody] DemoSimulationRequest request, IAiCoachService aiCoach, CancellationToken ct) =>
+{
+    if (string.IsNullOrWhiteSpace(request.Context) && string.IsNullOrWhiteSpace(request.Architecture))
+    {
+        return Results.BadRequest(new { Message = "Context or Architecture must be provided." });
+    }
+
+    var result = await aiCoach.SimulateDemoAsync(request, ct);
+    return Results.Ok(result);
+});
+
+app.MapPost("/api/ai/pingpong-simulate", async ([FromBody] PingPongSimulationRequest request, IAiCoachService aiCoach, CancellationToken ct) =>
+{
+    if (string.IsNullOrWhiteSpace(request.Answer) && string.IsNullOrWhiteSpace(request.FullResponse))
+    {
+        return Results.BadRequest(new { Message = "Answer or FullResponse must be provided." });
+    }
+
+    var result = await aiCoach.SimulatePingPongAsync(request, ct);
+    return Results.Ok(result);
 });
 
 // Reminder Service Endpoints
