@@ -74,6 +74,9 @@
         <button id="nav-curriculum" class="px-3 py-1.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 transition">
           🗺️ Ma trận 90 ngày
         </button>
+        <a href="fundamentals.html" target="_blank" class="px-3 py-1.5 rounded-lg text-sm font-medium text-amber-300 bg-amber-950/40 border border-amber-800/60 hover:bg-amber-900/40 transition flex items-center gap-1.5">
+          <span>📖 Cẩm Nang Cấu Âm (Fundamentals)</span>
+        </a>
       </div>
     </div>
   </header>
@@ -89,13 +92,26 @@
 
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div class="space-y-2 max-w-3xl">
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3 flex-wrap">
               <span class="px-2.5 py-1 rounded-full text-xs font-mono font-semibold bg-cyan-950 text-cyan-400 border border-cyan-800/70" id="badge-day">
                 DAY 1 // SPRINT 1
               </span>
               <span class="text-xs text-slate-400 font-mono" id="badge-sprint-name">
                 Mechanical Phonetics & Daily Standup
               </span>
+
+              <!-- Quick Day Switcher & Fast-Track -->
+              <div class="flex items-center gap-1.5 ml-auto bg-slate-950/80 border border-slate-800 p-1 rounded-lg text-xs font-mono">
+                <button id="btn-prev-day" title="Học ngày trước đó" class="px-2 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded border border-slate-700/60 transition">
+                  ◀ Trước
+                </button>
+                <select id="select-jump-day" class="bg-slate-900 border border-slate-700/60 rounded px-2 py-1 text-slate-200 text-xs focus:outline-none focus:border-cyan-500">
+                  <!-- Populated by JS -->
+                </select>
+                <button id="btn-next-day" title="Chuyển sang ngày tiếp theo (học tăng tốc)" class="px-2 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded border border-slate-700/60 transition">
+                  Tiếp ▶
+                </button>
+              </div>
             </div>
             <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight" id="lesson-title">
               Loading lesson...
@@ -146,6 +162,10 @@
               /t/, /d/
             </span>
           </div>
+
+          <a href="fundamentals.html" target="_blank" class="block p-2 rounded-lg bg-cyan-950/30 border border-cyan-800/50 text-[11px] text-cyan-300 hover:bg-cyan-900/30 transition">
+            💡 <strong>Bản đồ khoang miệng:</strong> Nhấp để mở <em>Cẩm Nang Cấu Âm Học</em> xem vị trí đầu lưỡi, ngạc & phân biệt voiced/voiceless.
+          </a>
 
           <!-- Articulatory Specs Card -->
           <div class="bg-slate-950/70 border border-slate-800/80 rounded-lg p-3 space-y-2 text-xs font-mono">

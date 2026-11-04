@@ -97,6 +97,56 @@
     el.btnEvaluateAi.addEventListener('click', evaluateWithAi);
     el.btnCompleteSession.addEventListener('click', completeCurrentSession);
 
+    // Day Switcher Controls (Prev / Next / Direct Jump)
+    const btnPrevDay = document.getElementById('btn-prev-day');
+    const btnNextDay = document.getElementById('btn-next-day');
+    const selectJumpDay = document.getElementById('select-jump-day');
+
+    if (btnPrevDay) {
+      btnPrevDay.addEventListener('click', () => {
+        if (state.currentDay > 1) {
+          loadDayLesson(state.currentDay - 1);
+        }
+      });
+    }
+
+    if (btnNextDay) {
+      btnNextDay.addEventListener('click', () => {
+        if (state.currentDay < 90) {
+          loadDayLesson(state.currentDay + 1);
+        }
+      });
+    }
+
+    if (selectJumpDay) {
+      selectJumpDay.addEventListener('change', (e) => {
+        const targetDay = parseInt(e.target.value, 10);
+        if (targetDay >= 1 && targetDay <= 90) {
+          loadDayLesson(targetDay);
+        }
+      });
+    }
+
+    // Global Delegated Click Listeners for dynamic audio playback and copying
+    document.addEventListener('click', (e) => {
+      const speakBtn = e.target.closest('.speak-btn');
+      if (speakBtn && speakBtn.dataset.word) {
+        e.preventDefault();
+        e.stopPropagation();
+        speakWord(speakBtn.dataset.word);
+        return;
+      }
+
+      const copyBtn = e.target.closest('.copy-frame-btn');
+      if (copyBtn && copyBtn.dataset.pattern) {
+        e.preventDefault();
+        navigator.clipboard.writeText(copyBtn.dataset.pattern);
+        const originalText = copyBtn.textContent;
+        copyBtn.textContent = '✓ Copied';
+        setTimeout(() => copyBtn.textContent = originalText, 1500);
+      }
+    });
+
     // Sprint Filter Buttons
     document.querySelectorAll('.sprint-filter-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
@@ -143,6 +193,17 @@
         state.sessions[s.dayNumber] = s;
       });
 
+      // Populate day selector options
+      const selectJumpDay = document.getElementById('select-jump-day');
+      if (selectJumpDay && selectJumpDay.options.length === 0) {
+        state.lessons.forEach(l => {
+          const opt = document.createElement('option');
+          opt.value = l.dayNumber;
+          opt.textContent = `Ngày ${l.dayNumber}: ${l.title} (S${l.sprintId})`;
+          selectJumpDay.appendChild(opt);
+        });
+      }
+
       updateTelemetryUI();
 
       // Open current / next scheduled day
@@ -173,6 +234,11 @@
 
     state.currentDay = dayNumber;
 
+    const selectJumpDay = document.getElementById('select-jump-day');
+    if (selectJumpDay) {
+      selectJumpDay.value = dayNumber;
+    }
+
     // Header
     el.badgeDay.textContent = `DAY ${lesson.dayNumber} // SPRINT ${lesson.sprintId}`;
     el.badgeSprintName.textContent = lesson.sprintTitle;
@@ -195,7 +261,7 @@
       row.className = 'flex items-center justify-between p-2 rounded bg-slate-950/70 border border-slate-800 text-xs';
       row.innerHTML = `
         <div class="flex items-center gap-2">
-          <button class="speak-btn text-cyan-400 hover:text-cyan-300 font-bold" data-word="${drill.word}">🔊</button>
+          <button class="speak-btn text-cyan-400 hover:text-cyan-300 font-bold px-1 py-0.5 rounded hover:bg-slate-800" data-word="${drill.word}" title="Nghe phát âm">🔊</button>
           <div>
             <span class="font-bold text-slate-100">${drill.word}</span>
             <span class="font-mono text-cyan-400 text-[11px] ml-1">${drill.ipa}</span>
@@ -205,13 +271,6 @@
         <div class="text-[11px] text-slate-400 italic hidden sm:block">${drill.physicalNote}</div>
       `;
       el.drillsContainer.appendChild(row);
-    });
-
-    document.querySelectorAll('.speak-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        speakWord(btn.dataset.word);
-      });
     });
 
     // Stage 2: Sentence Frames
@@ -228,22 +287,14 @@
         </div>
         <div class="font-mono text-xs text-slate-200 bg-slate-900/90 p-2 rounded border border-slate-800/80">${frame.templatePattern}</div>
         <div class="text-[11px] text-slate-400 flex items-center justify-between pt-1">
-          <span>Ví dụ: "${frame.exampleUsage}"</span>
-          <button class="speak-btn text-slate-400 hover:text-blue-400" data-word="${frame.exampleUsage}">🔊</button>
+          <span class="line-clamp-1">Ví dụ: "${frame.exampleUsage}"</span>
+          <button class="speak-btn text-blue-400 hover:text-blue-300 font-bold px-1.5 py-0.5 rounded hover:bg-slate-800 shrink-0 ml-2" data-word="${frame.exampleUsage}" title="Nghe phát âm mẫu">🔊 Nghe</button>
         </div>
       `;
       el.framesContainer.appendChild(card);
     });
 
     el.frameVariables.textContent = Array.from(allVars).join(', ') || '[Feature], [Component], [Task]';
-
-    document.querySelectorAll('.copy-frame-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        navigator.clipboard.writeText(btn.dataset.pattern);
-        btn.textContent = '✓ Copied';
-        setTimeout(() => btn.textContent = '📋 Copy', 1500);
-      });
-    });
 
     // Stage 3: Practice Task
     el.taskPrompt.textContent = lesson.practiceTask.prompt;
@@ -426,6 +477,17 @@
       // Refresh progress summary
       const progressRes = await fetch('/api/progress');
       state.summary = await progressRes.json();
+      // Populate day selector options
+      const selectJumpDay = document.getElementById('select-jump-day');
+      if (selectJumpDay && selectJumpDay.options.length === 0) {
+        state.lessons.forEach(l => {
+          const opt = document.createElement('option');
+          opt.value = l.dayNumber;
+          opt.textContent = `Ngày ${l.dayNumber}: ${l.title} (S${l.sprintId})`;
+          selectJumpDay.appendChild(opt);
+        });
+      }
+
       updateTelemetryUI();
 
       alert(`🎉 Chúc mừng bạn đã hoàn thành Ngày ${state.currentDay}! Streak hiện tại: ${state.summary.currentStreakDays} ngày.`);

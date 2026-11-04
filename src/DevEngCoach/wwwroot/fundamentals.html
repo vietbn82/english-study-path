@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cẩm Nang Cấu Âm Cơ Học // Articulatory Phonetics Fundamentals</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            slate: {
+              850: '#131c31'
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased selection:bg-cyan-500 selection:text-slate-950">
+
+  <!-- Navigation -->
+  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <a href="index.html" class="w-9 h-9 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-mono font-bold text-slate-950 shadow-lg shadow-cyan-500/20">
+          DE
+        </a>
+        <div>
+          <div class="font-bold text-base tracking-tight flex items-center gap-2">
+            <span>Cẩm Nang Cấu Âm Nền Tảng</span>
+            <span class="text-xs px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800/60 font-mono">Articulatory Phonetics</span>
+          </div>
+          <div class="text-xs text-slate-400 font-mono">Bản đồ cơ học khoang miệng & Giải phẫu phát âm tiếng Anh chuẩn</div>
+        </div>
+      </div>
+
+      <a href="index.html" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-cyan-600 hover:bg-cyan-500 text-slate-950 transition flex items-center gap-1.5">
+        <span>◀ Quay lại Dashboard học</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+    <!-- HERO INTRO -->
+    <div class="bg-gradient-to-r from-slate-900 via-slate-900 to-slate-850 rounded-2xl border border-slate-800 p-8 shadow-xl relative overflow-hidden">
+      <div class="max-w-3xl space-y-4">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono bg-cyan-950 text-cyan-400 border border-cyan-800/70">
+          ⚙️ PHƯƠNG PHÁP: ARTICULATORY PHONETICS & KINESTHETIC TRAINING
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+          Giải Phẫu Cơ Học Phát Âm: <br><span class="text-cyan-400">Không Cần Tai Nhạy, Chỉ Cần Đặt Đúng Vị Trí</span>
+        </h1>
+        <p class="text-slate-300 leading-relaxed text-sm sm:text-base">
+          Người lớn sau 12-14 tuổi phát âm tiếng Anh sai không phải vì thiếu năng khiếu, mà vì <strong>Bộ lọc âm tiếng mẹ đẻ (L1 Phonetic Filter)</strong> tự động ép các âm tiếng Anh lạ về âm tiếng Việt gần giống. Phương pháp truyền thống <em>"Nghe và bắt chước"</em> hoàn toàn bất lực.
+        </p>
+        <p class="text-slate-300 leading-relaxed text-sm">
+          Phương pháp <strong>Ngữ âm học cấu âm (Articulatory Phonetics)</strong> biến việc phát âm thành <strong>bài tập gym cho vòm miệng</strong>: Bạn chỉ cần biết chính xác <strong>đầu lưỡi chạm vào đâu, ngạc cứng hay ngạc mềm, luồng khí thoát ra kiểu gì, và cổ họng có rung hay không</strong>. Đặt đúng tọa độ vật lý thì âm thanh phát ra tự nhiên sẽ chuẩn 100%.
+        </p>
+      </div>
+    </div>
+
+    <!-- SECTION 1: VOCAL TRACT ANATOMY & SVG -->
+    <section class="space-y-6">
+      <div class="border-b border-slate-800 pb-3">
+        <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+          <span class="w-7 h-7 rounded bg-cyan-950 text-cyan-400 border border-cyan-800 flex items-center justify-center font-mono text-xs">1</span>
+          Bản Đồ Giải Phẫu Khoang Miệng (Vocal Tract Anatomy)
+        </h2>
+        <p class="text-xs text-slate-400 mt-1">Toàn bộ âm vị trong tiếng Anh được tạo ra bởi sự tương tác giữa 2 nhóm: Cơ quan chủ động (Active Articulators) và Cơ quan thụ động (Passive Articulators).</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+        
+        <!-- Interactive Vocal Tract SVG -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 flex flex-col items-center">
+          <h3 class="text-sm font-bold text-cyan-400 mb-4 font-mono self-start">Sơ đồ mặt cắt bên (Sagittal Vocal Tract)</h3>
+          
+          <svg viewBox="0 0 500 450" class="w-full max-w-md h-auto bg-slate-950 rounded-lg p-2 border border-slate-800">
+            <!-- Head outline -->
+            <path d="M 120 40 C 250 20, 360 80, 360 220 C 360 320, 300 380, 260 410" fill="none" stroke="#334155" stroke-width="2.5" />
+            
+            <!-- Nasal Cavity -->
+            <path d="M 130 110 C 180 100, 260 110, 280 150" fill="none" stroke="#475569" stroke-width="2" stroke-dasharray="4" />
+            <text x="200" y="95" fill="#64748b" font-size="11" font-family="monospace">Khoang mũi (Nasal cavity)</text>
+
+            <!-- Upper Lip & Teeth -->
+            <path d="M 120 180 C 135 190, 145 200, 150 215" fill="none" stroke="#f43f5e" stroke-width="3" />
+            <text x="50" y="195" fill="#f43f5e" font-size="11" font-family="monospace">1. Môi trên (Upper Lip)</text>
+
+            <rect x="148" y="215" width="10" height="15" fill="#e2e8f0" rx="2" />
+            <text x="35" y="226" fill="#cbd5e1" font-size="11" font-family="monospace">2. Răng cửa trên (Teeth)</text>
+
+            <!-- Alveolar Ridge -->
+            <path d="M 158 220 C 175 220, 195 210, 210 195" fill="none" stroke="#38bdf8" stroke-width="4" />
+            <circle cx="185" cy="212" r="5" fill="#38bdf8" />
+            <text x="75" y="155" fill="#38bdf8" font-size="12" font-weight="bold" font-family="monospace">3. Gờ Lợi (Alveolar Ridge)</text>
+            <line x1="165" y1="160" x2="185" y2="205" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="2" />
+
+            <!-- Hard Palate -->
+            <path d="M 210 195 C 235 180, 265 180, 285 200" fill="none" stroke="#a855f7" stroke-width="4" />
+            <circle cx="245" cy="185" r="5" fill="#a855f7" />
+            <text x="210" y="160" fill="#c084fc" font-size="12" font-weight="bold" font-family="monospace">4. Ngạc Cứng (Hard Palate)</text>
+
+            <!-- Soft Palate (Velum) & Uvula -->
+            <path d="M 285 200 C 310 220, 320 240, 315 260" fill="none" stroke="#eab308" stroke-width="4" />
+            <circle cx="305" cy="235" r="5" fill="#eab308" />
+            <text x="325" y="225" fill="#facc15" font-size="12" font-weight="bold" font-family="monospace">5. Ngạc Mềm (Velum)</text>
+
+            <!-- Tongue -->
+            <!-- Tip -->
+            <path d="M 155 265 C 175 240, 205 235, 235 245 C 265 255, 280 290, 270 330 C 260 360, 250 375, 240 380" fill="#0284c7" fill-opacity="0.2" stroke="#0ea5e9" stroke-width="3" />
+            
+            <circle cx="165" cy="255" r="4" fill="#38bdf8" />
+            <text x="80" y="280" fill="#38bdf8" font-size="11" font-weight="bold" font-family="monospace">Đầu lưỡi (Tip)</text>
+
+            <circle cx="215" cy="240" r="4" fill="#60a5fa" />
+            <text x="180" y="300" fill="#93c5fd" font-size="11" font-family="monospace">Thân lưỡi (Body)</text>
+
+            <circle cx="265" cy="275" r="4" fill="#fbbf24" />
+            <text x="275" y="310" fill="#fde047" font-size="11" font-family="monospace">Gốc lưỡi (Back)</text>
+
+            <!-- Lower Teeth & Lip -->
+            <rect x="146" y="270" width="10" height="15" fill="#e2e8f0" rx="2" />
+            <path d="M 120 290 C 135 285, 145 285, 146 270" fill="none" stroke="#f43f5e" stroke-width="3" />
+
+            <!-- Vocal Cords (Larynx) -->
+            <ellipse cx="250" cy="400" rx="14" ry="7" fill="#ef4444" fill-opacity="0.5" stroke="#ef4444" stroke-width="2" />
+            <text x="275" y="405" fill="#f87171" font-size="12" font-weight="bold" font-family="monospace">6. Dây Thanh Âm (Vocal Cords)</text>
+          </svg>
+          <div class="text-[11px] text-slate-400 text-center mt-3 font-mono">
+            Nhấn vào các phần giải thích bên phải để đối chiếu vị trí.
+          </div>
+        </div>
+
+        <!-- Explanations of Core Articulators -->
+        <div class="space-y-4 text-xs leading-relaxed">
+          
+          <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 space-y-1.5">
+            <div class="font-bold text-sm text-cyan-400 flex items-center justify-between">
+              <span>1. Gờ Lợi (Alveolar Ridge) — Trọng tâm số 1 của tiếng Anh</span>
+              <span class="text-[10px] font-mono bg-cyan-950 px-2 py-0.5 rounded text-cyan-300">/t/, /d/, /s/, /z/, /n/, /l/</span>
+            </div>
+            <p class="text-slate-300">
+              <strong>Vị trí:</strong> Dùng đầu lưỡi liếm từ mặt sau của răng cửa trên lên trên vòm họng. Bạn sẽ cảm thấy một dải thịt gồ ghề, lượn sóng ngay sát chân răng trước khi lõm sâu vào trong. Đó chính là <strong>Gờ Lợi (Alveolar Ridge)</strong>.
+            </p>
+            <p class="text-amber-300/90 bg-amber-950/30 p-2 rounded border border-amber-900/50">
+              ⚠️ <strong>Lỗi người Việt:</strong> Tiếng Việt phát âm âm "t", "đ" bằng cách đập đầu lưỡi vào <em>mặt sau răng cửa</em> (âm răng). Trong tiếng Anh, âm /t/ và /d/ bắt buộc đầu lưỡi phải ép chặt vào <em>gờ lợi</em> rồi mới giật mạnh ra để nén áp suất.
+            </p>
+          </div>
+
+          <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 space-y-1.5">
+            <div class="font-bold text-sm text-purple-400 flex items-center justify-between">
+              <span>2. Ngạc Cứng (Hard Palate) — Vòm họng cứng</span>
+              <span class="text-[10px] font-mono bg-purple-950 px-2 py-0.5 rounded text-purple-300">/j/ (yes), /ʃ/, /tʃ/</span>
+            </div>
+            <p class="text-slate-300">
+              <strong>Vị trí:</strong> Đi sâu hơn qua gờ lợi vào giữa vòm miệng. Đây là phần mái vòm hình cung có xương nâng đỡ, sờ vào rất cứng và trơn láng.
+            </p>
+            <p class="text-slate-300">
+              <strong>Cách dùng:</strong> Thân lưỡi (Tongue Body) cong lên áp sát ngạc cứng để tạo âm /j/ như trong <em>yield</em>, <em>user</em>, hoặc kết hợp với gờ lợi tạo âm /tʃ/ (<em>check</em>) và /dʒ/ (<em>JSON</em>).
+            </p>
+          </div>
+
+          <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 space-y-1.5">
+            <div class="font-bold text-sm text-yellow-400 flex items-center justify-between">
+              <span>3. Ngạc Mềm (Soft Palate / Velum) — Cánh cửa thông gió</span>
+              <span class="text-[10px] font-mono bg-yellow-950 px-2 py-0.5 rounded text-yellow-300">/k/, /ɡ/, /ŋ/</span>
+            </div>
+            <p class="text-slate-300">
+              <strong>Vị trí:</strong> Vùng vòm họng tận cùng phía sau, sờ vào mềm và dễ buồn nôn (không có xương). Tận cùng của nó là <strong>Lưỡi gà (Uvula)</strong>.
+            </p>
+            <p class="text-slate-300">
+              <strong>Nguyên lý cơ học:</strong> Ngạc mềm hoạt động như chiếc van đóng mở:
+            </p>
+            <ul class="list-disc list-inside text-slate-300 pl-1 space-y-0.5">
+              <li><strong>Nâng lên đóng kín:</strong> Luồng khí chỉ thoát qua miệng (tạo /k/, /ɡ/, /p/, /t/...).</li>
+              <li><strong>Hạ xuống mở thông:</strong> Luồng khí thoát lên mũi tạo các âm mũi (/m/, /n/, /ŋ/ trong <em>running</em>).</li>
+            </ul>
+          </div>
+
+          <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 space-y-1.5">
+            <div class="font-bold text-sm text-red-400 flex items-center justify-between">
+              <span>4. Dây Thanh Âm (Vocal Folds) — Máy phát rung</span>
+              <span class="text-[10px] font-mono bg-red-950 px-2 py-0.5 rounded text-red-300">Voiced vs Voiceless</span>
+            </div>
+            <p class="text-slate-300">
+              Nằm trong thanh quản (yết hầu / trái cổ). Khi khép lại, luồng hơi làm chúng rung lên bần bật tạo ra <strong>âm thanh hữu thanh (Voiced)</strong>. Khi mở rộng ra, chỉ có gió thổi qua tạo <strong>âm vô thanh (Voiceless)</strong>.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 2: PLACES OF ARTICULATION -->
+    <section class="space-y-6">
+      <div class="border-b border-slate-800 pb-3">
+        <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+          <span class="w-7 h-7 rounded bg-blue-950 text-blue-400 border border-blue-800 flex items-center justify-center font-mono text-xs">2</span>
+          8 Vị Trí Cấu Âm (Places of Articulation)
+        </h2>
+        <p class="text-xs text-slate-400 mt-1">Đầu lưỡi, môi và răng tiếp xúc ở đâu? Toàn bộ 24 phụ âm tiếng Anh chỉ xoay quanh 8 vị trí tọa độ sau:</p>
+      </div>
+
+      <div class="overflow-x-auto rounded-xl border border-slate-800">
+        <table class="w-full text-left text-xs text-slate-300 font-mono">
+          <thead class="bg-slate-900 text-slate-400 uppercase text-[11px] border-b border-slate-800">
+            <tr>
+              <th class="p-3.5">Vị trí (Place)</th>
+              <th class="p-3.5">Cơ quan tiếp xúc</th>
+              <th class="p-3.5">Âm vị IPA</th>
+              <th class="p-3.5">Từ vựng IT mẫu</th>
+              <th class="p-3.5">Hành động cơ học</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800/80 bg-slate-950/60 font-sans">
+            <tr class="hover:bg-slate-900/50">
+              <td class="p-3.5 font-bold font-mono text-cyan-400">1. Bilabial (Hai môi)</td>
+              <td class="p-3.5">Môi trên + Môi dưới</td>
+              <td class="p-3.5 font-mono font-bold text-slate-100">/p/, /b/, /m/, /w/</td>
+              <td class="p-3.5"><button class="speak-btn text-cyan-400 hover:underline" data-word="bug, push, map">bug, push, map 🔊</button></td>
+              <td class="p-3.5">Mím chặt hai môi lại rồi bật ra hoặc ngân qua mũi.</td>
+            </tr>
+            <tr class="hover:bg-slate-900/50">
+              <td class="p-3.5 font-bold font-mono text-cyan-400">2. Labiodental (Môi - Răng)</td>
+              <td class="p-3.5">Răng cửa trên + Môi dưới</td>
+              <td class="p-3.5 font-mono font-bold text-slate-100">/f/, /v/</td>
+              <td class="p-3.5"><button class="speak-btn text-cyan-400 hover:underline" data-word="file, fetch, server">file, fetch, server 🔊</button></td>
+              <td class="p-3.5">Mép răng cửa trên cắn nhẹ lên bờ trong môi dưới, thổi hơi xì qua khe.</td>
+            </tr>
+            <tr class="hover:bg-slate-900/50 bg-slate-900/20">
+              <td class="p-3.5 font-bold font-mono text-cyan-400">3. Interdental (Răng - Lưỡi)</td>
+              <td class="p-3.5">Đầu lưỡi + 2 hàm răng</td>
+              <td class="p-3.5 font-mono font-bold text-amber-400">/θ/ (voiceless), /ð/ (voiced)</td>
+              <td class="p-3.5"><button class="speak-btn text-cyan-400 hover:underline" data-word="auth, thread, this">auth, thread, this 🔊</button></td>
+              <td class="p-3.5">Thè nhẹ đầu lưỡi ra kẹp giữa hai hàm răng, cắn hờ và thổi hơi lùa qua mặt lưỡi.</td>
+            </tr>
+            <tr class="hover:bg-slate-900/50 bg-cyan-950/10">
+              <td class="p-3.5 font-bold font-mono text-cyan-400">4. Alveolar (Gờ lợi)</td>
+              <td class="p-3.5">Đầu lưỡi + Gờ lợi trên</td>
+              <td class="p-3.5 font-mono font-bold text-slate-100">/t/, /d/, /s/, /z/, /n/, /l/</td>
+              <td class="p-3.5"><button class="speak-btn text-cyan-400 hover:underline" data-word="test, data, sync">test, data, sync 🔊</button></td>
+              <td class="p-3.5">Đầu lưỡi ép chặt hoặc nâng sát vào gờ lợi sau chân răng trên (không chạm vào răng).</td>
+            </tr>
+            <tr class="hover:bg-slate-900/50">
+              <td class="p-3.5 font-bold font-mono text-cyan-400">5. Post-alveolar</td>
+              <td class="p-3.5">Phiến lưỡi + Sau gờ lợi</td>
+              <td class="p-3.5 font-mono font-bold text-slate-100">/ʃ/, /ʒ/, /tʃ/, /dʒ/</td>
+              <td class="p-3.5"><button class="speak-btn text-cyan-400 hover:underline" data-word="shell, branch, merge">shell, branch, merge 🔊</button></td>
+              <td class="p-3.5">Đầu lưỡi cong lùi nhẹ vào sau gờ lợi, chu môi nhẹ hình chiếc phễu.</td>
+            </tr>
+            <tr class="hover:bg-slate-900/50">
+              <td class="p-3.5 font-bold font-mono text-cyan-400">6. Palatal (Ngạc cứng)</td>
+              <td class="p-3.5">Thân lưỡi + Vòm ngạc cứng</td>
+              <td class="p-3.5 font-mono font-bold text-slate-100">/j/</td>
+              <td class="p-3.5"><button class="speak-btn text-cyan-400 hover:underline" data-word="yield, user, yes">yield, user, yes 🔊</button></td>
+              <td class="p-3.5">Nâng phẳng lưng thân lưỡi ép sát vào vòm ngạc cứng trên đỉnh miệng.</td>
+            </tr>
+            <tr class="hover:bg-slate-900/50">
+              <td class="p-3.5 font-bold font-mono text-cyan-400">7. Velar (Ngạc mềm)</td>
+              <td class="p-3.5">Gốc lưỡi + Vòm ngạc mềm</td>
+              <td class="p-3.5 font-mono font-bold text-slate-100">/k/, /ɡ/, /ŋ/</td>
+              <td class="p-3.5"><button class="speak-btn text-cyan-400 hover:underline" data-word="commit, git, ping">commit, git, ping 🔊</button></td>
+              <td class="p-3.5">Gốc lưỡi phía sau họng nhấc bổng lên dán chặt vào màng ngạc mềm để chặn hơi.</td>
+            </tr>
+            <tr class="hover:bg-slate-900/50">
+              <td class="p-3.5 font-bold font-mono text-cyan-400">8. Glottal (Thanh môn)</td>
+              <td class="p-3.5">Khe giữa 2 dây thanh âm</td>
+              <td class="p-3.5 font-mono font-bold text-slate-100">/h/, /ʔ/ (Glottal stop)</td>
+              <td class="p-3.5"><button class="speak-btn text-cyan-400 hover:underline" data-word="host, hook, button">host, hook, button 🔊</button></td>
+              <td class="p-3.5">Khí thở trực tiếp cọ xát hoặc nghẹn đột ngột tại thanh quản.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION 3: MANNERS OF ARTICULATION -->
+    <section class="space-y-6">
+      <div class="border-b border-slate-800 pb-3">
+        <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+          <span class="w-7 h-7 rounded bg-purple-950 text-purple-400 border border-purple-800 flex items-center justify-center font-mono text-xs">3</span>
+          6 Cách Thoát Khí (Manners of Articulation)
+        </h2>
+        <p class="text-xs text-slate-400 mt-1">Luồng hơi từ phổi bị bóp nghẹt, tích áp hay thổi liên tục như thế nào khi đi ra ngoài?</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-sm text-cyan-400 font-mono">1. Plosive / Stop (Chặn Nổ)</span>
+            <span class="text-xs font-mono text-slate-400">/p, b, t, d, k, ɡ/</span>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            <strong>Cơ chế 3 pha:</strong> <br>
+            1. Bịt kín 100% đường thở (Catch). <br>
+            2. Phổi bơm hơi lên làm áp suất khí nén tăng vọt (Hold). <br>
+            3. Mở bung cơ quan đột ngột tạo tiếng nổ nhỏ pực/tực (Release).
+          </p>
+          <div class="text-[11px] text-amber-400 font-mono bg-amber-950/30 p-2 rounded border border-amber-900/50">
+            Ở cuối từ tiếng Anh: Người Việt hay bỏ quên pha 3 (Release), làm biến mất âm đuôi.
+          </div>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-sm text-blue-400 font-mono">2. Fricative (Xát / Xì)</span>
+            <span class="text-xs font-mono text-slate-400">/f, v, θ, ð, s, z, ʃ, ʒ, h/</span>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            <strong>Cơ chế ma sát:</strong> <br>
+            Hai cơ quan khép rất hẹp (nhưng không đóng hoàn toàn). Luồng khí bị bóp qua khe hẹp tạo ra tiếng rít/xì ma sát liên tục. Bạn có thể giữ hơi âm này dài bao lâu tùy thích (sssss..., fffff...).
+          </p>
+          <div class="text-[11px] text-blue-400 font-mono bg-blue-950/30 p-2 rounded border border-blue-900/50">
+            Ví dụ: <em>pass</em> /s/, <em>path</em> /θ/, <em>patch</em> /tʃ/.
+          </div>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-sm text-purple-400 font-mono">3. Affricate (Tắc Xát)</span>
+            <span class="text-xs font-mono text-slate-400">/tʃ/ (ch), /dʒ/ (j)</span>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            <strong>Cơ chế lai (Stop + Fricative):</strong> <br>
+            Đầu lưỡi chặn hoàn toàn gờ lợi như làm âm /t/, nhưng khi buông ra thì không bung tự do mà từ từ tạo khe hẹp để xát thành âm /ʃ/. <br>
+            /t/ + /ʃ/ = /tʃ/ (<em>watch</em>, <em>chain</em>).
+          </p>
+          <div class="text-[11px] text-purple-400 font-mono bg-purple-950/30 p-2 rounded border border-purple-900/50">
+            Tương tự: /d/ + /ʒ/ = /dʒ/ (<em>bridge</em>, <em>JSON</em>).
+          </div>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-sm text-yellow-400 font-mono">4. Nasal (Âm Mũi)</span>
+            <span class="text-xs font-mono text-slate-400">/m, n, ŋ/</span>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            <strong>Cơ chế thoát hơi qua mũi:</strong> <br>
+            Miệng bị chặn hoàn toàn (ở môi /m/, ở gờ lợi /n/, hoặc ở cuống họng /ŋ/), ngạc mềm hạ xuống cho luồng hơi cộng hưởng qua khoang mũi.
+          </p>
+          <div class="text-[11px] text-yellow-400 font-mono bg-yellow-950/30 p-2 rounded border border-yellow-900/50">
+            Nếu bạn bịt mũi lại, bạn sẽ không thể phát âm được chữ /m/ hay /n/.
+          </div>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-sm text-emerald-400 font-mono">5. Approximant (Tiếp Cận)</span>
+            <span class="text-xs font-mono text-slate-400">/w, r, j/</span>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            <strong>Cơ chế lướt mượt:</strong> <br>
+            Hai cơ quan tiến lại gần nhau nhưng khoảng cách vẫn đủ rộng để luồng khí trôi qua êm ả mà không tạo ra tiếng xì ma sát. Còn được gọi là Bán nguyên âm (Semi-vowels).
+          </p>
+          <div class="text-[11px] text-emerald-400 font-mono bg-emerald-950/30 p-2 rounded border border-emerald-900/50">
+            Ví dụ: <em>web</em> (/w/), <em>run</em> (/r/), <em>yes</em> (/j/).
+          </div>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-sm text-pink-400 font-mono">6. Lateral (Tiếp Cận Cạnh)</span>
+            <span class="text-xs font-mono text-slate-400">/l/</span>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            <strong>Cơ chế lượn hai mép:</strong> <br>
+            Đầu lưỡi dán chặt vào tâm giữa của gờ lợi trên, nhưng hai bên rìa lưỡi thì buông chùng xuống để luồng khí lượn thoát ra hai bên má.
+          </p>
+          <div class="text-[11px] text-pink-400 font-mono bg-pink-950/30 p-2 rounded border border-pink-900/50">
+            Phân biệt: Light L (đầu từ: <em>log</em>) và Dark L (cuối từ: <em>null</em>, <em>pool</em>).
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 4: VOICED VS VOICELESS -->
+    <section class="space-y-6">
+      <div class="border-b border-slate-800 pb-3">
+        <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+          <span class="w-7 h-7 rounded bg-red-950 text-red-400 border border-red-800 flex items-center justify-center font-mono text-xs">4</span>
+          Voiced (Hữu Thanh) vs. Voiceless (Vô Thanh)
+        </h2>
+        <p class="text-xs text-slate-400 mt-1">Cơ chế vật lý và 2 bài test cơ học giúp bạn nhận biết ngay lập tức không cần dùng tai.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- Explanation Card -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-4">
+          <h3 class="font-bold text-base text-white">Bản chất cơ học của Dây thanh âm</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Trong tiếng Anh, rất nhiều cặp phụ âm có <strong>vị trí đặt lưỡi và cách thoát khí giống hệt nhau 100%</strong>. Điểm duy nhất khác nhau là: Dây thanh âm trong cổ họng có rung hay không.
+          </p>
+
+          <div class="space-y-2 text-xs font-mono">
+            <div class="flex items-center justify-between p-2.5 rounded bg-slate-950 border border-slate-800">
+              <span class="text-slate-400">Cùng ngậm 2 môi:</span>
+              <span class="text-slate-200">/p/ (Gió) ⟷ /b/ (Rung)</span>
+            </div>
+            <div class="flex items-center justify-between p-2.5 rounded bg-slate-950 border border-slate-800">
+              <span class="text-slate-400">Cùng cắn răng môi:</span>
+              <span class="text-slate-200">/f/ (Gió) ⟷ /v/ (Rung)</span>
+            </div>
+            <div class="flex items-center justify-between p-2.5 rounded bg-slate-950 border border-slate-800">
+              <span class="text-slate-400">Cùng kẹp lưỡi răng:</span>
+              <span class="text-slate-200">/θ/ (Gió) ⟷ /ð/ (Rung)</span>
+            </div>
+            <div class="flex items-center justify-between p-2.5 rounded bg-slate-950 border border-slate-800">
+              <span class="text-slate-400">Cùng đầu lưỡi gờ lợi:</span>
+              <span class="text-slate-200">/t/ (Gió) ⟷ /d/ (Rung)</span>
+            </div>
+            <div class="flex items-center justify-between p-2.5 rounded bg-slate-950 border border-slate-800">
+              <span class="text-slate-400">Cùng xì qua răng:</span>
+              <span class="text-slate-200">/s/ (Gió) ⟷ /z/ (Rung)</span>
+            </div>
+            <div class="flex items-center justify-between p-2.5 rounded bg-slate-950 border border-slate-800">
+              <span class="text-slate-400">Cùng gốc lưỡi ngạc mềm:</span>
+              <span class="text-slate-200">/k/ (Gió) ⟷ /ɡ/ (Rung)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2 Physical Tests -->
+        <div class="bg-gradient-to-br from-red-950/20 to-slate-900 border border-red-900/40 rounded-xl p-6 space-y-4">
+          <h3 class="font-bold text-base text-red-300 flex items-center gap-2">
+            <span>✋ 2 Bài Test Cơ Học Tự Kiểm Tra</span>
+          </h3>
+
+          <div class="space-y-3 text-xs leading-relaxed">
+            <div class="p-3 bg-slate-950/80 rounded-lg border border-slate-800 space-y-1">
+              <div class="font-bold text-cyan-400">Bài Test 1: Đặt 2 ngón tay lên hõm cổ (Yết hầu)</div>
+              <p class="text-slate-300">
+                1. Đặt ngón trỏ và ngón giữa nhẹ nhàng lên chính giữa cổ họng (vùng thanh quản). <br>
+                2. Kéo dài âm: <span class="font-mono text-cyan-300 font-bold">"ssssssss"</span>. Bạn thấy cổ họng phẳng lặng, chỉ có luồng gió xì qua răng. Đó là <strong>Voiceless</strong>. <br>
+                3. Giữ nguyên khẩu hình miệng, chuyển sang: <span class="font-mono text-cyan-300 font-bold">"zzzzzzzz"</span>. Ngón tay bạn ngay lập tức cảm nhận rung động dữ dội như chiếc điện thoại rung. Đó là <strong>Voiced</strong>.
+              </p>
+            </div>
+
+            <div class="p-3 bg-slate-950/80 rounded-lg border border-slate-800 space-y-1">
+              <div class="font-bold text-amber-400">Bài Test 2: Bịt chặt 2 lỗ tai</div>
+              <p class="text-slate-300">
+                1. Dùng 2 ngón tay trỏ bịt chặt 2 lỗ tai lại. <br>
+                2. Phát âm <span class="font-mono text-amber-300 font-bold">/f/</span>: Bạn hầu như không nghe thấy âm thanh nào bên trong sọ não. <br>
+                3. Phát âm <span class="font-mono text-amber-300 font-bold">/v/</span>: Một tiếng "ù ù ù" rền vang dội thẳng vào xương sọ của bạn.
+              </p>
+            </div>
+
+            <div class="p-3 bg-purple-950/30 rounded-lg border border-purple-900/50 space-y-1 text-slate-300">
+              <div class="font-bold text-purple-300">💡 Quy tắc vàng Vowel Lengthening:</div>
+              <p>
+                Khi một từ kết thúc bằng âm <strong>Voiced</strong>, người bản xứ sẽ kéo dài nguyên âm đứng trước nó gấp 1.5 lần! <br>
+                • <em>hit</em> /hɪt/ (Voiceless): Nguyên âm cực ngắn, dứt khoát. <br>
+                • <em>hid</em> /hɪːd/ (Voiced): Kéo dài nguyên âm /ɪ/ rồi mới đóng âm /d/.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 5: VIETNAMESE DEVELOPER ROADBLOCKS -->
+    <section class="space-y-6">
+      <div class="border-b border-slate-800 pb-3">
+        <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+          <span class="w-7 h-7 rounded bg-amber-950 text-amber-400 border border-amber-800 flex items-center justify-center font-mono text-xs">5</span>
+          Bẫy Ngữ Âm Người Việt (The Vietnamese Phonological Traps)
+        </h2>
+        <p class="text-xs text-slate-400 mt-1">Tại sao kỹ sư phần mềm Việt Nam nói tiếng Anh thường bị ngọng hoặc người nước ngoài nghe không hiểu?</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 text-xs">
+        <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-2">
+          <div class="text-sm font-bold text-red-400 font-mono">Bẫy 1: Rụng âm đuôi (Coda Deletion)</div>
+          <p class="text-slate-300 leading-relaxed">
+            Tiếng Việt là ngôn ngữ âm tiết đóng không bung (unreleased codas). Khi nói từ "bát", ta chặn lưỡi nhưng không bật nổ. Sang tiếng Anh, thói quen này khiến bạn nói <em>commit</em>, <em>test</em>, <em>build</em> thành <em>"com-mí"</em>, <em>"tét"</em>, <em>"biu"</em>.
+          </p>
+          <div class="text-cyan-400 font-mono bg-slate-950 p-2 rounded">
+            Khắc phục: Tập giữ áp suất và bật dứt khoát /t/, /d/, /k/ ở cuối từ.
+          </div>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-2">
+          <div class="text-sm font-bold text-red-400 font-mono">Bẫy 2: Nuốt phụ âm kép (Cluster Reduction)</div>
+          <p class="text-slate-300 leading-relaxed">
+            Tiếng Việt không có chùm phụ âm đi liền nhau (consonant clusters). Trong tiếng Anh, các từ IT dày đặc chùm âm: <em>scripts</em> (/skrɪpts/), <em>fixed</em> (/fɪkst/), <em>prompt</em> (/prɒmpt/). Người Việt thường bỏ rơi bớt âm để đọc cho nhẹ mồm.
+          </p>
+          <div class="text-cyan-400 font-mono bg-slate-950 p-2 rounded">
+            Khắc phục: Đọc chậm từng âm rời rạc rồi tăng tốc: /k/ -> /s/ -> /t/ = /kst/ (fixed).
+          </div>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-2">
+          <div class="text-sm font-bold text-red-400 font-mono">Bẫy 3: Đều đều như gõ mõ (Syllable-timed)</div>
+          <p class="text-slate-300 leading-relaxed">
+            Tiếng Việt phát âm từng âm tiết với thời gian bằng nhau. Tiếng Anh là <strong>Stress-timed</strong>: các từ mang nội dung (Content words) được nhấn to dài, còn các từ chức năng (Function words như <em>to, at, can, for</em>) bị lướt rất nhanh về âm Schwa /ə/.
+          </p>
+          <div class="text-cyan-400 font-mono bg-slate-950 p-2 rounded">
+            Khắc phục: Học cách nuốt âm lướt nhẹ và nhấn đúng từ khóa kỹ thuật.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: READY TO PRACTICE -->
+    <div class="p-8 rounded-2xl bg-gradient-to-r from-cyan-950/60 to-blue-950/60 border border-cyan-800/60 text-center space-y-4">
+      <h3 class="text-2xl font-extrabold text-white">Bạn Đã Nắm Trọn Bản Đồ Cơ Học Khoang Miệng!</h3>
+      <p class="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto leading-relaxed">
+        Bây giờ, hãy quay lại Dashboard và bắt đầu buổi học thực hành. Mỗi ngày học chỉ tập trung vào duy nhất một tọa độ để bạn khắc sâu vào trí nhớ cơ bắp (Muscle Memory).
+      </p>
+      <div class="pt-2">
+        <a href="index.html" class="inline-flex items-center gap-2 px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-sm shadow-lg shadow-cyan-500/20 transition">
+          🚀 Mở Dashboard & Luyện Tập Ngày Hôm Nay
+        </a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Speech Synthesis Script for In-page Audio Examples -->
+  <script>
+    function speakWord(text) {
+      if (!window.speechSynthesis) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest('.speak-btn');
+        if (btn && btn.dataset.word) {
+          e.preventDefault();
+          speakWord(btn.dataset.word);
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
