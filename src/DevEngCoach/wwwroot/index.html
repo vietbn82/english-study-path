@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevEng Coach // 90-Day Deep English for Developers</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            slate: {
+              850: '#131c31'
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased selection:bg-cyan-500 selection:text-slate-950">
+
+  <!-- Top Sticky Navigation -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-mono font-bold text-slate-950 shadow-lg shadow-cyan-500/20">
+          DE
+        </div>
+        <div>
+          <div class="font-bold text-base tracking-tight flex items-center gap-2">
+            <span>DevEng Coach</span>
+            <span class="text-xs px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800/60 font-mono">.NET 10 // AGY</span>
+          </div>
+          <div class="text-xs text-slate-400 font-mono">Kinesthetic English Engine for Senior Devs</div>
+        </div>
+      </div>
+
+      <!-- Telemetry Stats Bar -->
+      <div class="hidden md:flex items-center space-x-6 text-xs font-mono">
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-md bg-slate-800/80 border border-slate-700/60">
+          <span class="text-amber-400">⏰ Nhắc nhở:</span>
+          <span class="font-bold text-slate-200" id="stat-reminder-time">22:00</span>
+          <button id="btn-test-notification" title="Test desktop notification" class="text-slate-400 hover:text-cyan-400 transition ml-1">🔔</button>
+        </div>
+
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-md bg-slate-800/80 border border-slate-700/60">
+          <span>🔥 Streak:</span>
+          <span class="font-bold text-orange-400" id="stat-streak">0 ngày</span>
+        </div>
+
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-md bg-slate-800/80 border border-slate-700/60">
+          <span>⏱️ Thực tế vs Plan:</span>
+          <span class="font-bold text-slate-200" id="stat-variance">0m / 0m</span>
+        </div>
+
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-md bg-slate-800/80 border border-slate-700/60">
+          <span>🎯 Tiến độ:</span>
+          <span class="font-bold text-cyan-400" id="stat-progress">0% (0/90)</span>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="flex items-center space-x-2">
+        <button id="nav-workspace" class="px-3 py-1.5 rounded-lg text-sm font-medium bg-cyan-500 text-slate-950 shadow-sm transition">
+          💻 Buổi học hôm nay
+        </button>
+        <button id="nav-curriculum" class="px-3 py-1.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 transition">
+          🗺️ Ma trận 90 ngày
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- VIEW 1: TODAY'S 30-MINUTE WORKSPACE -->
+    <section id="view-workspace" class="space-y-6">
+      
+      <!-- Day Hero Card -->
+      <div class="bg-gradient-to-r from-slate-900 via-slate-900 to-slate-850 rounded-2xl border border-slate-800 p-6 shadow-xl relative overflow-hidden">
+        <div class="absolute -right-16 -top-16 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div class="space-y-2 max-w-3xl">
+            <div class="flex items-center gap-3">
+              <span class="px-2.5 py-1 rounded-full text-xs font-mono font-semibold bg-cyan-950 text-cyan-400 border border-cyan-800/70" id="badge-day">
+                DAY 1 // SPRINT 1
+              </span>
+              <span class="text-xs text-slate-400 font-mono" id="badge-sprint-name">
+                Mechanical Phonetics & Daily Standup
+              </span>
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight" id="lesson-title">
+              Loading lesson...
+            </h1>
+            <p class="text-sm text-slate-300 leading-relaxed" id="lesson-objective">
+              ...
+            </p>
+          </div>
+
+          <!-- 30-Minute Pomodoro Tracker Card -->
+          <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-4 flex flex-col items-center min-w-[280px]">
+            <div class="text-xs font-mono text-slate-400 uppercase tracking-wider mb-1">Session Timer (30 mins)</div>
+            <div class="text-4xl font-mono font-bold text-cyan-400 mb-2" id="timer-display">30:00</div>
+            
+            <div class="w-full bg-slate-800 h-1.5 rounded-full mb-3 overflow-hidden">
+              <div id="timer-progress" class="bg-gradient-to-r from-cyan-500 to-blue-500 h-full w-full transition-all duration-300"></div>
+            </div>
+
+            <div class="flex items-center gap-2 w-full">
+              <button id="btn-timer-start" class="flex-1 py-1.5 px-3 bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold rounded text-xs transition">
+                Start 30m
+              </button>
+              <button id="btn-timer-pause" class="py-1.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-xs transition">
+                Pause
+              </button>
+              <button id="btn-timer-reset" class="py-1.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded text-xs transition">
+                ↺
+              </button>
+            </div>
+            <div class="text-[11px] text-slate-400 mt-2 font-mono" id="timer-phase-hint">
+              Phase: 00-10m Kinesthetic Phonetics
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3-Phase Accordion / Tabs -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- STAGE 1: KINESTHETIC PHONETICS (10 MINS) -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 flex flex-col space-y-4 shadow-lg">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded bg-cyan-950 text-cyan-400 border border-cyan-800/60 flex items-center justify-center font-mono text-xs font-bold">1</span>
+              <h2 class="font-bold text-slate-100 text-sm tracking-wide">Cơ Học Khẩu Hình (10m)</h2>
+            </div>
+            <span class="text-xs font-mono text-cyan-400 bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-900" id="phonetics-symbol">
+              /t/, /d/
+            </span>
+          </div>
+
+          <!-- Articulatory Specs Card -->
+          <div class="bg-slate-950/70 border border-slate-800/80 rounded-lg p-3 space-y-2 text-xs font-mono">
+            <div class="flex justify-between">
+              <span class="text-slate-500">Cơ quan chủ động:</span>
+              <span class="text-slate-300 font-semibold" id="phonetics-active">-</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">Điểm tiếp xúc:</span>
+              <span class="text-slate-300 font-semibold" id="phonetics-passive">-</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">Cách thoát khí:</span>
+              <span class="text-slate-300 font-semibold" id="phonetics-manner">-</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">Dây thanh âm:</span>
+              <span class="text-slate-300 font-semibold" id="phonetics-voiced">-</span>
+            </div>
+          </div>
+
+          <!-- Mechanical Instructions Box -->
+          <div class="space-y-1.5">
+            <div class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+              <span>⚙️ Cơ chế vật lý:</span>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed bg-slate-950/50 p-2.5 rounded border border-slate-800" id="phonetics-instruction">
+              ...
+            </p>
+          </div>
+
+          <!-- Common Vietnamese Mistake Warning -->
+          <div class="bg-amber-950/30 border border-amber-900/60 rounded-lg p-3 space-y-1">
+            <div class="text-xs font-semibold text-amber-400 flex items-center gap-1">
+              <span>⚠️ Bẫy phát âm người Việt:</span>
+            </div>
+            <p class="text-xs text-amber-200/90 leading-relaxed" id="phonetics-mistake">
+              ...
+            </p>
+          </div>
+
+          <!-- Target Words Drill -->
+          <div class="space-y-2 pt-1 flex-1">
+            <div class="text-xs font-semibold text-slate-300">Từ vựng kỹ thuật trong ngày (Click 🔊 nghe mẫu):</div>
+            <div class="space-y-1.5 max-h-56 overflow-y-auto pr-1" id="drills-container">
+              <!-- Drills populated by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- STAGE 2: SENTENCE FRAMES (10 MINS) -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 flex flex-col space-y-4 shadow-lg">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded bg-blue-950 text-blue-400 border border-blue-800/60 flex items-center justify-center font-mono text-xs font-bold">2</span>
+              <h2 class="font-bold text-slate-100 text-sm tracking-wide">Khung Câu Đóng Băng (10m)</h2>
+            </div>
+            <span class="text-xs font-mono text-blue-400 bg-blue-950/80 px-2 py-0.5 rounded border border-blue-900">
+              Zero Grammar Friction
+            </span>
+          </div>
+
+          <div class="text-xs text-slate-400">
+            Không dịch từ tiếng Việt sang tiếng Anh. Dùng khung câu chuẩn bên dưới và ráp biến số công việc thực tế của bạn vào:
+          </div>
+
+          <!-- Frames Container -->
+          <div class="space-y-3 flex-1 overflow-y-auto" id="frames-container">
+            <!-- Frames populated by JS -->
+          </div>
+
+          <div class="bg-slate-950/60 border border-slate-800 p-3 rounded-lg text-xs space-y-1 font-mono">
+            <div class="text-slate-400 font-bold">💡 Biến số Plug-and-Play:</div>
+            <div class="text-cyan-400" id="frame-variables">[Feature], [Component], [Task]</div>
+          </div>
+        </div>
+
+        <!-- STAGE 3: AI SPEECH & AGY ASSISTANT (10 MINS) -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 flex flex-col space-y-4 shadow-lg">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded bg-purple-950 text-purple-400 border border-purple-800/60 flex items-center justify-center font-mono text-xs font-bold">3</span>
+              <h2 class="font-bold text-slate-100 text-sm tracking-wide">AI Coach Assistant (10m)</h2>
+            </div>
+            <span class="text-xs font-mono text-purple-400 bg-purple-950/80 px-2 py-0.5 rounded border border-purple-900">
+              AGY CLI Powered
+            </span>
+          </div>
+
+          <!-- Practice Task Scenario -->
+          <div class="bg-slate-950/70 border border-slate-800 rounded-lg p-3 space-y-1.5">
+            <div class="text-xs font-semibold text-purple-300">🎯 Kịch bản thực hành hôm nay:</div>
+            <p class="text-xs text-slate-300" id="task-prompt">...</p>
+            <div class="text-[11px] text-slate-400 italic" id="task-scenario">...</div>
+          </div>
+
+          <!-- Input Area -->
+          <div class="space-y-2 flex-1">
+            <div class="flex items-center justify-between">
+              <label for="ai-input-text" class="text-xs font-semibold text-slate-300">Nói hoặc gõ câu trả lời của bạn:</label>
+              <button id="btn-speech-record" class="text-xs px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded border border-slate-700 flex items-center gap-1 transition">
+                🎤 <span id="record-label">Nói vào mic</span>
+              </button>
+            </div>
+            <textarea id="ai-input-text" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-100 font-mono focus:outline-none focus:border-cyan-500 transition resize-none" placeholder="Ví dụ: Yesterday, I worked on the auth module and fixed the token validation bug..."></textarea>
+            
+            <button id="btn-evaluate-ai" class="w-full py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold rounded-lg text-xs shadow-md transition flex items-center justify-center gap-2">
+              <span>🚀 Chấm điểm bằng AGY AI Assistant</span>
+            </button>
+          </div>
+
+          <!-- AI Evaluation Feedback Result Box -->
+          <div id="ai-feedback-box" class="hidden bg-slate-950 border border-purple-900/50 rounded-lg p-3 space-y-2.5 text-xs">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+              <span class="font-bold text-purple-300">Đánh giá từ AGY Coach:</span>
+              <span id="ai-fluency-badge" class="px-2 py-0.5 rounded text-xs font-mono font-bold bg-purple-950 text-purple-400 border border-purple-800">
+                Score: 85/100
+              </span>
+            </div>
+
+            <div class="space-y-1">
+              <div class="text-[11px] font-semibold text-slate-400">🔍 Sửa lỗi ngữ pháp & câu tự nhiên:</div>
+              <p class="text-slate-200 bg-slate-900/80 p-2 rounded border border-slate-800/80" id="ai-grammar-fix">...</p>
+            </div>
+
+            <div class="space-y-1">
+              <div class="text-[11px] font-semibold text-slate-400">🗣️ Nhắc nhở cơ học phát âm:</div>
+              <ul class="list-disc list-inside text-slate-300 space-y-0.5" id="ai-phonetic-alerts"></ul>
+            </div>
+
+            <div class="space-y-1">
+              <div class="text-[11px] font-semibold text-cyan-400">⭐ Phiên bản Senior Engineer nói:</div>
+              <p class="text-cyan-200 font-mono bg-cyan-950/40 p-2 rounded border border-cyan-900/60" id="ai-senior-refactor">...</p>
+            </div>
+          </div>
+
+          <!-- Mark Session Complete Button -->
+          <div class="pt-2 border-t border-slate-800 flex items-center gap-3">
+            <div class="flex items-center gap-1.5 text-xs font-mono text-slate-400">
+              <span>Thời gian:</span>
+              <input type="number" id="input-actual-minutes" value="30" min="5" max="180" class="w-14 bg-slate-950 border border-slate-800 rounded px-1.5 py-1 text-center text-slate-200">
+              <span>phút</span>
+            </div>
+            <button id="btn-complete-session" class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold rounded-lg text-xs shadow-md transition">
+              ✓ Hoàn thành Ngày hôm nay
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- VIEW 2: 90-DAY CURRICULUM SPRINT MATRIX -->
+    <section id="view-curriculum" class="hidden space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+        <div>
+          <h2 class="text-2xl font-bold text-white tracking-tight">Ma Trận 90 Ngày Học Chuyên Sâu (Deep)</h2>
+          <p class="text-xs text-slate-400 mt-1">
+            Chia thành 3 Sprint x 30 ngày. Chuẩn bị trước 100% tài liệu, bấm vào ngày bất kỳ để xem và luyện.
+          </p>
+        </div>
+
+        <!-- Sprint Filter Pills -->
+        <div class="flex items-center gap-2 font-mono text-xs">
+          <button class="sprint-filter-btn px-3 py-1.5 rounded-lg bg-cyan-500 text-slate-950 font-bold" data-sprint="all">All (90)</button>
+          <button class="sprint-filter-btn px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700" data-sprint="1">Sprint 1: Standup (1-30)</button>
+          <button class="sprint-filter-btn px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700" data-sprint="2">Sprint 2: Demo (31-60)</button>
+          <button class="sprint-filter-btn px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700" data-sprint="3">Sprint 3: 1-on-1 (61-90)</button>
+        </div>
+      </div>
+
+      <!-- 90 Days Grid Container -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3.5" id="curriculum-grid">
+        <!-- Grid cards populated by JS -->
+      </div>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
