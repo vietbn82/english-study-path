@@ -69,3 +69,15 @@
 - [x] **Task 6.2**: ProgressService unit tests (testing streak calculation, plan vs actual duration, edge cases).
 - [x] **Task 6.3**: Integration tests for API endpoints (`/api/curriculum`, `/api/progress`, `/api/ai/evaluate`).
 - [x] **Task 6.4**: Build, run, and verify the local server at `http://localhost:5000`.
+
+---
+
+## Phase 7: Omnipresent Audio, Contrastive Phonetics & Global AI Assistant Widget
+
+- [x] **Task 7.1**: Implement self-contained CSS layout system in `styles.css` (Fix broken UI, full offline resilience for `.hidden`, grid, flex, cards, buttons without depending on external CDN).
+- [x] **Task 7.2**: Implement resilient client initialization & fallback in `app.js` (Prevent stuck `Loading lesson...` state, handle network dropouts gracefully).
+- [x] **Task 7.3**: Implement Contrastive Minimal Pairs Module in Workspace (Side-by-side comparison of `/t/` vs `/d/`, `/s/` vs `/z/`, `/θ/` vs `/ð/` with visual articulatory contrast).
+- [x] **Task 7.4**: Implement Instant Sound-level Practice & AI Grading Modal across Homepage and Fundamentals (Mic capture, scoring, articulatory correction feedback).
+- [x] **Task 7.5**: Add omnipresent 1-click audio playback (`🔊`) to every single IPA symbol, example word, and phrase.
+- [x] **Task 7.6**: Add persistent Global Floating AGY AI Assistant widget (FAB) across all pages.
+- [x] **Task 7.7**: End-to-End browser verification and automated test suite execution.

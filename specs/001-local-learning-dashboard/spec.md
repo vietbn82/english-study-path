@@ -63,6 +63,10 @@ As a developer, I want to submit my daily speech transcript or practice sentence
 - **FR-004 (22:00 Reminder Hook)**: The system MUST support an automated 22:00 reminder (Windows desktop notification via PowerShell/toast or in-browser sound/notification).
 - **FR-005 (AGY CLI Integration)**: The backend MUST expose an API endpoint (`/api/ai/evaluate`) that invokes the local Antigravity CLI / Gemini AI to evaluate learner input against the day's phonetic targets and sentence frames.
 - **FR-006 (Zero External Dependency for Core Curriculum)**: The entire 90-day curriculum and dashboard MUST function completely offline on `localhost`.
+- **FR-007 (Omnipresent Audio Playback)**: Every IPA symbol, vocabulary word, example sentence, and minimal pair comparison across all pages (Dashboard & Fundamentals) MUST provide a 1-click audio playback button (`🔊`).
+- **FR-008 (Global Floating AGY AI Assistant)**: A persistent Floating Action Button (FAB) and slide-out chat modal MUST be present on all pages (`index.html`, `fundamentals.html`) to invoke AGY CLI assistance at any point.
+- **FR-009 (Interactive Sound-Level Speech Grading)**: Every phonetic unit and minimal pair entry MUST include a direct "Nói & Chấm Điểm" (Practice & Grade with AI) action with mic recording and immediate 1-100 fluency/accuracy scoring.
+- **FR-010 (Contrastive Minimal Pairs Matrix)**: Each lesson and the Fundamentals reference MUST explicitly feature side-by-side contrastive sound pairs (e.g., `/t/` vs `/d/`, `/s/` vs `/z/`, `/θ/` vs `/ð/`, `/iː/` vs `/ɪ/`) highlighting articulatory differences (voicing, aspiration, duration).
 
 ### Key Entities
 
