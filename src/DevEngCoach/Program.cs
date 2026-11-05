@@ -14,6 +14,10 @@ builder.Services.AddSingleton<ISrsService, SrsService>();
 builder.Services.AddSingleton<ISpeechScoringService, SpeechScoringService>();
 builder.Services.AddSingleton<IAnalyticsService, AnalyticsService>();
 builder.Services.AddSingleton<IShadowingService, ShadowingService>();
+builder.Services.AddSingleton<IMouthMapService, MouthMapService>();
+builder.Services.AddSingleton<ISrsWarmupService, SrsWarmupService>();
+builder.Services.AddSingleton<ICheatSheetService, CheatSheetService>();
+builder.Services.AddSingleton<IIpaGlossaryService, IpaGlossaryService>();
 
 // Register Reminder as both IHostedService and IReminderService
 builder.Services.AddSingleton<ReminderService>();
@@ -239,6 +243,102 @@ shadowingApi.MapPost("/evaluate", async ([FromBody] ShadowingEvaluateRequest req
 
 shadowingApi.MapGet("/reference/{day:int}", async (int day, IShadowingService shadowingService, CancellationToken ct) =>
     Results.Ok(await shadowingService.GetReferenceInfoAsync(day, ct)));
+
+// Micro-Lesson Endpoints (Feature 005)
+var microApi = app.MapGroup("/api/microlesson");
+microApi.MapGet("/recommendation", (IProgressService progress) =>
+    Results.Ok(progress.GetRecommendation()));
+
+progressApi.MapPost("/micro-complete", ([FromBody] MicroSessionRequest request, IProgressService progress) =>
+{
+    var session = progress.MicroCompleteSession(request);
+    var summary = progress.GetSummary();
+    return Results.Ok(new MicroSessionResponse(
+        Success: true,
+        DayNumber: request.DayNumber,
+        SelectedBlock: request.SelectedBlock,
+        CurrentStreakDays: summary.CurrentStreakDays,
+        Status: session.Status,
+        Message: $"Hoàn thành phiên 10 phút ({request.SelectedBlock})! Chuỗi học được duy trì: {summary.CurrentStreakDays} ngày."
+    ));
+});
+
+// Vietnamese Mouth-Map Endpoints (Feature 006)
+var mouthMapApi = app.MapGroup("/api/mouthmap");
+mouthMapApi.MapGet("/all", (IMouthMapService mouthMap) =>
+    Results.Ok(mouthMap.GetAllEntries()));
+mouthMapApi.MapGet("/{phoneme}", (string phoneme, IMouthMapService mouthMap) =>
+{
+    var entry = mouthMap.GetEntry(phoneme);
+    return entry is not null ? Results.Ok(entry) : Results.NotFound(new { Message = $"Phoneme {phoneme} not found." });
+});
+
+// Spaced Repetition Warm-Up Endpoints (Feature 007)
+srsApi.MapGet("/warmup", async (ISrsWarmupService warmupService, CancellationToken ct) =>
+    Results.Ok(await warmupService.GetWarmupBatchAsync(ct)));
+
+// Sprint Cheat Sheet Endpoints (Feature 008)
+var cheatSheetApi = app.MapGroup("/api/cheatsheet");
+cheatSheetApi.MapGet("/{sprintId:int}", (int sprintId, ICheatSheetService cheatSheet) =>
+    Results.Ok(cheatSheet.GetSprintCheatSheet(sprintId)));
+
+// Auto-Complete 70% Threshold Endpoints (Feature 009)
+var drillApi = app.MapGroup("/api/drill");
+drillApi.MapPost("/check-threshold", ([FromBody] DrillThresholdCheckRequest request, ISrsService srs, IProgressService progress) =>
+{
+    var total = Math.Max(1, request.TotalWordsCount);
+    var correct = request.CorrectWordsCount;
+    var percentage = (int)Math.Round((double)correct / total * 100);
+    var reached = percentage >= 70;
+
+    var enrolled = new List<string>();
+    if (reached)
+    {
+        // Auto-enroll failed words in SRS for tomorrow
+        foreach (var word in request.FailedWords)
+        {
+            if (!string.IsNullOrWhiteSpace(word))
+            {
+                srs.AutoEnrollWeakSpot(new SrsEnrollRequest(word, request.TargetPhoneme, $"Day {request.DayNumber} 70% threshold auto-enroll", 50));
+                enrolled.Add(word);
+            }
+        }
+
+        // Auto mark session complete if not already completed
+        progress.CompleteSession(new CompleteSessionRequest(
+            DayNumber: request.DayNumber,
+            ActualMinutes: 15,
+            SelfRating: percentage >= 90 ? 5 : 4,
+            LearnerNotes: $"Auto-completed via 70% threshold ({correct}/{total} correct)",
+            AiFeedbackSnippet: "Good enough completion! Weak words queued in SRS."
+        ));
+    }
+
+    var message = reached
+        ? (percentage >= 90
+            ? $"🏆 Xuất sắc! {correct}/{total} ({percentage}%) — Đạt chuẩn xuất sắc! Phiên học hoàn tất."
+            : $"🎉 Tuyệt vời! Bạn đã đạt {correct}/{total} ({percentage}%). Buổi học đã hoàn thành! {enrolled.Count} từ còn vấp đã được tự động lưu vào SRS ngày mai.")
+        : $"Đã đạt {correct}/{total} ({percentage}%). Cần đạt 70% để hoàn thành tự động.";
+
+    return Results.Ok(new DrillThresholdCheckResponse(
+        ThresholdReached: reached,
+        AccuracyPercentage: percentage,
+        AutoCompleted: reached,
+        CelebrationMessage: message,
+        EnrolledInSrsWords: enrolled,
+        CanKeepGoing: true
+    ));
+});
+
+// IPA Tooltips Glossary Endpoints (Feature 010)
+var ipaApi = app.MapGroup("/api/ipa");
+ipaApi.MapGet("/glossary", (IIpaGlossaryService glossary) =>
+    Results.Ok(glossary.GetAll()));
+ipaApi.MapGet("/{symbol}", (string symbol, IIpaGlossaryService glossary) =>
+{
+    var data = glossary.Lookup(symbol);
+    return data is not null ? Results.Ok(data) : Results.NotFound(new { Message = $"IPA symbol {symbol} not found." });
+});
 
 // Reminder Service Endpoints
 var reminderApi = app.MapGroup("/api/reminder");

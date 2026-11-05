@@ -97,6 +97,15 @@
         <button id="nav-shadowing" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 transition">
           🎙️ Shadowing Studio
         </button>
+        <button id="btn-open-warmup" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-amber-300 bg-amber-950/60 border border-amber-800/80 hover:bg-amber-900/60 transition flex items-center gap-1" title="Khởi động 2 phút với 5 từ yếu">
+          ⚡ 2m Warm-Up
+        </button>
+        <button id="btn-open-microlesson" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-orange-300 bg-orange-950/60 border border-orange-800/80 hover:bg-orange-900/60 transition flex items-center gap-1" title="Chế độ học 10 phút">
+          ⚡ Quick 10m
+        </button>
+        <button id="btn-open-cheatsheet" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-cyan-300 bg-cyan-950/60 border border-cyan-800/80 hover:bg-cyan-900/60 transition flex items-center gap-1" title="In tờ tóm tắt A4">
+          📋 In Cheat Sheet
+        </button>
         <a href="fundamentals.html" target="_blank" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-amber-300 bg-amber-950/40 border border-amber-800/60 hover:bg-amber-900/40 transition flex items-center gap-1">
           <span>📖 Fundamentals</span>
         </a>
@@ -172,6 +181,22 @@
       </div>
 
       <!-- 3-Phase Accordion / Tabs -->
+      <!-- Expand All / Collapse All bar (Feature 011) -->
+      <div class="flex items-center justify-between bg-slate-900/80 border border-slate-800 px-4 py-2 rounded-xl text-xs">
+        <div class="flex items-center gap-2">
+          <span class="font-mono text-slate-400">⏱️ Điều hướng các chặng học (Pomodoro 30m):</span>
+          <span class="text-[11px] text-cyan-400 font-semibold" id="active-phase-indicator">Chặng 1: 0-10m Cơ học</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="btn-quick-10m-inline" class="px-2.5 py-1 rounded bg-orange-950 border border-orange-800 text-orange-300 font-semibold hover:bg-orange-900 transition text-[11px]">
+            ⚡ Chọn 1 Block 10m
+          </button>
+          <button id="btn-toggle-all-blocks" class="px-2.5 py-1 rounded bg-slate-800 border border-slate-700 text-slate-300 hover:text-white transition text-[11px]">
+            Thu gọn / Mở tất cả ↕
+          </button>
+        </div>
+      </div>
+
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         <!-- STAGE 1: KINESTHETIC PHONETICS (10 MINS) -->
@@ -189,6 +214,39 @@
           <a href="fundamentals.html" target="_blank" class="block p-2 rounded-lg bg-cyan-950/30 border border-cyan-800/50 text-[11px] text-cyan-300 hover:bg-cyan-900/30 transition">
             💡 <strong>Bản đồ khoang miệng:</strong> Nhấp để mở <em>Cẩm Nang Cấu Âm Học</em> xem vị trí đầu lưỡi, ngạc & phân biệt voiced/voiceless.
           </a>
+
+          
+          <!-- Side-by-Side Vietnamese vs English Mouth-Map (Feature 006) -->
+          <div id="mouth-map-card" class="bg-slate-950 border border-cyan-900/60 rounded-xl p-3.5 space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+              <span class="text-xs font-mono font-bold text-cyan-400">ĐỐI CHIẾU CƠ HỌC: 🇻🇳 THÓI QUEN VS 🇬🇧 TIẾNG ANH</span>
+              <button id="btn-animate-mouth" class="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-[10px] text-cyan-300 font-mono rounded border border-slate-700 transition">
+                ▶️ Xem chuyển động
+              </button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 text-[11px]">
+              <!-- Left: Vietnamese Habit -->
+              <div class="p-2.5 rounded-lg bg-rose-950/20 border border-rose-900/40 space-y-1">
+                <div class="font-bold text-rose-300" id="mouth-vn-title">🇻🇳 Thói quen của bạn</div>
+                <p class="text-slate-300 text-[10px] leading-relaxed" id="mouth-vn-desc">
+                  Ngậm miệng lại (unreleased coda). Đầu lưỡi chạm ngạc nhưng chặn đứng luồng khí.
+                </p>
+              </div>
+
+              <!-- Right: English Target -->
+              <div class="p-2.5 rounded-lg bg-emerald-950/20 border border-emerald-900/40 space-y-1">
+                <div class="font-bold text-emerald-300" id="mouth-en-title">🇬🇧 Chuẩn tiếng Anh</div>
+                <p class="text-slate-300 text-[10px] leading-relaxed" id="mouth-en-desc">
+                  Đầu lưỡi dán chặt gờ lợi, nén áp suất rồi giật dứt khoát giải phóng tiếng nổ (Pop).
+                </p>
+              </div>
+            </div>
+
+            <div class="p-2 rounded bg-amber-950/30 border border-amber-900/50 text-[11px] text-amber-200" id="mouth-alert-box">
+              ⚠️ <strong>Lỗi phổ biến:</strong> Đọc commit thành côm-mít ngậm miệng, nuốt mất âm /t/.
+            </div>
+          </div>
 
           <!-- Interactive Anatomical Vocal Tract SVG -->
           <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3 flex flex-col items-center">
@@ -1350,5 +1408,144 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
   </div>
 
   <script src="app.js"></script>
+
+  <!-- AUTO-COMPLETE 70% CELEBRATION BANNER (Feature 009) -->
+  <div id="autocomplete-celebration" class="hidden fixed top-6 right-6 z-50 max-w-md bg-gradient-to-r from-emerald-900 via-teal-900 to-slate-900 border-2 border-emerald-400 p-4 rounded-2xl shadow-2xl space-y-3 animate-bounce">
+    <div class="flex items-center justify-between">
+      <span class="text-sm font-bold text-emerald-300 flex items-center gap-1.5">
+        <span>🎉</span> HOÀN THÀNH TỰ ĐỘNG (GOOD ENOUGH)!
+      </span>
+      <button id="btn-close-autocomplete" class="text-slate-400 hover:text-white text-xs font-mono">✕</button>
+    </div>
+    <p class="text-xs text-slate-100 leading-relaxed" id="autocomplete-msg">
+      Bạn đã phát âm chính xác 7/10 từ (70%). Buổi học hôm nay được đánh dấu HOÀN THÀNH! 3 từ còn lại đã được tự động lưu vào SRS ngày mai.
+    </p>
+    <div class="flex items-center gap-2 pt-1">
+      <button id="btn-keep-going" class="flex-1 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-lg text-xs transition">
+        Tiếp tục luyện tập 💪
+      </button>
+      <button id="btn-finish-now" class="flex-1 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-lg text-xs transition">
+        Nghỉ ngơi ngay ☕
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL: 10-Minute Escape Hatch (Feature 005) -->
+  <div id="modal-microlesson" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+    <div class="bg-slate-900 border border-slate-700/80 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-5">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div>
+          <h3 class="font-bold text-base text-white flex items-center gap-1.5">
+            <span>⚡</span> Chế Độ 10 Phút (Escape Hatch)
+          </h3>
+          <p class="text-xs text-slate-400">Chọn 1 chặng để duy trì chuỗi Streak khi đêm muộn mệt mỏi.</p>
+        </div>
+        <button id="btn-close-microlesson" class="text-slate-400 hover:text-white font-mono text-base">✕</button>
+      </div>
+
+      <div class="space-y-3">
+        <!-- Option 1: Phonetics -->
+        <button class="w-full p-3.5 rounded-xl border border-slate-800 bg-slate-950 hover:border-cyan-500 text-left transition flex items-center justify-between group micro-block-choice" data-block="Phonetics">
+          <div class="space-y-1">
+            <div class="font-bold text-xs text-cyan-400 group-hover:text-cyan-300">🦷 10m Cơ Học Khẩu Hình</div>
+            <div class="text-[11px] text-slate-400">Luyện nén khí & nhả âm đuôi /t, d, s, z, θ, ð/.</div>
+          </div>
+          <span class="text-xs text-slate-500 group-hover:text-cyan-400 font-bold">Bắt đầu ➔</span>
+        </button>
+
+        <!-- Option 2: Frames -->
+        <button class="w-full p-3.5 rounded-xl border border-slate-800 bg-slate-950 hover:border-purple-500 text-left transition flex items-center justify-between group micro-block-choice" data-block="Frames">
+          <div class="space-y-1">
+            <div class="font-bold text-xs text-purple-400 group-hover:text-purple-300">📝 10m Khung Câu Kỹ Thuật</div>
+            <div class="text-[11px] text-slate-400">Thuộc lòng 2 mẫu câu Standup/Demo chuẩn.</div>
+          </div>
+          <span class="text-xs text-slate-500 group-hover:text-purple-400 font-bold">Bắt đầu ➔</span>
+        </button>
+
+        <!-- Option 3: Output -->
+        <button class="w-full p-3.5 rounded-xl border border-slate-800 bg-slate-950 hover:border-emerald-500 text-left transition flex items-center justify-between group micro-block-choice" data-block="Output">
+          <div class="space-y-1">
+            <div class="font-bold text-xs text-emerald-400 group-hover:text-emerald-300">🎤 10m Luyện Nói & Chấm AI</div>
+            <div class="text-[11px] text-slate-400">Nói 1 câu hoàn chỉnh và nhận refactor từ AI Coach.</div>
+          </div>
+          <span class="text-xs text-slate-500 group-hover:text-emerald-400 font-bold">Bắt đầu ➔</span>
+        </button>
+      </div>
+
+      <div class="p-3 rounded-lg bg-orange-950/30 border border-orange-900/50 text-[11px] text-orange-200">
+        💡 <em>Vẫn tính duy trì chuỗi Streak!</em> Bạn có thể hoàn thành nốt các phần còn lại bất cứ lúc nào.
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Spaced Repetition 2-Minute Warm-Up (Feature 007) -->
+  <div id="modal-srs-warmup" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
+    <div class="bg-slate-900 border border-amber-600/80 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="w-8 h-8 rounded-lg bg-amber-950 text-amber-400 border border-amber-800 flex items-center justify-center font-bold">⚡</span>
+          <div>
+            <h3 class="font-bold text-sm text-white">Khởi Động 2 Phút (SRS Warm-Up)</h3>
+            <div class="text-[11px] text-amber-300 font-mono" id="warmup-step-indicator">Từ 1 / 5 // Hộp 1</div>
+          </div>
+        </div>
+        <div class="text-sm font-mono font-bold text-amber-400 px-3 py-1 rounded bg-amber-950 border border-amber-800" id="warmup-timer">
+          02:00
+        </div>
+      </div>
+
+      <!-- Word Drill Display -->
+      <div class="bg-slate-950 border border-slate-800 p-5 rounded-xl space-y-3 text-center">
+        <div class="text-3xl font-bold font-mono text-cyan-400" id="warmup-word">throughput</div>
+        <div class="text-xs font-mono text-amber-300" id="warmup-phoneme">Âm mục tiêu: /θ/ (Dental fricative)</div>
+        <div class="text-xs text-slate-300 font-sans italic p-2 rounded bg-slate-900 border border-slate-800" id="warmup-context">
+          "We must benchmark throughput under peak traffic."
+        </div>
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <div class="grid grid-cols-3 gap-2.5 pt-1">
+        <button id="btn-warmup-listen" class="py-2.5 bg-slate-800 hover:bg-slate-700 text-cyan-300 font-semibold rounded-lg text-xs border border-slate-700 flex items-center justify-center gap-1 transition">
+          🔊 Nghe mẫu
+        </button>
+        <button id="btn-warmup-fail" class="py-2.5 bg-rose-950/60 hover:bg-rose-900 text-rose-200 font-bold rounded-lg text-xs border border-rose-800 transition">
+          ❌ Vấp / Quên
+        </button>
+        <button id="btn-warmup-pass" class="py-2.5 bg-emerald-950/60 hover:bg-emerald-900 text-emerald-200 font-bold rounded-lg text-xs border border-emerald-800 transition">
+          ✅ Đọc chuẩn
+        </button>
+      </div>
+
+      <div class="text-center pt-2">
+        <button id="btn-skip-warmup" class="text-slate-500 hover:text-slate-300 text-xs font-mono">Bỏ qua khởi động, vào thẳng bài học ➔</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Printable Sprint Cheat Sheet (Feature 008) -->
+  <div id="modal-cheatsheet" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md overflow-y-auto">
+    <div class="cheatsheet-content bg-slate-900 border border-slate-700 rounded-2xl max-w-4xl w-full p-8 shadow-2xl space-y-6 my-8">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-4 no-print">
+        <div>
+          <h2 class="text-xl font-bold text-white flex items-center gap-2">
+            <span>📋</span> Sprint Technical English Cheat Sheet (A4 One-Pager)
+          </h2>
+          <p class="text-xs text-slate-400">In ra giấy dán cạnh màn hình hoặc Alt-Tab tra cứu nhanh trong Daily Standup & Sprint Demo.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="btn-print-sheet" class="px-4 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-lg text-xs flex items-center gap-1.5 transition">
+            🖨️ In ra A4 (Ctrl+P)
+          </button>
+          <button id="btn-close-cheatsheet" class="text-slate-400 hover:text-white font-mono text-lg p-1">✕</button>
+        </div>
+      </div>
+
+      <!-- Printable Document Container -->
+      <div id="cheatsheet-printable-body" class="space-y-6 text-xs text-slate-200">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>

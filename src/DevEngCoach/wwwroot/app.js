@@ -813,6 +813,10 @@
     // Dynamic Vocal Tract SVG Illumination (FR-007)
     updateVocalTractSVG(lesson);
 
+    // Vietnamese Mouth-Map (Feature 006) & IPA Tooltips (Feature 010)
+    loadMouthMap(lesson.phonetics.targetSound);
+    setTimeout(attachIpaTooltips, 100);
+
     // Drills (With Omnipresent Audio & Practice buttons)
     if (el.drillsContainer) {
       el.drillsContainer.innerHTML = '';
@@ -1419,6 +1423,7 @@
     const percent = (state.timer.remainingSeconds / state.timer.totalSeconds) * 100;
     if (el.timerProgress) el.timerProgress.style.width = `${percent}%`;
 
+    syncBlocksWithTimer(state.timer.remainingSeconds);
     const elapsed = state.timer.totalSeconds - state.timer.remainingSeconds;
     if (el.timerPhaseHint) {
       if (elapsed < 10 * 60) {
@@ -2744,5 +2749,443 @@
       el.btnShadowAiFeedback.textContent = '⚡ Phân Tích Nhịp Điệu Cùng AI';
     }
   }
+
+
+  // =========================================================================
+  // FEATURES 005 - 011: ADVANCED CAPABILITIES SUITE
+  // =========================================================================
+
+  // --- Feature 010: IPA Glossary Tooltip Engine ---
+  let ipaGlossary = {};
+  let ipaPopoverEl = null;
+
+  async function initIpaGlossary() {
+    try {
+      ipaGlossary = await fetch('/api/ipa/glossary').then(r => r.json());
+      createGlobalIpaPopover();
+      attachIpaTooltips();
+    } catch (e) {
+      console.warn('Failed to load IPA glossary', e);
+    }
+  }
+
+  function createGlobalIpaPopover() {
+    if (document.getElementById('global-ipa-popover')) return;
+    ipaPopoverEl = document.createElement('div');
+    ipaPopoverEl.id = 'global-ipa-popover';
+    ipaPopoverEl.className = 'hidden';
+    document.body.appendChild(ipaPopoverEl);
+  }
+
+  function attachIpaTooltips() {
+    document.querySelectorAll('.ipa-interactive, [data-ipa]').forEach(el => {
+      el.onmouseenter = e => showIpaPopover(e.target, el.dataset.ipa || el.textContent);
+      el.onmouseleave = hideIpaPopover;
+    });
+  }
+
+  function showIpaPopover(target, text) {
+    if (!ipaPopoverEl) return;
+    const cleanSym = (text.match(/\/[^/]+\//) || [text])[0];
+    const data = ipaGlossary[cleanSym] || {
+      symbol: cleanSym,
+      soundCategory: 'Âm vị tiếng Anh',
+      vietnameseEquivalent: 'Âm chuẩn giao tiếp kỹ thuật',
+      physicalCueVi: 'Đặt lưỡi chính xác và giữ luồng hơi nén dứt khoát.',
+      devExampleWords: ['code', 'data']
+    };
+
+    ipaPopoverEl.innerHTML = `
+      <div class="space-y-1.5">
+        <div class="flex items-center justify-between border-b border-slate-700 pb-1">
+          <span class="font-mono font-bold text-cyan-400 text-xs">${data.symbol}</span>
+          <span class="text-[10px] text-slate-400">${data.soundCategory}</span>
+        </div>
+        <div class="text-[10px] text-amber-300 font-semibold">${data.vietnameseEquivalent}</div>
+        <p class="text-[10px] text-slate-300 leading-snug">${data.physicalCueVi}</p>
+        <div class="text-[10px] text-slate-400 font-mono">Ví dụ: ${data.devExampleWords.join(', ')}</div>
+      </div>
+    `;
+
+    const rect = target.getBoundingClientRect();
+    ipaPopoverEl.style.top = `${rect.bottom + window.scrollY + 6}px`;
+    ipaPopoverEl.style.left = `${Math.max(10, rect.left + window.scrollX - 60)}px`;
+    ipaPopoverEl.classList.remove('hidden');
+  }
+
+  function hideIpaPopover() {
+    if (ipaPopoverEl) ipaPopoverEl.classList.add('hidden');
+  }
+
+  // --- Feature 006: Vietnamese Mouth-Map Loader ---
+  async function loadMouthMap(targetSound) {
+    try {
+      const data = await fetch(`/api/mouthmap/${encodeURIComponent(targetSound || '/t/')}`).then(r => r.json());
+      if (data) {
+        const vnTitle = document.getElementById('mouth-vn-title');
+        const vnDesc = document.getElementById('mouth-vn-desc');
+        const enTitle = document.getElementById('mouth-en-title');
+        const enDesc = document.getElementById('mouth-en-desc');
+        const alertBox = document.getElementById('mouth-alert-box');
+
+        if (vnTitle) vnTitle.textContent = data.vietnameseHabitTitle;
+        if (vnDesc) vnDesc.textContent = data.vietnameseHabitDescription;
+        if (enTitle) enTitle.textContent = data.englishTargetTitle;
+        if (enDesc) enDesc.textContent = data.englishTargetDescription;
+        if (alertBox) alertBox.innerHTML = `${data.commonMistakeAlertVi} <strong>Giải pháp cơ học:</strong> ${data.kinestheticFixInstruction}`;
+      }
+    } catch (e) {
+      console.warn('Mouth map load fallback', e);
+    }
+  }
+
+  // --- Feature 011: Collapsible Accordion Blocks ---
+  function setupCollapsibleBlocks() {
+    const btnToggle1 = document.getElementById('btn-toggle-stage-1');
+    const btnToggle2 = document.getElementById('btn-toggle-stage-2');
+    const btnToggle3 = document.getElementById('btn-toggle-stage-3');
+    const btnToggleAll = document.getElementById('btn-toggle-all-blocks');
+
+    const card1 = document.getElementById('stage-1-card');
+    const card2 = document.getElementById('stage-2-card');
+    const card3 = document.getElementById('stage-3-card');
+
+    const toggle = (card, btn) => {
+      if (!card) return;
+      const isCollapsed = card.classList.toggle('collapsed');
+      if (btn) btn.textContent = isCollapsed ? '▶' : '▼';
+    };
+
+    if (btnToggle1) btnToggle1.onclick = () => toggle(card1, btnToggle1);
+    if (btnToggle2) btnToggle2.onclick = () => toggle(card2, btnToggle2);
+    if (btnToggle3) btnToggle3.onclick = () => toggle(card3, btnToggle3);
+
+    let allCollapsed = false;
+    if (btnToggleAll) {
+      btnToggleAll.onclick = () => {
+        allCollapsed = !allCollapsed;
+        [card1, card2, card3].forEach(c => {
+          if (c) {
+            if (allCollapsed) c.classList.add('collapsed');
+            else c.classList.remove('collapsed');
+          }
+        });
+        [btnToggle1, btnToggle2, btnToggle3].forEach(b => {
+          if (b) b.textContent = allCollapsed ? '▶' : '▼';
+        });
+      };
+    }
+  }
+
+  // Timer Phase Sync: Auto expand block based on 30m Pomodoro
+  function syncBlocksWithTimer(remainingSeconds) {
+    const card1 = document.getElementById('stage-1-card');
+    const card2 = document.getElementById('stage-2-card');
+    const card3 = document.getElementById('stage-3-card');
+    const phaseLabel = document.getElementById('active-phase-indicator');
+
+    if (!card1 || !card2 || !card3) return;
+
+    if (remainingSeconds > 20 * 60) {
+      // 0 - 10 mins: Phonetics
+      card1.classList.remove('collapsed');
+      card2.classList.add('collapsed');
+      card3.classList.add('collapsed');
+      if (phaseLabel) phaseLabel.textContent = "Chặng 1: 0-10m Cơ Học Khẩu Hình";
+    } else if (remainingSeconds > 10 * 60) {
+      // 10 - 20 mins: Frames
+      card1.classList.add('collapsed');
+      card2.classList.remove('collapsed');
+      card3.classList.add('collapsed');
+      if (phaseLabel) phaseLabel.textContent = "Chặng 2: 10-20m Khung Câu Kỹ Thuật";
+    } else {
+      // 20 - 30 mins: Output & AI
+      card1.classList.add('collapsed');
+      card2.classList.add('collapsed');
+      card3.classList.remove('collapsed');
+      if (phaseLabel) phaseLabel.textContent = "Chặng 3: 20-30m Luyện Nói & Chấm Điểm AI";
+    }
+  }
+
+  // --- Feature 005: Micro-Lesson Mode ---
+  function setupMicroLesson() {
+    const modal = document.getElementById('modal-microlesson');
+    const btnOpen1 = document.getElementById('btn-open-microlesson');
+    const btnOpen2 = document.getElementById('btn-quick-10m-inline');
+    const btnClose = document.getElementById('btn-close-microlesson');
+
+    const open = () => modal?.classList.remove('hidden');
+    const close = () => modal?.classList.add('hidden');
+
+    if (btnOpen1) btnOpen1.onclick = open;
+    if (btnOpen2) btnOpen2.onclick = open;
+    if (btnClose) btnClose.onclick = close;
+
+    document.querySelectorAll('.micro-block-choice').forEach(btn => {
+      btn.onclick = async () => {
+        const block = btn.dataset.block || 'Phonetics';
+        try {
+          const res = await fetch('/api/progress/micro-complete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              dayNumber: state.currentDay,
+              selectedBlock: block,
+              actualMinutes: 10
+            })
+          });
+          const data = await res.json();
+          alert(data.message || `Đã hoàn thành chặng 10m (${block})!`);
+          close();
+          fetchInitialData();
+        } catch (e) {
+          console.error('Micro complete error', e);
+        }
+      };
+    });
+  }
+
+  // --- Feature 007: Spaced Repetition 2-Minute Warm-Up ---
+  let warmupBatch = [];
+  let warmupIndex = 0;
+  let warmupTimerId = null;
+  let warmupSecondsLeft = 120;
+
+  function setupSrsWarmup() {
+    const btnOpen = document.getElementById('btn-open-warmup');
+    const modal = document.getElementById('modal-srs-warmup');
+    const btnSkip = document.getElementById('btn-skip-warmup');
+    const btnPass = document.getElementById('btn-warmup-pass');
+    const btnFail = document.getElementById('btn-warmup-fail');
+    const btnListen = document.getElementById('btn-warmup-listen');
+
+    if (btnOpen) btnOpen.onclick = startWarmupRound;
+    if (btnSkip) btnSkip.onclick = closeWarmupModal;
+
+    if (btnListen) {
+      btnListen.onclick = () => {
+        const item = warmupBatch[warmupIndex];
+        if (item && window.speechSynthesis) {
+          const u = new SpeechSynthesisUtterance(item.wordOrPhrase);
+          u.lang = 'en-US';
+          window.speechSynthesis.speak(u);
+        }
+      };
+    }
+
+    if (btnPass) {
+      btnPass.onclick = () => recordWarmupItem(100);
+    }
+    if (btnFail) {
+      btnFail.onclick = () => recordWarmupItem(40);
+    }
+  }
+
+  async function startWarmupRound() {
+    try {
+      const batch = await fetch('/api/srs/warmup').then(r => r.json());
+      if (batch.shouldSkipWarmup || !batch.items || batch.items.length === 0) {
+        alert('Không có từ vựng cần ôn tập hôm nay! Hệ thống sẵn sàng vào thẳng bài học.');
+        return;
+      }
+      warmupBatch = batch.items;
+      warmupIndex = 0;
+      warmupSecondsLeft = 120;
+
+      const modal = document.getElementById('modal-srs-warmup');
+      modal?.classList.remove('hidden');
+
+      renderWarmupCard();
+      startWarmupTimer();
+    } catch (e) {
+      console.warn('Warmup fetch error', e);
+    }
+  }
+
+  function renderWarmupCard() {
+    if (warmupIndex >= warmupBatch.length) {
+      closeWarmupModal();
+      alert('🎯 Hoàn thành khởi động 2 phút! Sẵn sàng vào bài học hôm nay.');
+      return;
+    }
+    const item = warmupBatch[warmupIndex];
+    const wordEl = document.getElementById('warmup-word');
+    const phonemeEl = document.getElementById('warmup-phoneme');
+    const contextEl = document.getElementById('warmup-context');
+    const stepEl = document.getElementById('warmup-step-indicator');
+
+    if (wordEl) wordEl.textContent = item.wordOrPhrase;
+    if (phonemeEl) phonemeEl.textContent = `Âm mục tiêu: ${item.targetPhoneme}`;
+    if (contextEl) contextEl.textContent = `"${item.contextSentence}"`;
+    if (stepEl) stepEl.textContent = `Từ ${warmupIndex + 1} / ${warmupBatch.length} // Hộp ${item.box}`;
+  }
+
+  async function recordWarmupItem(score) {
+    const item = warmupBatch[warmupIndex];
+    if (item) {
+      fetch('/api/srs/review', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ itemId: item.itemId, score: score })
+      }).catch(() => {});
+    }
+    warmupIndex++;
+    renderWarmupCard();
+  }
+
+  function startWarmupTimer() {
+    clearInterval(warmupTimerId);
+    const timerEl = document.getElementById('warmup-timer');
+    warmupTimerId = setInterval(() => {
+      warmupSecondsLeft--;
+      if (warmupSecondsLeft <= 0) {
+        clearInterval(warmupTimerId);
+        closeWarmupModal();
+        alert("⏰ Hết 2 phút khởi động! Hãy bắt đầu buổi học chính.");
+      } else {
+        const m = String(Math.floor(warmupSecondsLeft / 60)).padStart(2, '0');
+        const s = String(warmupSecondsLeft % 60).padStart(2, '0');
+        if (timerEl) timerEl.textContent = `${m}:${s}`;
+      }
+    }, 1000);
+  }
+
+  function closeWarmupModal() {
+    clearInterval(warmupTimerId);
+    document.getElementById('modal-srs-warmup')?.classList.add('hidden');
+  }
+
+  // --- Feature 008: Printable Sprint Cheat Sheet ---
+  function setupCheatSheet() {
+    const btnOpen = document.getElementById('btn-open-cheatsheet');
+    const modal = document.getElementById('modal-cheatsheet');
+    const btnClose = document.getElementById('btn-close-cheatsheet');
+    const btnPrint = document.getElementById('btn-print-sheet');
+
+    if (btnOpen) {
+      btnOpen.onclick = async () => {
+        const sprintId = state.currentDay <= 30 ? 1 : state.currentDay <= 60 ? 2 : 3;
+        try {
+          const sheet = await fetch(`/api/cheatsheet/${sprintId}`).then(r => r.json());
+          renderCheatSheetBody(sheet);
+          modal?.classList.remove('hidden');
+        } catch (e) {
+          console.error('Cheat sheet error', e);
+        }
+      };
+    }
+
+    if (btnClose) btnClose.onclick = () => modal?.classList.add('hidden');
+    if (btnPrint) btnPrint.onclick = () => window.print();
+  }
+
+  function renderCheatSheetBody(sheet) {
+    const body = document.getElementById('cheatsheet-printable-body');
+    if (!body) return;
+
+    body.innerHTML = `
+      <div class="border-b-2 border-cyan-500 pb-3">
+        <h1 class="text-xl font-bold text-white uppercase">${sheet.sprintTitle}</h1>
+        <p class="text-xs text-cyan-300 font-semibold mt-1">🎯 Mục tiêu: ${sheet.focusObjective}</p>
+      </div>
+
+      <!-- Section 1: Top Sentence Frames -->
+      <div class="space-y-2">
+        <h3 class="text-xs font-bold font-mono text-cyan-400 uppercase tracking-wider">1. Khung Câu Standup & Demo Tiêu Biểu (10 Frames):</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+          ${sheet.sentenceFrames.map(f => `
+            <div class="p-2.5 rounded bg-slate-950 border border-slate-800 space-y-1">
+              <div class="font-bold text-slate-100 font-mono text-[11px]">${f.number}. ${f.templatePattern}</div>
+              <div class="text-[10px] text-slate-400 italic">${f.translationVi}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- Section 2: Target Phonemes Table -->
+      <div class="space-y-2">
+        <h3 class="text-xs font-bold font-mono text-amber-400 uppercase tracking-wider">2. Bảng Tra Cứu Âm Vị & Chỉ Dẫn Khẩu Hình:</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-[11px] border-collapse">
+            <thead>
+              <tr class="border-b border-slate-800 text-slate-400">
+                <th class="py-1 px-2 font-mono">Âm vị</th>
+                <th class="py-1 px-2">Cơ học cấu âm</th>
+                <th class="py-1 px-2 font-mono">Từ ví dụ IT</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${sheet.targetPhonemes.map(p => `
+                <tr class="border-b border-slate-800/60">
+                  <td class="py-1 px-2 font-mono font-bold text-cyan-400">${p.symbol}</td>
+                  <td class="py-1 px-2 text-slate-200">${p.mouthPlacementCueVi}</td>
+                  <td class="py-1 px-2 font-mono text-amber-300">${p.devWords.join(', ')}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Section 3: Essential Vocabulary -->
+      <div class="space-y-2">
+        <h3 class="text-xs font-bold font-mono text-purple-400 uppercase tracking-wider">3. Từ Vựng Kỹ Thuật Trọng Tâm:</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-[10px] font-mono">
+          ${sheet.essentialVocabulary.map(v => `
+            <div class="p-1.5 rounded bg-slate-950 border border-slate-800">
+              <div class="font-bold text-cyan-300">${v.word}</div>
+              <div class="text-slate-400">${v.ipa}</div>
+              <div class="text-slate-500 text-[9px] truncate">${v.meaningVi}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  // --- Feature 009: 70% Good Enough Auto-Complete Checker ---
+  async function checkAutoCompleteThreshold(totalWords, correctWords, failedWords, targetPhoneme) {
+    try {
+      const res = await fetch('/api/drill/check-threshold', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          dayNumber: state.currentDay,
+          totalWordsCount: totalWords,
+          correctWordsCount: correctWords,
+          failedWords: failedWords,
+          targetPhoneme: targetPhoneme
+        })
+      });
+
+      const data = await res.json();
+      if (data.thresholdReached) {
+        const celebration = document.getElementById('autocomplete-celebration');
+        const msg = document.getElementById('autocomplete-msg');
+        if (celebration && msg) {
+          msg.textContent = data.celebrationMessage;
+          celebration.classList.remove('hidden');
+
+          document.getElementById('btn-close-autocomplete').onclick = () => celebration.classList.add('hidden');
+          document.getElementById('btn-finish-now').onclick = () => {
+            celebration.classList.add('hidden');
+            fetchInitialData();
+          };
+          document.getElementById('btn-keep-going').onclick = () => celebration.classList.add('hidden');
+        }
+      }
+    } catch (e) {
+      console.warn('Auto complete check fallback', e);
+    }
+  }
+
+  // Initialize Advanced Capabilities Suite on Startup
+  setTimeout(() => {
+    initIpaGlossary();
+    setupCollapsibleBlocks();
+    setupMicroLesson();
+    setupSrsWarmup();
+    setupCheatSheet();
+  }, 100);
 
 })();

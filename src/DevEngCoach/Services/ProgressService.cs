@@ -9,6 +9,8 @@ public interface IProgressService
     IReadOnlyList<SessionLog> GetAllSessions();
     SessionLog? GetSessionByDay(int dayNumber);
     SessionLog CompleteSession(CompleteSessionRequest request);
+    SessionLog MicroCompleteSession(MicroSessionRequest request);
+    BlockRecommendation GetRecommendation();
     void ResetProgress();
 }
 
@@ -47,7 +49,7 @@ public sealed class ProgressService : IProgressService
         lock (_lock)
         {
             var completedSessions = _state.Sessions
-                .Where(s => s.Status == "Completed" && s.CompletedAt.HasValue)
+                .Where(s => ((s.Status == "Completed" || s.Status == "CompletedPartial") || s.Status == "CompletedPartial") && s.CompletedAt.HasValue)
                 .OrderBy(s => s.DayNumber)
                 .ToList();
 
@@ -60,7 +62,7 @@ public sealed class ProgressService : IProgressService
             var longestStreak = CalculateLongestStreak(completedSessions);
 
             var nextDay = 1;
-            while (nextDay <= 90 && _state.Sessions.Any(s => s.DayNumber == nextDay && s.Status == "Completed"))
+            while (nextDay <= 90 && _state.Sessions.Any(s => s.DayNumber == nextDay && (s.Status == "Completed" || s.Status == "CompletedPartial")))
             {
                 nextDay++;
             }
@@ -127,6 +129,58 @@ public sealed class ProgressService : IProgressService
 
             SaveStateInternal();
             return log;
+        }
+    }
+
+    public SessionLog MicroCompleteSession(MicroSessionRequest request)
+    {
+        lock (_lock)
+        {
+            var existingIndex = _state.Sessions.FindIndex(s => s.DayNumber == request.DayNumber);
+            var now = DateTime.Now;
+
+            var log = new SessionLog(
+                DayNumber: request.DayNumber,
+                ScheduledDate: existingIndex >= 0 ? _state.Sessions[existingIndex].ScheduledDate : now.Date.AddHours(22),
+                CompletedAt: now,
+                PlannedMinutes: 10,
+                ActualMinutes: Math.Max(1, request.ActualMinutes),
+                Status: "CompletedPartial",
+                SelfRating: request.SelfRating ?? 4,
+                LearnerNotes: request.LearnerNotes ?? $"Micro-session: {request.SelectedBlock} block completed",
+                AiFeedbackSnippet: $"Completed 10-minute escape hatch ({request.SelectedBlock}). Streak maintained!"
+            );
+
+            if (existingIndex >= 0)
+            {
+                _state.Sessions[existingIndex] = log;
+            }
+            else
+            {
+                _state.Sessions.Add(log);
+            }
+
+            SaveStateInternal();
+            return log;
+        }
+    }
+
+    public BlockRecommendation GetRecommendation()
+    {
+        lock (_lock)
+        {
+            var lastSession = _state.Sessions.OrderByDescending(s => s.CompletedAt).FirstOrDefault();
+            if (lastSession is null || lastSession.Status == "Pending")
+            {
+                return new BlockRecommendation("Phonetics", "Bắt đầu ngày học với 10 phút khởi động cơ học khẩu hình.", 1);
+            }
+
+            if (lastSession.LearnerNotes?.Contains("Output", StringComparison.OrdinalIgnoreCase) == true)
+            {
+                return new BlockRecommendation("Frames", "Củng cố các khung câu kỹ thuật trước khi luyện phản xạ.", 2);
+            }
+
+            return new BlockRecommendation("Output", "Tập trung luyện nói dứt khoát 1 câu Standup hoàn chỉnh.", 3);
         }
     }
 
