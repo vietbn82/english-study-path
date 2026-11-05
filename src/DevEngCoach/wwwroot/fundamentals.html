@@ -118,6 +118,12 @@
       <div class="flex items-center gap-2 flex-1 min-w-[280px]">
         <span class="text-cyan-400 font-bold">🔍</span>
         <input type="text" id="handbook-search-input" placeholder="Tìm kiếm nhanh âm vị, quy tắc hoặc từ khóa (ví dụ: /t/, /d/, linking, cluster, auth, commit)..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500 font-mono transition">
+      <!-- Dynamic Search Results Bar -->
+      <div id="handbook-search-status" class="hidden p-2.5 rounded-lg bg-cyan-950/80 border border-cyan-800 text-xs text-cyan-200 font-mono transition-all">
+      </div>
+      <!-- Dynamic Search Results Bar -->
+      <div id="handbook-search-status" class="hidden p-2.5 rounded-lg bg-cyan-950/80 border border-cyan-800 text-xs text-cyan-200 font-mono transition-all">
+      </div>
       </div>
       <div class="flex items-center gap-1.5 overflow-x-auto text-[10px] font-mono">
         <button class="quick-filter-tag px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition" data-filter="all">Tất cả</button>
@@ -349,11 +355,11 @@
               <path d="M 360 215 C 362 260, 362 330, 345 425 L 315 425 C 330 340, 330 260, 315 215 Z" fill="#1e293b" stroke="#475569" stroke-width="2" />
 
               <!-- 4. Hard Palate & Alveolar Ridge -->
-              <path id="svg-part-alveolar-fund" d="M 160 202 C 170 202, 185 196, 200 190" fill="none" stroke="#38bdf8" stroke-width="5" stroke-linecap="round" />
-              <path id="svg-part-hard-palate-fund" d="M 200 190 C 235 180, 275 185, 305 202" fill="none" stroke="#a855f7" stroke-width="4.5" stroke-linecap="round" />
+              <path id="svg-part-alveolar-fund" class="fund-svg-organ cursor-pointer" data-organ="alveolar" class="fund-svg-organ cursor-pointer" data-organ="alveolar" d="M 160 202 C 170 202, 185 196, 200 190" fill="none" stroke="#38bdf8" stroke-width="5" stroke-linecap="round" />
+              <path id="svg-part-hard-palate-fund" class="fund-svg-organ cursor-pointer" data-organ="hard-palate" class="fund-svg-organ cursor-pointer" data-organ="hard-palate" d="M 200 190 C 235 180, 275 185, 305 202" fill="none" stroke="#a855f7" stroke-width="4.5" stroke-linecap="round" />
 
               <!-- 5. Soft Palate (Velum) & Uvula (Ngạc Mềm & Lưỡi Gà) -->
-              <path id="svg-part-velum-fund" d="M 305 202 C 322 205, 340 212, 348 215 C 344 225, 330 220, 305 212 Z" fill="#eab308" stroke="#ca8a04" stroke-width="2" />
+              <path id="svg-part-velum-fund" class="fund-svg-organ cursor-pointer" data-organ="velum" class="fund-svg-organ cursor-pointer" data-organ="velum" d="M 305 202 C 322 205, 340 212, 348 215 C 344 225, 330 220, 305 212 Z" fill="#eab308" stroke="#ca8a04" stroke-width="2" />
 
               <!-- 6. Teeth (Upper & Lower Incisors) -->
               <rect x="146" y="196" width="12" height="18" rx="2" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5" />
@@ -367,9 +373,9 @@
               <path id="svg-tongue-shape-fund" d="M 165 265 C 170 240, 175 210, 185 192 C 205 194, 235 220, 265 240 C 290 260, 300 300, 290 355 C 275 385, 245 390, 230 380 C 215 350, 190 310, 165 265 Z" fill="url(#tongueGradF)" stroke="#e11d48" stroke-width="2.5" />
 
               <!-- Tongue Landmark Markers -->
-              <circle id="svg-part-tongue-tip-fund" cx="185" cy="192" r="5" fill="#38bdf8" stroke="#ffffff" stroke-width="1.5" />
-              <circle id="svg-part-tongue-blade-fund" cx="240" cy="225" r="4.5" fill="#a855f7" stroke="#ffffff" stroke-width="1.5" />
-              <circle id="svg-part-tongue-back-fund" cx="280" cy="265" r="4.5" fill="#eab308" stroke="#ffffff" stroke-width="1.5" />
+              <circle id="svg-part-tongue-tip-fund" class="fund-svg-organ cursor-pointer" data-organ="tongue-tip" class="fund-svg-organ cursor-pointer" data-organ="tongue-tip" cx="185" cy="192" r="5" fill="#38bdf8" stroke="#ffffff" stroke-width="1.5" />
+              <circle id="svg-part-tongue-blade-fund" class="fund-svg-organ cursor-pointer" data-organ="tongue-blade" class="fund-svg-organ cursor-pointer" data-organ="tongue-blade" cx="240" cy="225" r="4.5" fill="#a855f7" stroke="#ffffff" stroke-width="1.5" />
+              <circle id="svg-part-tongue-back-fund" class="fund-svg-organ cursor-pointer" data-organ="tongue-back" class="fund-svg-organ cursor-pointer" data-organ="tongue-back" cx="280" cy="265" r="4.5" fill="#eab308" stroke="#ffffff" stroke-width="1.5" />
 
               <!-- 9. Contact Point Glow & Burst Ripple -->
               <circle id="svg-contact-glow-fund" cx="185" cy="192" r="8" fill="#38bdf8" fill-opacity="0.5" filter="url(#glow-contact-f)" />
@@ -381,7 +387,7 @@
 
               <!-- 11. Epiglottis & Larynx / Vocal Folds -->
               <path d="M 285 365 C 295 345, 295 330, 288 325 C 282 325, 280 340, 275 365" fill="#ec4899" stroke="#db2777" stroke-width="1.5" />
-              <ellipse id="svg-part-vocal-cords-fund" cx="295" cy="405" rx="14" ry="7" fill="#ef4444" fill-opacity="0.6" stroke="#ef4444" stroke-width="2.5" />
+              <ellipse id="svg-part-vocal-cords-fund" class="fund-svg-organ cursor-pointer" data-organ="vocal-cords" class="fund-svg-organ cursor-pointer" data-organ="vocal-cords" cx="295" cy="405" rx="14" ry="7" fill="#ef4444" fill-opacity="0.6" stroke="#ef4444" stroke-width="2.5" />
               <path d="M 280 415 L 280 465 M 310 415 L 310 465" stroke="#475569" stroke-width="2" stroke-dasharray="4 3" />
 
               <!-- 12. Clear Text Labels with Leader Lines -->
@@ -421,8 +427,20 @@
             </svg>
           </div>
 
-          <div id="sagittal-fund-desc" class="w-full mt-3 p-3 rounded-lg bg-slate-950 border border-slate-800 text-xs text-slate-300 font-mono">
-            💡 <strong>/t/, /d/ (Gờ Lợi):</strong> Đầu lưỡi ép chặt gờ lợi sau chân răng trên (không chạm răng), nén áp suất rồi giật mạnh nhả tiếng nổ (Pop).
+          <!-- Interactive Organ Selector Chips (Nhấp vào cơ quan để xem) -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 w-full mt-3 text-[11px] text-center font-mono" id="fund-articulator-chips">
+            <button class="fund-organ-btn p-1.5 rounded bg-slate-950 hover:bg-cyan-950/80 border border-slate-800 hover:border-cyan-700 text-slate-300 hover:text-cyan-300 transition cursor-pointer" data-organ="alveolar">3. Gờ lợi (Alveolar)</button>
+            <button class="fund-organ-btn p-1.5 rounded bg-slate-950 hover:bg-cyan-950/80 border border-slate-800 hover:border-cyan-700 text-slate-300 hover:text-cyan-300 transition cursor-pointer" data-organ="hard-palate">4. Ngạc cứng (Palate)</button>
+            <button class="fund-organ-btn p-1.5 rounded bg-slate-950 hover:bg-cyan-950/80 border border-slate-800 hover:border-cyan-700 text-slate-300 hover:text-cyan-300 transition cursor-pointer" data-organ="velum">5. Ngạc mềm (Velum)</button>
+            <button class="fund-organ-btn p-1.5 rounded bg-slate-950 hover:bg-cyan-950/80 border border-slate-800 hover:border-cyan-700 text-slate-300 hover:text-cyan-300 transition cursor-pointer" data-organ="vocal-cords">6. Thanh quản (Vocal)</button>
+            <button class="fund-organ-btn p-1.5 rounded bg-slate-950 hover:bg-cyan-950/80 border border-slate-800 hover:border-cyan-700 text-slate-300 hover:text-cyan-300 transition cursor-pointer" data-organ="tongue-tip">Đầu lưỡi (Tip)</button>
+            <button class="fund-organ-btn p-1.5 rounded bg-slate-950 hover:bg-cyan-950/80 border border-slate-800 hover:border-cyan-700 text-slate-300 hover:text-cyan-300 transition cursor-pointer" data-organ="tongue-blade">Thân lưỡi (Blade)</button>
+            <button class="fund-organ-btn p-1.5 rounded bg-slate-950 hover:bg-cyan-950/80 border border-slate-800 hover:border-cyan-700 text-slate-300 hover:text-cyan-300 transition cursor-pointer" data-organ="teeth">2. Răng (Teeth)</button>
+            <button class="fund-organ-btn p-1.5 rounded bg-slate-950 hover:bg-cyan-950/80 border border-slate-800 hover:border-cyan-700 text-slate-300 hover:text-cyan-300 transition cursor-pointer" data-organ="lips">1. Môi (Lips)</button>
+          </div>
+
+          <div id="sagittal-fund-desc" class="w-full mt-3 p-3.5 rounded-xl bg-slate-950/90 border-2 border-cyan-900/60 text-xs text-slate-200 font-mono shadow-lg transition-all">
+            💡 <strong>/t/, /d/ (Gờ Lợi):</strong> Đầu lưỡi ép chặt gờ lợi sau chân răng trên (không chạm răng), nén áp suất rồi giật mạnh nhả tiếng nổ (Pop). Nhấp vào các nút cơ quan ở trên hoặc sơ đồ để xem giải phẫu chi tiết!
           </div>
         </div>
         <!-- Explanations of Core Articulators -->
@@ -1686,6 +1704,20 @@
           const text = selection.toString().trim();
           if (!text || text.length < 2 || text.length > 150) return;
 
+          if (lastDismissedSelection && text === lastDismissedSelection) {
+            return;
+          }
+          if (lastDismissedSelection && text !== lastDismissedSelection) {
+            lastDismissedSelection = null;
+          }
+
+          if (lastDismissedSelection && text === lastDismissedSelection) {
+            return;
+          }
+          if (lastDismissedSelection && text !== lastDismissedSelection) {
+            lastDismissedSelection = null;
+          }
+
           const anchorNode = selection.anchorNode;
           if (anchorNode && anchorNode.parentElement && (
               anchorNode.parentElement.closest('#selection-lookup-popup') ||
@@ -1738,6 +1770,8 @@
 
           document.getElementById('sel-pop-btn-close')?.addEventListener('click', (e) => {
             e.stopPropagation();
+            lastDismissedSelection = text;
+            try { window.getSelection()?.removeAllRanges(); } catch (_) {}
             popup.classList.add('hidden');
           });
 
@@ -2308,12 +2342,109 @@
       }
     });
 
-    // 4. Quick Search & Filter Engine (UX Upgrade #5)
+    // 4. Full Handbook Search & Filter Engine
     const searchInput = document.getElementById('handbook-search-input');
+    const searchStatus = document.getElementById('handbook-search-status');
+    let matchingElements = [];
+    let currentMatchIndex = 0;
+
+    function filterHandbookContent(query) {
+      // 1. Filter Consonant Table rows
+      const rows = document.querySelectorAll('#consonant-matrix-section table tbody tr');
+      let rowMatches = 0;
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        const match = !query || text.includes(query);
+        row.style.display = match ? '' : 'none';
+        if (query && match) rowMatches++;
+      });
+
+      // 2. Search across sections, articles, cards, headers and paragraphs
+      matchingElements = [];
+      if (query && query.length >= 2) {
+        const candidates = document.querySelectorAll('main section, article, .contrast-pair-card, .cluster-rule-box, dl > div, table tbody tr');
+        candidates.forEach(el => {
+          if (el.textContent.toLowerCase().includes(query)) {
+            matchingElements.push(el);
+          }
+        });
+      }
+
+      // 3. Update search status UI
+      if (searchStatus) {
+        if (!query || query.length < 2) {
+          searchStatus.classList.add('hidden');
+        } else {
+          searchStatus.classList.remove('hidden');
+          const totalCount = matchingElements.length;
+          searchStatus.innerHTML = `
+            <div class="flex items-center justify-between gap-3 flex-wrap">
+              <div class="flex items-center gap-2">
+                <span class="text-cyan-400 font-bold">🔍 Kết quả:</span>
+                <span>Tìm thấy <strong>${totalCount}</strong> mục liên quan đến "<strong>${query}</strong>"</span>
+                ${totalCount > 0 ? `<span class="text-[10px] text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">Mục ${currentMatchIndex + 1}/${totalCount}</span>` : ''}
+              </div>
+              <div class="flex items-center gap-1.5">
+                ${totalCount > 1 ? `
+                  <button id="btn-search-prev" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-300 text-[11px] font-semibold transition cursor-pointer">⬆ Trước</button>
+                  <button id="btn-search-next" class="px-2.5 py-1 rounded bg-cyan-600 hover:bg-cyan-500 text-slate-950 text-[11px] font-bold transition cursor-pointer">⬇ Tiếp theo</button>
+                ` : ''}
+                <button id="btn-search-clear" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-rose-600 text-slate-300 hover:text-white text-[11px] transition cursor-pointer">✕ Đóng tìm kiếm</button>
+              </div>
+            </div>
+          `;
+
+          document.getElementById('btn-search-prev')?.addEventListener('click', () => {
+            if (matchingElements.length === 0) return;
+            currentMatchIndex = (currentMatchIndex - 1 + matchingElements.length) % matchingElements.length;
+            focusMatch(currentMatchIndex);
+          });
+
+          document.getElementById('btn-search-next')?.addEventListener('click', () => {
+            if (matchingElements.length === 0) return;
+            currentMatchIndex = (currentMatchIndex + 1) % matchingElements.length;
+            focusMatch(currentMatchIndex);
+          });
+
+          document.getElementById('btn-search-clear')?.addEventListener('click', () => {
+            if (searchInput) searchInput.value = '';
+            filterHandbookContent('');
+          });
+
+          if (matchingElements.length > 0) {
+            currentMatchIndex = 0;
+            focusMatch(0);
+          }
+        }
+      }
+    }
+
+    function focusMatch(index) {
+      if (!matchingElements[index]) return;
+      const el = matchingElements[index];
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.classList.add('ring-2', 'ring-cyan-400', 'ring-offset-2', 'ring-offset-slate-950');
+      setTimeout(() => {
+        el.classList.remove('ring-2', 'ring-cyan-400', 'ring-offset-2', 'ring-offset-slate-950');
+      }, 2500);
+
+      // Update counter tag in searchStatus
+      const counter = searchStatus?.querySelector('span.text-\\[10px\\]');
+      if (counter) counter.textContent = `Mục ${index + 1}/${matchingElements.length}`;
+    }
+
     if (searchInput) {
       searchInput.addEventListener('input', (e) => {
-        const query = e.target.value.toLowerCase().trim();
-        filterHandbookContent(query);
+        filterHandbookContent(e.target.value.trim().toLowerCase());
+      });
+      searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          if (matchingElements.length > 0) {
+            currentMatchIndex = (currentMatchIndex + 1) % matchingElements.length;
+            focusMatch(currentMatchIndex);
+          }
+        }
       });
     }
 
@@ -2330,13 +2461,99 @@
       });
     });
 
-    function filterHandbookContent(query) {
-      const rows = document.querySelectorAll('#consonant-matrix-section table tbody tr');
-      rows.forEach(row => {
-        const text = row.textContent.toLowerCase();
-        row.style.display = (!query || text.includes(query)) ? '' : 'none';
+    // --- Interactive Articulators & Speech Organ Clicks (Nhấp vào cơ quan để xem) ---
+    const organEncyclopedia = {
+      'alveolar': {
+        name: "3. Gờ Lợi (Alveolar Ridge)",
+        elementId: "svg-part-alveolar-fund",
+        targetArticle: "section-articulators",
+        desc: "💡 <strong>Gờ Lợi (Alveolar Ridge):</strong> Dải mô thịt gồ ghề ngay sát sau chân răng cửa trên. Là 'trung tâm thần kinh' của phát âm tiếng Anh. Đầu lưỡi dán chặt tạo âm tắc /t/, /d/, nâng sát 1mm tạo rãnh xì /s/, /z/, hoặc dẫn khí 2 bên tạo /l/."
+      },
+      'hard-palate': {
+        name: "4. Ngạc Cứng (Hard Palate)",
+        elementId: "svg-part-hard-palate-fund",
+        targetArticle: "section-articulators",
+        desc: "💡 <strong>Ngạc Cứng (Hard Palate):</strong> Vòm miệng hình cung có xương nâng đỡ, sờ vào cứng và trơn láng. Thân lưỡi nâng vồng lên sát ngạc cứng để tạo bán nguyên âm /j/ (yield, user) và phối hợp gờ lợi tạo /tʃ/ (check) và /dʒ/ (JSON)."
+      },
+      'velum': {
+        name: "5. Ngạc Mềm & Lưỡi Gà (Velum / Soft Palate)",
+        elementId: "svg-part-velum-fund",
+        targetArticle: "section-articulators",
+        desc: "💡 <strong>Ngạc Mềm (Velum):</strong> Vòm thịt mềm không có xương phía sau. Có cơ quan nâng hạ như van đóng/mở khoang mũi. Khi hạ xuống cho luồng hơi cộng hưởng khoang mũi tạo âm /ŋ/ (ping). Gốc lưỡi dán ngạc mềm tạo âm /k/ (commit) và /ɡ/ (git)."
+      },
+      'vocal-cords': {
+        name: "6. Dây Thanh Âm (Vocal Folds / Larynx)",
+        elementId: "svg-part-vocal-cords-fund",
+        targetArticle: "section-voicing",
+        desc: "💡 <strong>Dây Thanh Âm (Vocal Folds):</strong> Nằm trong thanh quản (trái táo cổ họng). Khép lại rung mạnh tạo âm hữu thanh (Voiced: /d/, /z/, /ɡ/, /v/, /b/, /ð/). Mở rộng không rung để luồng hơi thoát ra thành âm vô thanh (Voiceless: /t/, /s/, /k/, /f/, /p/, /θ/)."
+      },
+      'tongue-tip': {
+        name: "Đầu Lưỡi (Tongue Tip)",
+        elementId: "svg-part-tongue-tip-fund",
+        targetArticle: "section-articulators",
+        desc: "💡 <strong>Đầu Lưỡi (Tongue Tip):</strong> Cơ quan linh hoạt nhất của bộ máy phát âm. Có thể ép chặt gờ lợi (/t/, /d/), thò kẹp giữa hai răng (/θ/, /ð/), hoặc nâng sát kẽ răng tạo luồng rít (/s/, /z/)."
+      },
+      'tongue-blade': {
+        name: "Thân Lưỡi (Tongue Blade / Body)",
+        elementId: "svg-part-tongue-blade-fund",
+        targetArticle: "section-articulators",
+        desc: "💡 <strong>Thân Lưỡi (Tongue Blade):</strong> Nằm ngay sau đầu lưỡi. Vồng cao hướng về ngạc cứng để phát âm các âm vòm như /ʃ/ (cache), /ʒ/ (version), và phối hợp tạo âm tắc xát /tʃ/, /dʒ/."
+      },
+      'tongue-back': {
+        name: "Gốc Lưỡi (Tongue Back / Dorsum)",
+        elementId: "svg-part-tongue-back-fund",
+        targetArticle: "section-articulators",
+        desc: "💡 <strong>Gốc Lưỡi (Tongue Back):</strong> Phần sau của lưỡi đối diện ngạc mềm. Nhấc bổng lên ép chặt ngạc mềm để nén áp suất rồi hạ nhanh bung nổ tạo âm tắc /k/ và /ɡ/."
+      },
+      'teeth': {
+        name: "2. Răng Cửa (Upper & Lower Incisors)",
+        elementId: "svg-part-alveolar-fund",
+        targetArticle: "section-articulators",
+        desc: "💡 <strong>Răng Cửa (Incisors):</strong> Răng trên và răng dưới tạo chướng ngại vật định hình luồng hơi. Mép răng trên chạm môi dưới tạo /f/, /v/. Răng cắn nhẹ đầu lưỡi tạo /θ/, /ð/. Hai hàm răng khép hẹp cho tia khí /s/, /z/ rít qua kẽ."
+      },
+      'lips': {
+        name: "1. Môi Trên & Môi Dưới (Bilabial / Labial)",
+        elementId: "svg-part-alveolar-fund",
+        targetArticle: "section-articulators",
+        desc: "💡 <strong>Đôi Môi (Lips):</strong> Mím chặt bờ trong nén áp suất tạo âm bật nổ hai môi /p/, /b/. Chu tròn hình chiếc phễu tạo /w/, /ʃ/, /tʃ/. Căng mép cười nhẹ hai bên tạo nguyên âm bẹt /iː/, /æ/."
+      }
+    };
+
+    function activateOrgan(organKey) {
+      const data = organEncyclopedia[organKey];
+      if (!data) return;
+
+      const descBox = document.getElementById('sagittal-fund-desc');
+      if (descBox) {
+        descBox.innerHTML = data.desc;
+        descBox.classList.add('border-cyan-400', 'bg-cyan-950/40');
+        setTimeout(() => descBox.classList.remove('border-cyan-400', 'bg-cyan-950/40'), 2000);
+      }
+
+      // Highlight button chip
+      document.querySelectorAll('.fund-organ-btn').forEach(btn => {
+        const isMatch = btn.dataset.organ === organKey;
+        btn.classList.toggle('bg-cyan-950', isMatch);
+        btn.classList.toggle('text-cyan-300', isMatch);
+        btn.classList.toggle('border-cyan-500', isMatch);
+        btn.classList.toggle('font-bold', isMatch);
       });
+
+      // Highlight SVG element
+      const svgEl = document.getElementById(data.elementId);
+      if (svgEl) {
+        svgEl.classList.add('svg-active-glow');
+        setTimeout(() => svgEl.classList.remove('svg-active-glow'), 2000);
+      }
     }
+
+    // Attach click to all organ buttons and SVG organs
+    document.querySelectorAll('.fund-organ-btn, .fund-svg-organ').forEach(elem => {
+      elem.addEventListener('click', () => {
+        const organKey = elem.dataset.organ;
+        if (organKey) activateOrgan(organKey);
+      });
+    });
 
     // 5. In-page Voice Recorder Dock (UX Upgrade #3)
     const btnOpenRecorder = document.getElementById('btn-open-recorder-dock');

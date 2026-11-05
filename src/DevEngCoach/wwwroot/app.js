@@ -392,6 +392,31 @@
     if (el.btnTimerPause) el.btnTimerPause.addEventListener('click', pauseTimer);
     if (el.btnTimerReset) el.btnTimerReset.addEventListener('click', resetTimer);
 
+    // Sticky Header Timer buttons
+    const headerToggle = document.getElementById('btn-header-timer-toggle');
+    const headerReset = document.getElementById('btn-header-timer-reset');
+    if (headerToggle) {
+      headerToggle.addEventListener('click', () => {
+        if (state.timer.isRunning) pauseTimer();
+        else startTimer();
+        updateTimerUI();
+      });
+    }
+    if (headerReset) {
+      headerReset.addEventListener('click', resetTimer);
+    }
+
+    // Brand Logo Home navigation
+    const brandHome = document.getElementById('brand-logo-home');
+    if (brandHome) {
+      brandHome.addEventListener('click', (e) => {
+        e.preventDefault();
+        showView('workspace');
+        loadLesson(1);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
     if (el.btnTestNotification) el.btnTestNotification.addEventListener('click', triggerTestNotification);
     if (el.btnEvaluateAi) el.btnEvaluateAi.addEventListener('click', evaluateWithAi);
     if (el.btnCompleteSession) el.btnCompleteSession.addEventListener('click', completeCurrentSession);
@@ -576,11 +601,20 @@
 
     let currentLookupText = '';
     let currentLookupData = null;
+    let lastDismissedSelection = null; // Track dismissed selection so closing popup doesn't reopen it
 
     // Hide on click outside
     document.addEventListener('mousedown', (e) => {
       if (popup && !popup.contains(e.target)) {
         popup.classList.add('hidden');
+      }
+    });
+
+    // Reset dismissed state when user clears selection or selects elsewhere
+    document.addEventListener('selectionchange', () => {
+      const sel = window.getSelection();
+      if (!sel || sel.isCollapsed) {
+        lastDismissedSelection = null;
       }
     });
 
@@ -599,6 +633,14 @@
 
         const text = selection.toString().trim();
         if (!text || text.length < 2 || text.length > 150) return;
+
+        // If user already dismissed this exact selection, DO NOT show popup again
+        if (lastDismissedSelection && text === lastDismissedSelection) {
+          return;
+        }
+        if (lastDismissedSelection && text !== lastDismissedSelection) {
+          lastDismissedSelection = null;
+        }
 
         // Ignore if selection is inside an interactive input or the popup itself
         const anchorNode = selection.anchorNode;
@@ -658,6 +700,8 @@
 
         document.getElementById('sel-pop-btn-close')?.addEventListener('click', (e) => {
           e.stopPropagation();
+          lastDismissedSelection = text;
+          try { window.getSelection()?.removeAllRanges(); } catch (_) {}
           popup.classList.add('hidden');
         });
 
@@ -1647,7 +1691,15 @@
   function updateTimerUI() {
     const mins = Math.floor(state.timer.remainingSeconds / 60);
     const secs = state.timer.remainingSeconds % 60;
-    if (el.timerDisplay) el.timerDisplay.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    const timeFormatted = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    if (el.timerDisplay) el.timerDisplay.textContent = timeFormatted;
+
+    // Synchronize Compact Sticky Header Timer
+    const headerDisplay = document.getElementById('header-timer-display');
+    const headerPhase = document.getElementById('header-timer-phase');
+    const headerToggle = document.getElementById('btn-header-timer-toggle');
+    if (headerDisplay) headerDisplay.textContent = timeFormatted;
+    if (headerToggle) headerToggle.textContent = state.timer.isRunning ? 'Pause' : 'Start';
 
     const percent = (state.timer.remainingSeconds / state.timer.totalSeconds) * 100;
     if (el.timerProgress) el.timerProgress.style.width = `${percent}%`;
@@ -1657,10 +1709,13 @@
     if (el.timerPhaseHint) {
       if (elapsed < 10 * 60) {
         el.timerPhaseHint.textContent = 'Phase 1 (00-10m): Cơ Học Khẩu Hình & Âm Đuôi';
+        if (headerPhase) headerPhase.textContent = '1. Khẩu Hình';
       } else if (elapsed < 20 * 60) {
         el.timerPhaseHint.textContent = 'Phase 2 (10-20m): Nạp Khung Câu Đóng Băng';
+        if (headerPhase) headerPhase.textContent = '2. Khung Câu';
       } else {
         el.timerPhaseHint.textContent = 'Phase 3 (20-30m): Nói & Chấm Điểm Cùng AI Coach';
+        if (headerPhase) headerPhase.textContent = '3. AI Coach';
       }
     }
   }
@@ -4161,7 +4216,12 @@
     const btnOpen = document.getElementById('btn-open-cheatsheet');
     const modal = document.getElementById('modal-cheatsheet');
     const btnClose = document.getElementById('btn-close-cheatsheet');
+    const btnFloatingClose = document.getElementById('btn-floating-close-cheatsheet');
+    const btnBottomClose = document.getElementById('btn-close-cheatsheet-bottom');
     const btnPrint = document.getElementById('btn-print-sheet');
+    const btnBottomPrint = document.getElementById('btn-print-sheet-bottom');
+
+    const closeModal = () => modal?.classList.add('hidden');
 
     if (btnOpen) {
       btnOpen.onclick = async () => {
@@ -4176,8 +4236,25 @@
       };
     }
 
-    if (btnClose) btnClose.onclick = () => modal?.classList.add('hidden');
+    if (btnClose) btnClose.onclick = closeModal;
+    if (btnFloatingClose) btnFloatingClose.onclick = closeModal;
+    if (btnBottomClose) btnBottomClose.onclick = closeModal;
     if (btnPrint) btnPrint.onclick = () => window.print();
+    if (btnBottomPrint) btnBottomPrint.onclick = () => window.print();
+
+    // Close on backdrop click
+    if (modal) {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+      });
+    }
+
+    // Close on ESC key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
+        closeModal();
+      }
+    });
   }
 
   function renderCheatSheetBody(sheet) {

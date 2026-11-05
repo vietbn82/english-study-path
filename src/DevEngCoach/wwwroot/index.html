@@ -29,16 +29,26 @@
   <!-- Top Sticky Navigation -->
   <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-mono font-bold text-slate-950 shadow-lg shadow-cyan-500/20">
-          DE
-        </div>
-        <div>
-          <div class="font-bold text-base tracking-tight flex items-center gap-2">
-            <span>DevEng Coach</span>
-            <span class="text-xs px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800/60 font-mono">.NET 10 // AI Coach</span>
+      <!-- Brand Logo / Home link -->
+      <div class="flex items-center gap-4">
+        <a href="/" id="brand-logo-home" class="flex items-center space-x-3 cursor-pointer group" title="Quay về trang chủ">
+          <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-mono font-bold text-slate-950 shadow-lg shadow-cyan-500/20 group-hover:scale-105 transition-transform">
+            DE
           </div>
-          <div class="text-xs text-slate-400 font-mono">Kinesthetic English Engine for Senior Devs</div>
+          <div>
+            <div class="font-bold text-base tracking-tight text-white group-hover:text-cyan-400 transition-colors">
+              DevEng Coach
+            </div>
+          </div>
+        </a>
+
+        <!-- Compact Sticky Header Session Timer (Always visible when scrolling) -->
+        <div id="sticky-header-timer" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-950/90 border border-cyan-800/70 shadow font-mono text-xs">
+          <span class="text-cyan-400 animate-pulse text-xs">⏱️</span>
+          <span id="header-timer-display" class="font-bold text-cyan-300">30:00</span>
+          <span id="header-timer-phase" class="hidden sm:inline text-[10px] text-slate-400 max-w-[120px] truncate">Phonetics</span>
+          <button id="btn-header-timer-toggle" class="px-2 py-0.5 rounded bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold text-[10px] transition cursor-pointer">Start</button>
+          <button id="btn-header-timer-reset" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-400 text-[10px] transition cursor-pointer" title="Reset">↺</button>
         </div>
       </div>
 
@@ -471,26 +481,44 @@
                     </div>
                   </div>
 
-                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                    <!-- Left: Vietnamese Habit -->
-                    <div class="p-3 rounded-xl bg-rose-950/20 border border-rose-900/40 space-y-1.5">
-                      <div class="font-bold text-rose-300 flex items-center gap-1.5" id="mouth-vn-title">
-                        <span>🇻🇳 Thói quen của bạn</span>
-                      </div>
-                      <p class="text-slate-300 text-xs leading-relaxed" id="mouth-vn-desc">
-                        Ngậm miệng lại (unreleased coda). Đầu lưỡi chạm ngạc nhưng chặn đứng luồng khí.
-                      </p>
-                    </div>
-
-                    <!-- Right: English Target -->
-                    <div class="p-3 rounded-xl bg-emerald-950/20 border border-emerald-900/40 space-y-1.5">
-                      <div class="font-bold text-emerald-300 flex items-center gap-1.5" id="mouth-en-title">
-                        <span>🇬🇧 Chuẩn tiếng Anh</span>
-                      </div>
-                      <p class="text-slate-300 text-xs leading-relaxed" id="mouth-en-desc">
-                        Đầu lưỡi dán chặt gờ lợi, nén áp suất rồi giật dứt khoát giải phóng tiếng nổ (Pop).
-                      </p>
-                    </div>
+                  <!-- 2-Column Direct Comparison Table (Bảng So Sánh 2 Cột Trực Diện) -->
+                  <div class="overflow-hidden rounded-xl border border-slate-800 bg-slate-900/60 shadow">
+                    <table class="w-full text-xs text-left border-collapse">
+                      <thead>
+                        <tr class="bg-slate-900 border-b border-slate-800 text-[11px] font-mono">
+                          <th class="p-2.5 text-rose-300 border-r border-slate-800 w-1/2">
+                            <span class="flex items-center gap-1.5">
+                              <span>🇻🇳</span>
+                              <span id="mouth-vn-title">Thói quen của bạn</span>
+                            </span>
+                          </th>
+                          <th class="p-2.5 text-emerald-300 w-1/2">
+                            <span class="flex items-center gap-1.5">
+                              <span>🇬🇧</span>
+                              <span id="mouth-en-title">Chuẩn tiếng Anh</span>
+                            </span>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-slate-800 text-[11px]">
+                        <tr>
+                          <td class="p-2.5 text-slate-300 leading-relaxed border-r border-slate-800 bg-rose-950/10" id="mouth-vn-desc">
+                            Ngậm miệng lại (unreleased coda). Đầu lưỡi chạm ngạc nhưng chặn đứng luồng khí.
+                          </td>
+                          <td class="p-2.5 text-slate-300 leading-relaxed bg-emerald-950/10" id="mouth-en-desc">
+                            Đầu lưỡi dán chặt gờ lợi, nén áp suất rồi giật dứt khoát giải phóng tiếng nổ (Pop).
+                          </td>
+                        </tr>
+                        <tr class="bg-slate-950/40 text-[10px] font-mono text-slate-400">
+                          <td class="p-2 border-r border-slate-800">
+                            <span class="text-rose-400 font-bold">Lỗi phổ biến:</span> Nuốt âm đuôi, đập lưỡi vào mặt sau răng cửa
+                          </td>
+                          <td class="p-2">
+                            <span class="text-emerald-400 font-bold">Cơ chế chuẩn:</span> Dán gờ lợi sau răng ➜ Giật nhả áp suất nổ sắc nét
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
 
                   <div class="p-2.5 rounded-lg bg-amber-950/30 border border-amber-900/50 text-xs text-amber-200" id="mouth-alert-box">
@@ -593,7 +621,7 @@
               <div class="lg:col-span-5 bg-slate-950/80 border border-slate-800 rounded-xl p-4 space-y-3 shadow-lg">
                 <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
                   <div class="text-xs font-bold text-slate-200 flex items-center gap-1.5">
-                    <span>🎯 Từ vựng kỹ thuật trong ngày:</span>
+                    <span>🎯 Từ vựng kỹ thuật trong ngày (20 từ):</span>
                   </div>
                   <span class="text-[11px] text-cyan-400 font-mono">🔊 Nghe // 🎤 Luyện</span>
                 </div>
@@ -1877,8 +1905,13 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
 
   <!-- MODAL: Printable Sprint Cheat Sheet (Feature 008) -->
   <div id="modal-cheatsheet" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md overflow-y-auto">
-    <div class="cheatsheet-content bg-slate-900 border border-slate-700 rounded-2xl max-w-4xl w-full p-8 shadow-2xl space-y-6 my-8">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-4 no-print">
+    <!-- Floating Exit Button on Viewport -->
+    <button id="btn-floating-close-cheatsheet" class="fixed top-4 right-4 z-50 px-3.5 py-2 rounded-xl bg-slate-800/90 hover:bg-rose-600 text-white font-mono font-bold text-xs shadow-2xl border border-slate-700 transition flex items-center gap-1.5 cursor-pointer backdrop-blur no-print">
+      <span>✕</span>
+      <span>Đóng (ESC)</span>
+    </button>
+    <div class="cheatsheet-content bg-slate-900 border border-slate-700 rounded-2xl max-w-4xl w-full p-6 sm:p-8 shadow-2xl space-y-6 my-8 relative">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-4 no-print sticky -top-6 sm:-top-8 bg-slate-900/95 backdrop-blur z-20 pt-2">
         <div>
           <h2 class="text-xl font-bold text-white flex items-center gap-2">
             <span>📋</span> Sprint Technical English Cheat Sheet (A4 One-Pager)
@@ -1886,16 +1919,30 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
           <p class="text-xs text-slate-400">In ra giấy dán cạnh màn hình hoặc Alt-Tab tra cứu nhanh trong Daily Standup & Sprint Demo.</p>
         </div>
         <div class="flex items-center gap-2">
-          <button id="btn-print-sheet" class="px-4 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-lg text-xs flex items-center gap-1.5 transition">
+          <button id="btn-print-sheet" class="px-4 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-lg text-xs flex items-center gap-1.5 transition cursor-pointer">
             🖨️ In ra A4 (Ctrl+P)
           </button>
-          <button id="btn-close-cheatsheet" class="text-slate-400 hover:text-white font-mono text-lg p-1">✕</button>
+          <button id="btn-close-cheatsheet" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-600 text-slate-300 hover:text-white font-bold text-xs transition cursor-pointer flex items-center gap-1">
+            <span>✕</span>
+            <span>Đóng lại</span>
+          </button>
         </div>
       </div>
 
       <!-- Printable Document Container -->
       <div id="cheatsheet-printable-body" class="space-y-6 text-xs text-slate-200">
         <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Bottom Close Dock -->
+      <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-800 no-print">
+        <button id="btn-print-sheet-bottom" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-cyan-300 font-semibold rounded-lg text-xs transition cursor-pointer">
+          🖨️ In ra A4
+        </button>
+        <button id="btn-close-cheatsheet-bottom" class="px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-lg text-xs transition cursor-pointer flex items-center gap-1.5">
+          <span>✕</span>
+          <span>Đóng Cheat Sheet</span>
+        </button>
       </div>
     </div>
   </div>

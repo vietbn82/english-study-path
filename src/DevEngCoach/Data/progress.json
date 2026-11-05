@@ -2,17 +2,5 @@
   "TargetTime": "22:00",
   "DailyPlannedMinutes": 30,
   "StartDate": "2026-11-04",
-  "Sessions": [
-    {
-      "DayNumber": 1,
-      "ScheduledDate": "2026-11-04T22:00:00",
-      "CompletedAt": null,
-      "PlannedMinutes": 30,
-      "ActualMinutes": 0,
-      "Status": "Pending",
-      "SelfRating": null,
-      "LearnerNotes": null,
-      "AiFeedbackSnippet": null
-    }
-  ]
+  "Sessions": []
 }
