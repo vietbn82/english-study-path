@@ -11,13 +11,13 @@
       theme: {
         extend: {
           fontSize: {
-            'xs': ['0.95rem', { lineHeight: '1.4rem' }],
-            'sm': ['1.05rem', { lineHeight: '1.55rem' }],
-            'base': ['1.25rem', { lineHeight: '1.75rem' }],
-            'lg': ['1.35rem', { lineHeight: '1.85rem' }],
-            'xl': ['1.55rem', { lineHeight: '2.1rem' }],
-            '2xl': ['2rem', { lineHeight: '2.4rem' }],
-            '3xl': ['2.5rem', { lineHeight: '2.85rem' }]
+            'xs': ['1.125rem', { lineHeight: '1.65rem' }],
+            'sm': ['1.25rem', { lineHeight: '1.8rem' }],
+            'base': ['1.375rem', { lineHeight: '1.95rem' }],
+            'lg': ['1.55rem', { lineHeight: '2.1rem' }],
+            'xl': ['1.75rem', { lineHeight: '2.3rem' }],
+            '2xl': ['2.2rem', { lineHeight: '2.6rem' }],
+            '3xl': ['2.75rem', { lineHeight: '3.1rem' }]
           },
           colors: {
             slate: {
@@ -364,27 +364,27 @@
               <path d="M 360 215 C 362 260, 362 330, 345 425 L 315 425 C 330 340, 330 260, 315 215 Z" fill="#1e293b" stroke="#475569" stroke-width="2" />
 
               <!-- 4. Hard Palate & Alveolar Ridge -->
-              <path id="svg-part-alveolar-fund" class="fund-svg-organ cursor-pointer" data-organ="alveolar" class="fund-svg-organ cursor-pointer" data-organ="alveolar" d="M 160 202 C 170 202, 185 196, 200 190" fill="none" stroke="#38bdf8" stroke-width="5" stroke-linecap="round" />
-              <path id="svg-part-hard-palate-fund" class="fund-svg-organ cursor-pointer" data-organ="hard-palate" class="fund-svg-organ cursor-pointer" data-organ="hard-palate" d="M 200 190 C 235 180, 275 185, 305 202" fill="none" stroke="#a855f7" stroke-width="4.5" stroke-linecap="round" />
+              <path id="svg-part-alveolar-fund" class="fund-svg-organ cursor-pointer" data-organ="alveolar" d="M 160 202 C 170 202, 185 196, 200 190" fill="none" stroke="#38bdf8" stroke-width="5" stroke-linecap="round" />
+              <path id="svg-part-hard-palate-fund" class="fund-svg-organ cursor-pointer" data-organ="hard-palate" d="M 200 190 C 235 180, 275 185, 305 202" fill="none" stroke="#a855f7" stroke-width="4.5" stroke-linecap="round" />
 
               <!-- 5. Soft Palate (Velum) & Uvula (Ngạc Mềm & Lưỡi Gà) -->
-              <path id="svg-part-velum-fund" class="fund-svg-organ cursor-pointer" data-organ="velum" class="fund-svg-organ cursor-pointer" data-organ="velum" d="M 305 202 C 322 205, 340 212, 348 215 C 344 225, 330 220, 305 212 Z" fill="#eab308" stroke="#ca8a04" stroke-width="2" />
+              <path id="svg-part-velum-fund" class="fund-svg-organ cursor-pointer" data-organ="velum" d="M 305 202 C 322 205, 340 212, 348 215 C 344 225, 330 220, 305 212 Z" fill="#eab308" stroke="#ca8a04" stroke-width="2" />
 
               <!-- 6. Teeth (Upper & Lower Incisors) -->
-              <rect x="146" y="196" width="12" height="18" rx="2" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5" />
-              <rect x="146" y="234" width="12" height="18" rx="2" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5" />
+              <rect id="svg-part-teeth-upper-fund" class="fund-svg-organ cursor-pointer" data-organ="teeth" x="146" y="196" width="12" height="18" rx="2" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5" />
+              <rect id="svg-part-teeth-lower-fund" class="fund-svg-organ cursor-pointer" data-organ="teeth" x="146" y="234" width="12" height="18" rx="2" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5" />
 
               <!-- 7. Lips (Môi trên & Môi dưới) -->
-              <path d="M 124 188 C 122 194, 130 200, 146 200" fill="none" stroke="#f43f5e" stroke-width="4" stroke-linecap="round" />
-              <path d="M 146 235 C 130 235, 120 244, 126 254" fill="none" stroke="#f43f5e" stroke-width="4" stroke-linecap="round" />
+              <path id="svg-part-lip-upper-fund" class="fund-svg-organ cursor-pointer" data-organ="lips" d="M 124 188 C 122 194, 130 200, 146 200" fill="none" stroke="#f43f5e" stroke-width="4" stroke-linecap="round" />
+              <path id="svg-part-lip-lower-fund" class="fund-svg-organ cursor-pointer" data-organ="lips" d="M 146 235 C 130 235, 120 244, 126 254" fill="none" stroke="#f43f5e" stroke-width="4" stroke-linecap="round" />
 
               <!-- 8. Complete Dynamic Muscular Tongue Body -->
               <path id="svg-tongue-shape-fund" d="M 165 265 C 170 240, 175 210, 185 192 C 205 194, 235 220, 265 240 C 290 260, 300 300, 290 355 C 275 385, 245 390, 230 380 C 215 350, 190 310, 165 265 Z" fill="url(#tongueGradF)" stroke="#e11d48" stroke-width="2.5" />
 
               <!-- Tongue Landmark Markers -->
-              <circle id="svg-part-tongue-tip-fund" class="fund-svg-organ cursor-pointer" data-organ="tongue-tip" class="fund-svg-organ cursor-pointer" data-organ="tongue-tip" cx="185" cy="192" r="5" fill="#38bdf8" stroke="#ffffff" stroke-width="1.5" />
-              <circle id="svg-part-tongue-blade-fund" class="fund-svg-organ cursor-pointer" data-organ="tongue-blade" class="fund-svg-organ cursor-pointer" data-organ="tongue-blade" cx="240" cy="225" r="4.5" fill="#a855f7" stroke="#ffffff" stroke-width="1.5" />
-              <circle id="svg-part-tongue-back-fund" class="fund-svg-organ cursor-pointer" data-organ="tongue-back" class="fund-svg-organ cursor-pointer" data-organ="tongue-back" cx="280" cy="265" r="4.5" fill="#eab308" stroke="#ffffff" stroke-width="1.5" />
+              <circle id="svg-part-tongue-tip-fund" class="fund-svg-organ cursor-pointer" data-organ="tongue-tip" cx="185" cy="192" r="5" fill="#38bdf8" stroke="#ffffff" stroke-width="1.5" />
+              <circle id="svg-part-tongue-blade-fund" class="fund-svg-organ cursor-pointer" data-organ="tongue-blade" cx="240" cy="225" r="4.5" fill="#a855f7" stroke="#ffffff" stroke-width="1.5" />
+              <circle id="svg-part-tongue-back-fund" class="fund-svg-organ cursor-pointer" data-organ="tongue-back" cx="280" cy="265" r="4.5" fill="#eab308" stroke="#ffffff" stroke-width="1.5" />
 
               <!-- 9. Contact Point Glow & Burst Ripple -->
               <circle id="svg-contact-glow-fund" cx="185" cy="192" r="8" fill="#38bdf8" fill-opacity="0.5" filter="url(#glow-contact-f)" />
@@ -396,7 +396,7 @@
 
               <!-- 11. Epiglottis & Larynx / Vocal Folds -->
               <path d="M 285 365 C 295 345, 295 330, 288 325 C 282 325, 280 340, 275 365" fill="#ec4899" stroke="#db2777" stroke-width="1.5" />
-              <ellipse id="svg-part-vocal-cords-fund" class="fund-svg-organ cursor-pointer" data-organ="vocal-cords" class="fund-svg-organ cursor-pointer" data-organ="vocal-cords" cx="295" cy="405" rx="14" ry="7" fill="#ef4444" fill-opacity="0.6" stroke="#ef4444" stroke-width="2.5" />
+              <ellipse id="svg-part-vocal-cords-fund" class="fund-svg-organ cursor-pointer" data-organ="vocal-cords" cx="295" cy="405" rx="14" ry="7" fill="#ef4444" fill-opacity="0.6" stroke="#ef4444" stroke-width="2.5" />
               <path d="M 280 415 L 280 465 M 310 415 L 310 465" stroke="#475569" stroke-width="2" stroke-dasharray="4 3" />
 
               <!-- 12. Clear Text Labels with Leader Lines -->
@@ -1162,8 +1162,62 @@
             <span>5. Có cần nói giọng chuẩn Anh-Anh hay Anh-Mỹ hoàn hảo thì người nước ngoài mới hiểu không?</span>
             <span class="text-cyan-400 group-open:rotate-180 transition-transform">▼</span>
           </summary>
-          <p class="text-slate-300 mt-2 text-[11px] leading-relaxed border-t border-slate-800/80 pt-2">
+          <p class="text-slate-200 mt-2 text-xs md:text-sm leading-relaxed border-t border-slate-800/80 pt-2 font-sans">
             Hoàn toàn KHÔNG! Trong giới công nghệ toàn cầu (Silicon Valley, Singapore, Châu Âu), tiêu chuẩn tối thượng là <strong>Intelligibility (Tính rõ nghĩa)</strong>. Chỉ cần bạn phát âm đúng nguyên âm trọng âm, đủ phụ âm cuối và ngắt nghỉ theo cụm từ, giọng địa phương (accent) nhẹ nhàng hoàn toàn không ảnh hưởng.
+          </p>
+        </details>
+
+        <details class="group bg-slate-900 border border-slate-800 rounded-xl p-3.5 [&_summary::-webkit-details-marker]:hidden">
+          <summary class="flex items-center justify-between cursor-pointer font-bold text-slate-200 hover:text-cyan-300 transition">
+            <span>6. Làm sao để phát âm Dark L (/ɫ/) ở cuối từ như 'Call', 'Install', 'SQL', 'Fail' mà không bị biến thành 'con' hay 'in-xtoong'?</span>
+            <span class="text-cyan-400 group-open:rotate-180 transition-transform">▼</span>
+          </summary>
+          <p class="text-slate-200 mt-2 text-xs md:text-sm leading-relaxed border-t border-slate-800/80 pt-2 font-sans">
+            Bí quyết cơ học: <strong>Không đưa đầu lưỡi chạm vào răng!</strong> Giữ đầu lưỡi thấp hoặc chạm nhẹ gờ lợi, đồng thời <strong>rút cuống lưỡi nâng nhẹ về phía ngạc mềm (Velarization)</strong> và hạ hàm dưới nhẹ. Luồng khí sẽ tạo ra âm /ɫ/ trầm đục, dày dặn từ sâu trong vòm họng. Người Việt hay biến thành 'o' hoặc 'on' vì quen đưa môi ra trước. Hãy giữ môi hơi bè và kéo gốc lưỡi ra sau.
+          </p>
+        </details>
+
+        <details class="group bg-slate-900 border border-slate-800 rounded-xl p-3.5 [&_summary::-webkit-details-marker]:hidden">
+          <summary class="flex items-center justify-between cursor-pointer font-bold text-slate-200 hover:text-cyan-300 transition">
+            <span>7. Tại sao tôi phát âm 'Error', 'Server', 'Worker' nghe rất nặng nề và gượng gạo?</span>
+            <span class="text-cyan-400 group-open:rotate-180 transition-transform">▼</span>
+          </summary>
+          <p class="text-slate-200 mt-2 text-xs md:text-sm leading-relaxed border-t border-slate-800/80 pt-2 font-sans">
+            Trong tiếng Anh chuẩn Mỹ, âm /r/ và nguyên âm mang tính uốn lưỡi (Rhotic Vowels /ɚ/, /ɝ/) <strong>hoàn toàn KHÔNG rung đầu lưỡi</strong> như chữ 'r' tiếng Việt. Bạn chỉ cần: (1) Hai mép lưỡi ép vào răng hàm trên hai bên, (2) Đầu lưỡi hơi cuộn ngược về sau (Retroflex) hoặc võng hình chiếc muỗng (Bunctuated Tongue) mà <strong>tuyệt đối không chạm vào bất kỳ điểm nào trên vòm miệng</strong>. Cơ bắp thả lỏng, giọng nói sẽ êm và chuẩn native.
+          </p>
+        </details>
+
+        <details class="group bg-slate-900 border border-slate-800 rounded-xl p-3.5 [&_summary::-webkit-details-marker]:hidden">
+          <summary class="flex items-center justify-between cursor-pointer font-bold text-slate-200 hover:text-cyan-300 transition">
+            <span>8. Làm sao nắm vững quy tắc phát âm đuôi '-ed' và '-s/-es' mà không cần học vẹt công thức?</span>
+            <span class="text-cyan-400 group-open:rotate-180 transition-transform">▼</span>
+          </summary>
+          <p class="text-slate-200 mt-2 text-xs md:text-sm leading-relaxed border-t border-slate-800/80 pt-2 font-sans">
+            Dựa hoàn toàn vào <strong>Quy luật cơ học Đồng hóa Thanh tính (Voicing Assimilation)</strong>:
+            <br>• <strong>Đuôi -ed:</strong> Nếu âm trước vô thanh (không rung: /p, k, f, s, ʃ, tʃ/) ➜ đuôi phát âm là <code>/t/</code> (ví dụ: <em>pushed, checked</em>). Nếu âm trước hữu thanh (rung: nguyên âm hoặc /b, ɡ, v, z, m, n, l/) ➜ đuôi phát âm là <code>/d/</code> (ví dụ: <em>deployed, configured</em>). Chỉ khi kết thúc bằng /t/ hoặc /d/ thì mới thêm âm tiết <code>/ɪd/</code> (ví dụ: <em>committed, added</em>).
+            <br>• <strong>Đuôi -s/-es:</strong> Tương tự: sau âm vô thanh ➜ <code>/s/</code> (<em>tests, hits</em>); sau âm hữu thanh ➜ <code>/z/</code> (<em>runs, files</em>); sau âm xì/xát (/s, z, ʃ, ʒ, tʃ, dʒ/) ➜ <code>/ɪz/</code> (<em>branches, releases</em>).
+          </p>
+        </details>
+
+        <details class="group bg-slate-900 border border-slate-800 rounded-xl p-3.5 [&_summary::-webkit-details-marker]:hidden">
+          <summary class="flex items-center justify-between cursor-pointer font-bold text-slate-200 hover:text-cyan-300 transition">
+            <span>9. Kỹ thuật ngắt hơi Glottal Stop /ʔ/ trong 'button', 'written', 'important' hoạt động thế nào?</span>
+            <span class="text-cyan-400 group-open:rotate-180 transition-transform">▼</span>
+          </summary>
+          <p class="text-slate-200 mt-2 text-xs md:text-sm leading-relaxed border-t border-slate-800/80 pt-2 font-sans">
+            Trong tiếng Anh giao tiếp tự nhiên của dân công nghệ bản xứ, khi âm /t/ đứng trước âm mũi /n/ (Syllabic n), người ta không nhấc đầu lưỡi bật /t/ ra ngoài mà dùng <strong>Thanh Môn (Glottis)</strong>: Khép chặt dây thanh quản tại cổ họng trong tích tắc (~50 mili-giây) để ngắt bặt luồng hơi, sau đó mở thẳng luồng hơi lên khoang mũi tạo âm /n/ (<em>buh-(stop)-n</em>, <em>wri-(stop)-n</em>). Nắm được mẹo này sẽ giúp bạn nghe hiểu người bản xứ dễ dàng hơn 300%.
+          </p>
+        </details>
+
+        <details class="group bg-slate-900 border border-slate-800 rounded-xl p-3.5 [&_summary::-webkit-details-marker]:hidden">
+          <summary class="flex items-center justify-between cursor-pointer font-bold text-slate-200 hover:text-cyan-300 transition">
+            <span>10. Làm sao để câu nói có ngữ điệu và nhịp điệu (Sentence Cadence) tự nhiên thay vì như robot?</span>
+            <span class="text-cyan-400 group-open:rotate-180 transition-transform">▼</span>
+          </summary>
+          <p class="text-slate-200 mt-2 text-xs md:text-sm leading-relaxed border-t border-slate-800/80 pt-2 font-sans">
+            Tiếng Anh là ngôn ngữ <strong>Đẳng thời theo trọng âm (Stress-Timed Rhythm)</strong>, còn tiếng Việt là ngôn ngữ âm tiết đều chằn chặn. Hãy áp dụng nguyên tắc:
+            <br>• <strong>Từ mang nội dung (Content Words):</strong> Động từ chính, danh từ kỹ thuật, tính từ, từ phủ định (NOT) ➜ Đọc TO hơn, NÂNG cao độ và KÉO DÀI thời lượng.
+            <br>• <strong>Từ chức năng (Function Words):</strong> Giới từ (to, of, at), mạo từ (the, a), trợ động từ (can, have) ➜ Nói LƯỚT cực nhanh, chuyển hết nguyên âm về âm lướt nhẹ <strong>Schwa /ə/</strong>. Câu nói của bạn sẽ lập tức có tiết tấu âm nhạc và sóng nhấp nhô của kỹ sư Senior.
           </p>
         </details>
       </div>
@@ -1519,14 +1573,18 @@
 
   <!-- Interactive JavaScript Engine -->
   <script>
+    let handbookAudioSpeed = 0.85;
+
     function speakWord(text) {
-      if (!window.speechSynthesis) return;
+      if (!text || !window.speechSynthesis) return;
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'en-US';
-      utterance.rate = 0.85;
+      utterance.rate = handbookAudioSpeed || 0.85;
       window.speechSynthesis.speak(utterance);
     }
+    window.speakWord = speakWord;
+    window.speakText = speakWord;
 
     // Modal state
     let targetSoundWord = 'commit';
@@ -2356,25 +2414,8 @@
       });
     });
 
-    // 3. Omnipresent Audio Synthesizer (UX Upgrade #1)
-    function speakText(text) {
-      if (!window.speechSynthesis) return;
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-US';
-      utterance.rate = handbookAudioSpeed || 1.0;
-      window.speechSynthesis.speak(utterance);
-    }
-
-    document.addEventListener('click', (e) => {
-      const speakBtn = e.target.closest('.speak-btn');
-      if (speakBtn && speakBtn.dataset.word) {
-        e.preventDefault();
-        e.stopPropagation();
-        speakText(speakBtn.dataset.word);
-        return;
-      }
-    });
+    // 3. Omnipresent Audio Synthesizer (Speed synced with speakWord)
+    // Speed buttons update handbookAudioSpeed and speakWord handles playback without conflict
 
     // 4. Full Handbook Search & Filter Engine
     const searchInput = document.getElementById('handbook-search-input');
@@ -2541,13 +2582,13 @@
       },
       'teeth': {
         name: "2. Răng Cửa (Upper & Lower Incisors)",
-        elementId: "svg-part-alveolar-fund",
+        elementIds: ["svg-part-teeth-upper-fund", "svg-part-teeth-lower-fund"],
         targetArticle: "section-articulators",
         desc: "💡 <strong>Răng Cửa (Incisors):</strong> Răng trên và răng dưới tạo chướng ngại vật định hình luồng hơi. Mép răng trên chạm môi dưới tạo /f/, /v/. Răng cắn nhẹ đầu lưỡi tạo /θ/, /ð/. Hai hàm răng khép hẹp cho tia khí /s/, /z/ rít qua kẽ."
       },
       'lips': {
         name: "1. Môi Trên & Môi Dưới (Bilabial / Labial)",
-        elementId: "svg-part-alveolar-fund",
+        elementIds: ["svg-part-lip-upper-fund", "svg-part-lip-lower-fund"],
         targetArticle: "section-articulators",
         desc: "💡 <strong>Đôi Môi (Lips):</strong> Mím chặt bờ trong nén áp suất tạo âm bật nổ hai môi /p/, /b/. Chu tròn hình chiếc phễu tạo /w/, /ʃ/, /tʃ/. Căng mép cười nhẹ hai bên tạo nguyên âm bẹt /iː/, /æ/."
       }
@@ -2560,8 +2601,7 @@
       const descBox = document.getElementById('sagittal-fund-desc');
       if (descBox) {
         descBox.innerHTML = data.desc;
-        descBox.classList.add('border-cyan-400', 'bg-cyan-950/40');
-        setTimeout(() => descBox.classList.remove('border-cyan-400', 'bg-cyan-950/40'), 2000);
+        descBox.className = "w-full mt-3 p-3.5 rounded-xl bg-slate-950 border-2 border-cyan-400 text-xs md:text-sm text-slate-100 font-mono shadow-xl transition-all leading-relaxed";
       }
 
       // Highlight button chip
@@ -2569,16 +2609,24 @@
         const isMatch = btn.dataset.organ === organKey;
         btn.classList.toggle('bg-cyan-950', isMatch);
         btn.classList.toggle('text-cyan-300', isMatch);
-        btn.classList.toggle('border-cyan-500', isMatch);
+        btn.classList.toggle('border-cyan-400', isMatch);
         btn.classList.toggle('font-bold', isMatch);
+        btn.classList.toggle('shadow-md', isMatch);
       });
 
-      // Highlight SVG element
-      const svgEl = document.getElementById(data.elementId);
-      if (svgEl) {
-        svgEl.classList.add('svg-active-glow');
-        setTimeout(() => svgEl.classList.remove('svg-active-glow'), 2000);
-      }
+      // Clear previous glows
+      document.querySelectorAll('.fund-svg-organ').forEach(el => {
+        el.classList.remove('svg-active-glow', 'svg-active-glow-voiced');
+      });
+
+      // Highlight SVG elements
+      const ids = data.elementIds || (data.elementId ? [data.elementId] : []);
+      ids.forEach(id => {
+        const svgEl = document.getElementById(id);
+        if (svgEl) {
+          svgEl.classList.add(organKey === 'vocal-cords' ? 'svg-active-glow-voiced' : 'svg-active-glow');
+        }
+      });
     }
 
     // Attach click to all organ buttons and SVG organs

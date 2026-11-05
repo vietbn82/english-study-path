@@ -990,7 +990,7 @@
             ${frame.templatePattern}
           </div>
           
-          <div class="text-[11px] text-slate-400 italic">
+          <div class="text-sm md:text-base text-slate-100 italic font-medium leading-relaxed">
             🇻🇳 Ý nghĩa: ${frame.vietnameseTranslation || 'Khung câu cấu trúc chuẩn cho kỹ sư phần mềm.'}
           </div>
 
@@ -1119,43 +1119,43 @@
     let howToHtml = '';
     if (soundA.howTo && soundB.howTo) {
       howToHtml = `
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-[11px]">
-          <div class="p-2.5 rounded-lg bg-cyan-950/20 border border-cyan-800/40 space-y-1.5 cursor-pointer hover:border-cyan-400 transition" onclick="window.selectSagittalAndMouth && window.selectSagittalAndMouth('${soundA.symbol}')">
-            <div class="font-bold text-cyan-300 flex items-center justify-between">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+          <div class="p-3.5 rounded-lg bg-cyan-950/20 border border-cyan-800/50 space-y-2 cursor-pointer hover:border-cyan-400 transition" onclick="window.selectSagittalAndMouth && window.selectSagittalAndMouth('${soundA.symbol}')">
+            <div class="font-bold text-cyan-300 flex items-center justify-between text-sm md:text-base">
               <span>👉 Cách phát âm chuẩn ${soundA.symbol} (${soundA.name})</span>
-              <button class="speak-btn px-1.5 py-0.5 rounded bg-cyan-900/60 hover:bg-cyan-800 text-[10px] text-cyan-200" data-word="${contrastData.drills[0]?.wordA || 'test'}">🔊 Nghe</button>
+              <button class="speak-btn px-2 py-0.5 rounded bg-cyan-900/60 hover:bg-cyan-800 text-xs text-cyan-200" data-word="${contrastData.drills[0]?.wordA || 'test'}">🔊 Nghe</button>
             </div>
-            <div class="text-slate-300 whitespace-pre-line text-[10px] leading-relaxed">${soundA.howTo}</div>
+            <div class="text-slate-100 whitespace-pre-line text-sm md:text-base leading-relaxed font-normal">${soundA.howTo}</div>
           </div>
-          <div class="p-2.5 rounded-lg bg-purple-950/20 border border-purple-800/40 space-y-1.5 cursor-pointer hover:border-purple-400 transition" onclick="window.selectSagittalAndMouth && window.selectSagittalAndMouth('${soundB.symbol}')">
-            <div class="font-bold text-purple-300 flex items-center justify-between">
+          <div class="p-3.5 rounded-lg bg-purple-950/20 border border-purple-800/50 space-y-2 cursor-pointer hover:border-purple-400 transition" onclick="window.selectSagittalAndMouth && window.selectSagittalAndMouth('${soundB.symbol}')">
+            <div class="font-bold text-purple-300 flex items-center justify-between text-sm md:text-base">
               <span>👉 Cách phát âm chuẩn ${soundB.symbol} (${soundB.name})</span>
-              <button class="speak-btn px-1.5 py-0.5 rounded bg-purple-900/60 hover:bg-purple-800 text-[10px] text-purple-200" data-word="${contrastData.drills[0]?.wordB || 'dead'}">🔊 Nghe</button>
+              <button class="speak-btn px-2 py-0.5 rounded bg-purple-900/60 hover:bg-purple-800 text-xs text-purple-200" data-word="${contrastData.drills[0]?.wordB || 'dead'}">🔊 Nghe</button>
             </div>
-            <div class="text-slate-300 whitespace-pre-line text-[10px] leading-relaxed">${soundB.howTo}</div>
+            <div class="text-slate-100 whitespace-pre-line text-sm md:text-base leading-relaxed font-normal">${soundB.howTo}</div>
           </div>
         </div>
       `;
     }
 
     card.innerHTML = `
-      <div class="grid grid-cols-2 gap-2 text-center pb-1 font-mono">
-        <div class="p-2.5 rounded-lg bg-slate-950 border border-cyan-900/60 cursor-pointer hover:border-cyan-400 transition" onclick="window.selectSagittalAndMouth && window.selectSagittalAndMouth('${soundA.symbol}')" title="Bấm để kích hoạt ${soundA.symbol} trong mô hình cấu âm">
+      <div class="grid grid-cols-2 gap-3 text-center pb-1 font-mono">
+        <div class="p-3.5 rounded-lg bg-slate-950 border border-cyan-900/60 cursor-pointer hover:border-cyan-400 transition" onclick="window.selectSagittalAndMouth && window.selectSagittalAndMouth('${soundA.symbol}')" title="Bấm để kích hoạt ${soundA.symbol} trong mô hình cấu âm">
           <div class="flex items-center justify-center gap-1.5">
-            <span class="text-lg font-bold text-cyan-400">${soundA.symbol}</span>
-            <button class="speak-btn text-xs text-slate-400 hover:text-cyan-300" data-word="${contrastData.drills[0]?.wordA || 'test'}">🔊</button>
+            <span class="text-xl font-bold text-cyan-400">${soundA.symbol}</span>
+            <button class="speak-btn text-sm text-slate-200 hover:text-cyan-300 font-bold" data-word="${contrastData.drills[0]?.wordA || 'test'}">🔊</button>
           </div>
-          <div class="text-[10px] text-cyan-300 font-bold">${soundA.name}</div>
-          <div class="text-[10px] text-slate-300 mt-1">${soundA.cue}</div>
+          <div class="text-xs text-cyan-300 font-bold mt-1">${soundA.name}</div>
+          <div class="text-xs md:text-sm text-slate-100 mt-1.5 leading-relaxed font-normal">${soundA.cue}</div>
         </div>
 
-        <div class="p-2.5 rounded-lg bg-slate-950 border border-purple-900/60 cursor-pointer hover:border-purple-400 transition" onclick="window.selectSagittalAndMouth && window.selectSagittalAndMouth('${soundB.symbol}')" title="Bấm để kích hoạt ${soundB.symbol} trong mô hình cấu âm">
+        <div class="p-3.5 rounded-lg bg-slate-950 border border-purple-900/60 cursor-pointer hover:border-purple-400 transition" onclick="window.selectSagittalAndMouth && window.selectSagittalAndMouth('${soundB.symbol}')" title="Bấm để kích hoạt ${soundB.symbol} trong mô hình cấu âm">
           <div class="flex items-center justify-center gap-1.5">
-            <span class="text-lg font-bold text-purple-400">${soundB.symbol}</span>
-            <button class="speak-btn text-xs text-slate-400 hover:text-purple-300" data-word="${contrastData.drills[0]?.wordB || 'dead'}">🔊</button>
+            <span class="text-xl font-bold text-purple-400">${soundB.symbol}</span>
+            <button class="speak-btn text-sm text-slate-200 hover:text-purple-300 font-bold" data-word="${contrastData.drills[0]?.wordB || 'dead'}">🔊</button>
           </div>
-          <div class="text-[10px] text-purple-300 font-bold">${soundB.name}</div>
-          <div class="text-[10px] text-slate-300 mt-1">${soundB.cue}</div>
+          <div class="text-xs text-purple-300 font-bold mt-1">${soundB.name}</div>
+          <div class="text-xs md:text-sm text-slate-100 mt-1.5 leading-relaxed font-normal">${soundB.cue}</div>
         </div>
       </div>
 
@@ -2632,12 +2632,90 @@
       loadMouthMap(sound);
     };
 
-    // Anatomical interactive pins
-    document.querySelectorAll('.sagittal-pin').forEach(elem => {
-      elem.addEventListener('click', (e) => {
-        const part = elem.dataset.part;
-        elem.classList.add('svg-active-glow');
-        setTimeout(() => elem.classList.remove('svg-active-glow'), 1800);
+    // Anatomical interactive pins & articulator chips
+    const ARTICULATOR_DATA = {
+      'lips': {
+        title: "1. Đôi Môi (Lips / Bilabial)",
+        elements: ['svg-part-lip-upper', 'svg-part-lip-lower'],
+        desc: "💡 <strong>1. Đôi Môi (Bilabial):</strong> Mép môi trên & môi dưới. Mím chặt bờ trong nén khí nổ bung tạo /p/, /b/ (push, bug). Chu tròn hình phễu tạo bán nguyên âm /w/ (worker) hoặc phối hợp răng dưới tạo /f/, /v/ (file, server)."
+      },
+      'teeth': {
+        title: "2. Răng Cửa (Teeth / Dental)",
+        elements: ['svg-part-teeth-upper', 'svg-part-teeth-lower'],
+        desc: "💡 <strong>2. Răng Cửa (Incisors):</strong> Răng trên và răng dưới. Cắn nhẹ lên đầu lưỡi tạo âm thè lưỡi /θ/ (auth, thread) và /ð/ (this, algorithm). Khép hẹp 2 hàm tạo khe rít tia khí cho /s/, /z/."
+      },
+      'alveolar': {
+        title: "3. Gờ Lợi (Alveolar Ridge)",
+        elements: ['svg-part-alveolar'],
+        desc: "💡 <strong>3. Gờ Lợi (Alveolar Ridge):</strong> Vùng thịt gồ ghề ngay sát chân răng cửa trên. Là 'trung tâm thần kinh' của cấu âm tiếng Anh! Đầu lưỡi dán chặt tạo âm tắc /t/, /d/ (commit, code), nâng sát 1mm xì hơi /s/, /z/, hoặc chặn khí 2 bên tạo /l/."
+      },
+      'hard-palate': {
+        title: "4. Ngạc Cứng (Hard Palate)",
+        elements: ['svg-part-hard-palate'],
+        desc: "💡 <strong>4. Ngạc Cứng (Hard Palate):</strong> Vòm miệng hình vòm có xương nâng đỡ, trơn nhẵn. Thân lưỡi vồng cao áp sát ngạc cứng để tạo bán nguyên âm /j/ (yield, user) và phối hợp gờ lợi tạo âm vòm /tʃ/ (check, branch), /dʒ/ (JSON, bridge)."
+      },
+      'velum': {
+        title: "5. Ngạc Mềm & Lưỡi Gà (Velum / Soft Palate)",
+        elements: ['svg-part-velum'],
+        desc: "💡 <strong>5. Ngạc Mềm (Velum):</strong> Vòm thịt mềm không xương phía sau họng. Gốc lưỡi nhấc bổng dán chặt ngạc mềm để nén khí rồi hạ nổ bung tạo âm tắc /k/, /ɡ/ (commit, git, debug). Hạ xuống thông khoang mũi tạo âm vang /ŋ/ (ping, string)."
+      },
+      'tongue-tip': {
+        title: "6. Đầu Lưỡi (Tongue Tip / Apex)",
+        elements: ['svg-part-tongue-tip'],
+        desc: "💡 <strong>6. Đầu Lưỡi (Tongue Tip):</strong> Cơ quan cơ học linh hoạt nhất. Bắt buộc nâng ép chặt gờ lợi trên khi phát âm /t/, /d/ (test, data) hoặc kẹp giữa hai răng khi phát âm /θ/, /ð/. Người Việt thường mắc lỗi thả rơi đầu lưỡi làm rụng âm đuôi."
+      },
+      'tongue-blade': {
+        title: "7. Thân Lưỡi & Gốc Lưỡi (Tongue Blade / Back)",
+        elements: ['svg-part-tongue-blade', 'svg-part-tongue-back'],
+        desc: "💡 <strong>7. Thân & Gốc Lưỡi (Tongue Body/Back):</strong> Thân lưỡi vồng cao tạo các âm ma sát vòm miệng /ʃ/ (cache, push), /ʒ/ (version). Gốc lưỡi lùi sau nâng ép ngạc mềm để tạo /k/, /ɡ/ và Dark L (/ɫ/) ở đuôi từ (install, SQL, fail)."
+      },
+      'vocal-cords': {
+        title: "8. Dây Thanh Âm (Vocal Folds / Larynx)",
+        elements: ['svg-part-vocal-cords'],
+        desc: "💡 <strong>8. Dây Thanh Âm (Vocal Cords):</strong> Động cơ âm thanh nằm trong thanh quản. Khép lại và rung dồn dập tạo âm Hữu thanh (Voiced: /d/, /z/, /ɡ/, /v/, /b/, /ð/). Mở rộng êm ru không rung tạo âm Vô thanh (Voiceless: /t/, /s/, /k/, /f/, /p/, /θ/)."
+      }
+    };
+
+    function activateArticulator(partKey) {
+      const data = ARTICULATOR_DATA[partKey];
+      if (!data) return;
+
+      // Highlight button chips
+      document.querySelectorAll('.articulator-chip').forEach(btn => {
+        const match = btn.dataset.part === partKey;
+        btn.classList.toggle('bg-cyan-950', match);
+        btn.classList.toggle('text-cyan-300', match);
+        btn.classList.toggle('border-cyan-400', match);
+        btn.classList.toggle('font-bold', match);
+        btn.classList.toggle('shadow-md', match);
+      });
+
+      // Clear previous glows
+      document.querySelectorAll('.sagittal-pin').forEach(el => {
+        el.classList.remove('svg-active-glow', 'svg-active-glow-voiced');
+      });
+
+      // Highlight SVG elements
+      data.elements.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.classList.add(partKey === 'vocal-cords' ? 'svg-active-glow-voiced' : 'svg-active-glow');
+        }
+      });
+
+      // Update callout box
+      const infoBox = document.getElementById('articulator-info-box');
+      if (infoBox) {
+        infoBox.innerHTML = data.desc;
+        infoBox.className = "p-3.5 rounded-xl bg-slate-950 border-2 border-cyan-500/80 text-xs md:text-sm text-slate-100 font-mono shadow-xl leading-relaxed transition-all";
+      }
+    }
+
+    document.querySelectorAll('.articulator-chip, .sagittal-pin').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const part = btn.dataset.part;
+        if (part) activateArticulator(part);
       });
     });
   }

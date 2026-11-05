@@ -11,13 +11,13 @@
       theme: {
         extend: {
           fontSize: {
-            'xs': ['0.95rem', { lineHeight: '1.4rem' }],
-            'sm': ['1.05rem', { lineHeight: '1.55rem' }],
-            'base': ['1.25rem', { lineHeight: '1.75rem' }],
-            'lg': ['1.35rem', { lineHeight: '1.85rem' }],
-            'xl': ['1.55rem', { lineHeight: '2.1rem' }],
-            '2xl': ['2rem', { lineHeight: '2.4rem' }],
-            '3xl': ['2.5rem', { lineHeight: '2.85rem' }]
+            'xs': ['1.125rem', { lineHeight: '1.65rem' }],
+            'sm': ['1.25rem', { lineHeight: '1.8rem' }],
+            'base': ['1.375rem', { lineHeight: '1.95rem' }],
+            'lg': ['1.55rem', { lineHeight: '2.1rem' }],
+            'xl': ['1.75rem', { lineHeight: '2.3rem' }],
+            '2xl': ['2.2rem', { lineHeight: '2.6rem' }],
+            '3xl': ['2.75rem', { lineHeight: '3.1rem' }]
           },
           colors: {
             slate: {
@@ -205,7 +205,7 @@
               <span class="px-2.5 py-1 rounded-full text-xs font-mono font-semibold bg-cyan-950 text-cyan-400 border border-cyan-800/70" id="badge-day">
                 DAY 1 // SPRINT 1
               </span>
-              <span class="text-xs text-slate-400 font-mono" id="badge-sprint-name">
+              <span class="text-sm text-slate-200 font-mono font-semibold" id="badge-sprint-name">
                 Mechanical Phonetics & Daily Standup
               </span>
 
@@ -490,12 +490,25 @@
                   </div>
                 </div>
 
-                <!-- Quick Articulator Explorer Buttons -->
-                <div class="grid grid-cols-4 gap-1.5 w-full text-[11px] text-center font-mono">
-                  <button class="articulator-chip p-1.5 rounded bg-slate-900 border border-slate-800 text-slate-300 hover:text-cyan-300 hover:border-cyan-700 transition" data-part="alveolar">3. Gờ lợi</button>
-                  <button class="articulator-chip p-1.5 rounded bg-slate-900 border border-slate-800 text-slate-300 hover:text-cyan-300 hover:border-cyan-700 transition" data-part="tongue-tip">Đầu lưỡi</button>
-                  <button class="articulator-chip p-1.5 rounded bg-slate-900 border border-slate-800 text-slate-300 hover:text-cyan-300 hover:border-cyan-700 transition" data-part="velum">5. Ngạc mềm</button>
-                  <button class="articulator-chip p-1.5 rounded bg-slate-900 border border-slate-800 text-slate-300 hover:text-cyan-300 hover:border-cyan-700 transition" data-part="vocal-cords">Thanh quản</button>
+                <!-- Quick Articulator Explorer Buttons (8 Cơ Quan Cấu Âm Chuẩn) -->
+                <div class="space-y-2 w-full">
+                  <div class="flex items-center justify-between text-xs font-mono font-bold text-slate-200">
+                    <span>📍 8 Vị Trí Cấu Âm (Click để highlight trên hình giải phẫu):</span>
+                  </div>
+                  <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 w-full text-xs text-center font-mono">
+                    <button class="articulator-chip p-2 rounded bg-slate-900 border border-slate-800 text-slate-200 hover:text-cyan-300 hover:border-cyan-500 transition cursor-pointer font-semibold" data-part="lips">1. Môi (Lips)</button>
+                    <button class="articulator-chip p-2 rounded bg-slate-900 border border-slate-800 text-slate-200 hover:text-cyan-300 hover:border-cyan-500 transition cursor-pointer font-semibold" data-part="teeth">2. Răng (Teeth)</button>
+                    <button class="articulator-chip p-2 rounded bg-slate-900 border border-slate-800 text-slate-200 hover:text-cyan-300 hover:border-cyan-500 transition cursor-pointer font-semibold" data-part="alveolar">3. Gờ lợi (Alveolar)</button>
+                    <button class="articulator-chip p-2 rounded bg-slate-900 border border-slate-800 text-slate-200 hover:text-cyan-300 hover:border-cyan-500 transition cursor-pointer font-semibold" data-part="hard-palate">4. Ngạc cứng (Palate)</button>
+                    <button class="articulator-chip p-2 rounded bg-slate-900 border border-slate-800 text-slate-200 hover:text-cyan-300 hover:border-cyan-500 transition cursor-pointer font-semibold" data-part="velum">5. Ngạc mềm (Velum)</button>
+                    <button class="articulator-chip p-2 rounded bg-slate-900 border border-slate-800 text-slate-200 hover:text-cyan-300 hover:border-cyan-500 transition cursor-pointer font-semibold" data-part="tongue-tip">6. Đầu lưỡi (Tip)</button>
+                    <button class="articulator-chip p-2 rounded bg-slate-900 border border-slate-800 text-slate-200 hover:text-cyan-300 hover:border-cyan-500 transition cursor-pointer font-semibold" data-part="tongue-blade">7. Thân lưỡi (Blade)</button>
+                    <button class="articulator-chip p-2 rounded bg-slate-900 border border-slate-800 text-slate-200 hover:text-cyan-300 hover:border-cyan-500 transition cursor-pointer font-semibold" data-part="vocal-cords">8. Thanh quản (Vocal)</button>
+                  </div>
+                  <!-- Dynamic Organ Callout Box -->
+                  <div id="articulator-info-box" class="p-3.5 rounded-xl bg-slate-950 border border-cyan-800/60 text-xs md:text-sm text-slate-100 font-mono shadow-md leading-relaxed">
+                    💡 <strong>3. Gờ Lợi (Alveolar Ridge):</strong> Điểm tựa quan trọng nhất của tiếng Anh. Đầu lưỡi dán chặt tạo âm /t/, /d/, xì rãnh 1mm tạo /s/, /z/, hoặc dẫn khí 2 bên tạo /l/.
+                  </div>
                 </div>
               </div>
 
@@ -510,14 +523,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                       <div class="flex items-center gap-1" id="mouth-map-pills">
-                        <button data-sound="/t/" class="mouth-pill-btn px-2.5 py-1 rounded text-[11px] font-mono font-bold bg-cyan-950 text-cyan-300 border border-cyan-700 shadow-sm transition active">
+                        <button data-sound="/t/" class="mouth-pill-btn px-2.5 py-1 rounded text-xs font-mono font-bold bg-cyan-950 text-cyan-300 border border-cyan-700 shadow-sm transition active">
                           /t/ (Vô thanh)
                         </button>
-                        <button data-sound="/d/" class="mouth-pill-btn px-2.5 py-1 rounded text-[11px] font-mono text-slate-400 border border-slate-800 hover:text-cyan-300 transition">
+                        <button data-sound="/d/" class="mouth-pill-btn px-2.5 py-1 rounded text-xs font-mono text-slate-300 border border-slate-800 hover:text-cyan-300 transition">
                           /d/ (Hữu thanh)
                         </button>
                       </div>
-                      <button id="btn-animate-mouth" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-[11px] text-cyan-300 font-mono rounded border border-slate-700 transition">
+                      <button id="btn-animate-mouth" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-xs text-cyan-300 font-mono rounded border border-slate-700 transition">
                         ▶️ Chuyển động
                       </button>
                     </div>
@@ -525,16 +538,16 @@
 
                   <!-- 2-Column Direct Comparison Table (Bảng So Sánh 2 Cột Trực Diện) -->
                   <div class="overflow-hidden rounded-xl border border-slate-800 bg-slate-900/60 shadow">
-                    <table class="w-full text-xs text-left border-collapse">
+                    <table class="w-full text-left border-collapse">
                       <thead>
-                        <tr class="bg-slate-900 border-b border-slate-800 text-[11px] font-mono">
-                          <th class="p-2.5 text-rose-300 border-r border-slate-800 w-1/2">
+                        <tr class="bg-slate-900 border-b border-slate-800 text-xs font-mono font-bold">
+                          <th class="p-3 text-rose-300 border-r border-slate-800 w-1/2">
                             <span class="flex items-center gap-1.5">
                               <span>🇻🇳</span>
                               <span id="mouth-vn-title">Thói quen của bạn</span>
                             </span>
                           </th>
-                          <th class="p-2.5 text-emerald-300 w-1/2">
+                          <th class="p-3 text-emerald-300 w-1/2">
                             <span class="flex items-center gap-1.5">
                               <span>🇬🇧</span>
                               <span id="mouth-en-title">Chuẩn tiếng Anh</span>
@@ -542,20 +555,20 @@
                           </th>
                         </tr>
                       </thead>
-                      <tbody class="divide-y divide-slate-800 text-[11px]">
+                      <tbody class="divide-y divide-slate-800 text-sm md:text-base">
                         <tr>
-                          <td class="p-2.5 text-slate-300 leading-relaxed border-r border-slate-800 bg-rose-950/10" id="mouth-vn-desc">
-                            Ngậm miệng lại (unreleased coda). Đầu lưỡi chạm ngạc nhưng chặn đứng luồng khí.
+                          <td class="p-3.5 text-slate-100 leading-relaxed border-r border-slate-800 bg-rose-950/20" id="mouth-vn-desc">
+                            Ngậm miệng lại (unreleased coda). Đầu lưỡi chạm ngạc nhưng chặn đứng luồng khí, không nhả hơi ra.
                           </td>
-                          <td class="p-2.5 text-slate-300 leading-relaxed bg-emerald-950/10" id="mouth-en-desc">
+                          <td class="p-3.5 text-slate-100 leading-relaxed bg-emerald-950/20" id="mouth-en-desc">
                             Đầu lưỡi dán chặt gờ lợi, nén áp suất rồi giật dứt khoát giải phóng tiếng nổ (Pop).
                           </td>
                         </tr>
-                        <tr class="bg-slate-950/40 text-[10px] font-mono text-slate-400">
-                          <td class="p-2 border-r border-slate-800">
+                        <tr class="bg-slate-950/60 text-xs font-sans text-slate-200">
+                          <td class="p-2.5 border-r border-slate-800">
                             <span class="text-rose-400 font-bold">Lỗi phổ biến:</span> Nuốt âm đuôi, đập lưỡi vào mặt sau răng cửa
                           </td>
-                          <td class="p-2">
+                          <td class="p-2.5">
                             <span class="text-emerald-400 font-bold">Cơ chế chuẩn:</span> Dán gờ lợi sau răng ➜ Giật nhả áp suất nổ sắc nét
                           </td>
                         </tr>
@@ -570,48 +583,48 @@
 
                 <!-- Articulatory Specs Card (2x2 Grid) -->
                 <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-4 space-y-3 shadow-lg">
-                  <div class="text-xs font-mono font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                  <div class="text-xs md:text-sm font-mono font-bold text-slate-100 uppercase tracking-wider flex items-center gap-1.5">
                     <span>📋 Tọa độ cấu âm học (IPA Technical Coordinates):</span>
                   </div>
-                  <div class="grid grid-cols-2 gap-3 text-xs font-mono">
-                    <div class="p-2.5 rounded-lg bg-slate-900/90 border border-slate-800/90">
-                      <div class="text-slate-500 text-[10px] uppercase">Cơ quan chủ động:</div>
-                      <div class="text-cyan-300 font-bold mt-0.5" id="phonetics-active">-</div>
+                  <div class="grid grid-cols-2 gap-3 text-xs md:text-sm font-mono">
+                    <div class="p-3 rounded-lg bg-slate-900 border border-slate-800">
+                      <div class="text-slate-300 text-xs font-semibold uppercase">Cơ quan chủ động:</div>
+                      <div class="text-cyan-300 font-bold mt-1 text-sm md:text-base" id="phonetics-active">-</div>
                     </div>
-                    <div class="p-2.5 rounded-lg bg-slate-900/90 border border-slate-800/90">
-                      <div class="text-slate-500 text-[10px] uppercase">Điểm tiếp xúc:</div>
-                      <div class="text-cyan-300 font-bold mt-0.5" id="phonetics-passive">-</div>
+                    <div class="p-3 rounded-lg bg-slate-900 border border-slate-800">
+                      <div class="text-slate-300 text-xs font-semibold uppercase">Điểm tiếp xúc:</div>
+                      <div class="text-cyan-300 font-bold mt-1 text-sm md:text-base" id="phonetics-passive">-</div>
                     </div>
-                    <div class="p-2.5 rounded-lg bg-slate-900/90 border border-slate-800/90">
-                      <div class="text-slate-500 text-[10px] uppercase">Cách thoát khí:</div>
-                      <div class="text-cyan-300 font-bold mt-0.5" id="phonetics-manner">-</div>
+                    <div class="p-3 rounded-lg bg-slate-900 border border-slate-800">
+                      <div class="text-slate-300 text-xs font-semibold uppercase">Cách thoát khí:</div>
+                      <div class="text-cyan-300 font-bold mt-1 text-sm md:text-base" id="phonetics-manner">-</div>
                     </div>
-                    <div class="p-2.5 rounded-lg bg-slate-900/90 border border-slate-800/90">
-                      <div class="text-slate-500 text-[10px] uppercase">Dây thanh âm:</div>
-                      <div class="text-cyan-300 font-bold mt-0.5" id="phonetics-voiced">-</div>
+                    <div class="p-3 rounded-lg bg-slate-900 border border-slate-800">
+                      <div class="text-slate-300 text-xs font-semibold uppercase">Dây thanh âm:</div>
+                      <div class="text-cyan-300 font-bold mt-1 text-sm md:text-base" id="phonetics-voiced">-</div>
                     </div>
                   </div>
                 </div>
 
                 <!-- Dynamic Educational Articulator Status & Guidance Panel -->
-                <div id="sagittal-info-panel" class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs space-y-2.5 shadow-lg">
+                <div id="sagittal-info-panel" class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 text-sm space-y-3 shadow-lg">
                   <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-                    <span class="font-bold text-cyan-300 font-mono text-sm" id="sagittal-status-sound">/t/ - Voiceless Alveolar Stop</span>
-                    <span class="text-[11px] px-2.5 py-0.5 rounded font-mono font-bold bg-emerald-950 text-emerald-300 border border-emerald-800" id="sagittal-status-badge">
+                    <span class="font-bold text-cyan-300 font-mono text-base" id="sagittal-status-sound">/t/ - Voiceless Alveolar Stop</span>
+                    <span class="text-xs px-2.5 py-1 rounded font-mono font-bold bg-emerald-950 text-emerald-300 border border-emerald-800" id="sagittal-status-badge">
                       🇬🇧 Chuẩn Target
                     </span>
                   </div>
 
-                  <p class="text-slate-300 text-xs leading-relaxed" id="sagittal-status-desc">
+                  <p class="text-slate-100 text-sm md:text-base leading-relaxed" id="sagittal-status-desc">
                     Đầu lưỡi dán chặt gờ lợi sau răng trên, nén áp suất khí rồi giật lưỡi dứt khoát giải phóng tiếng bật hơi sắc nét (Pop).
                   </p>
 
-                  <div class="grid grid-cols-2 gap-2 text-xs font-mono border-t border-slate-800/80 pt-2 text-slate-400">
+                  <div class="grid grid-cols-2 gap-2 text-xs md:text-sm font-mono border-t border-slate-800/80 pt-2 text-slate-200">
                     <div>
-                      <span class="text-slate-500">Cơ quan:</span> <span class="text-slate-200" id="sagittal-status-organ">Đầu lưỡi ➜ Gờ lợi trên</span>
+                      <span class="text-slate-300 font-semibold">Cơ quan:</span> <span class="text-cyan-300 font-bold" id="sagittal-status-organ">Đầu lưỡi ➜ Gờ lợi trên</span>
                     </div>
                     <div>
-                      <span class="text-slate-500">Dây thanh âm:</span> <span class="text-slate-200" id="sagittal-status-voicing">Vô thanh (Không rung)</span>
+                      <span class="text-slate-300 font-semibold">Dây thanh âm:</span> <span class="text-cyan-300 font-bold" id="sagittal-status-voicing">Vô thanh (Không rung)</span>
                     </div>
                   </div>
                 </div>
