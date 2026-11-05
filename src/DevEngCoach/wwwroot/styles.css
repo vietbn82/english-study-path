@@ -441,3 +441,63 @@ button { cursor: pointer; border: none; outline: none; }
 @media (min-width: 1280px) {
   .xl\:grid-cols-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 }
+
+/* --- Analytics Heatmap (Feature 003) --- */
+.heatmap-cell {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: transform 0.15s ease, outline 0.15s ease;
+  position: relative;
+}
+.heatmap-cell:hover {
+  transform: scale(1.25);
+  outline: 1.5px solid #38bdf8;
+  z-index: 10;
+}
+.heatmap-intensity-0 { background-color: #1e293b; border: 1px solid #334155; }
+.heatmap-intensity-1 { background-color: #064e3b; border: 1px solid #047857; }
+.heatmap-intensity-2 { background-color: #059669; border: 1px solid #10b981; }
+.heatmap-intensity-3 { background-color: #10b981; border: 1px solid #34d399; box-shadow: 0 0 6px rgba(16, 185, 129, 0.4); }
+
+/* --- Badges Shelf (Feature 003) --- */
+.badge-card {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.badge-card.unlocked {
+  border-color: #f59e0b;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(15, 23, 42, 0.9));
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
+}
+.badge-card.locked {
+  opacity: 0.5;
+  filter: grayscale(1);
+}
+
+/* --- Phoneme Badges (Feature 002) --- */
+.phoneme-tag-correct {
+  background-color: #064e3b;
+  border: 1px solid #059669;
+  color: #6ee7b7;
+}
+.phoneme-tag-incorrect {
+  background-color: #450a0a;
+  border: 1px solid #dc2626;
+  color: #fca5a5;
+}
+.phoneme-tag-partial {
+  background-color: #451a03;
+  border: 1px solid #d97706;
+  color: #fcd34d;
+}
+
+/* --- Waveform Visualizer (Feature 004) --- */
+.waveform-canvas {
+  width: 100%;
+  height: 64px;
+  background-color: #030712;
+  border-radius: 8px;
+  border: 1px solid #1e293b;
+  display: block;
+}

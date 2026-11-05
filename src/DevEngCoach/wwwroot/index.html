@@ -91,6 +91,12 @@
         <button id="nav-srs" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 transition">
           🧠 SRS Vault
         </button>
+        <button id="nav-analytics" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 transition">
+          📊 Burndown & Analytics
+        </button>
+        <button id="nav-shadowing" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 transition">
+          🎙️ Shadowing Studio
+        </button>
         <a href="fundamentals.html" target="_blank" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-amber-300 bg-amber-950/40 border border-amber-800/60 hover:bg-amber-900/40 transition flex items-center gap-1">
           <span>📖 Fundamentals</span>
         </a>
@@ -1039,6 +1045,181 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
       </div>
     </section>
 
+      <!-- SECTION 7: Analytics & Burndown Dashboard (Feature 003) -->
+    <section id="view-analytics" class="space-y-6 hidden">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div>
+          <h2 class="text-lg font-bold text-slate-100 flex items-center gap-2">
+            <span>📊</span> Analytics, Burndown & Gamification
+          </h2>
+          <p class="text-xs text-slate-400">Trực quan hóa quỹ đạo hoàn thành 90 ngày, heatmap cường độ học tập và bộ sưu tập huy hiệu.</p>
+        </div>
+        <div id="burndown-pace-badge" class="px-3 py-1 rounded-full text-xs font-mono font-bold bg-slate-800 text-cyan-300 border border-slate-700">
+          Đang tính tiến độ...
+        </div>
+      </div>
+
+      <!-- Top Row: Burndown Line Chart & Heatmap -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Burndown SVG Chart -->
+        <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+            <span class="text-xs font-mono font-bold text-cyan-400">BURNDOWN TRAJECTORY (NGÀY 1 → 90):</span>
+            <div class="flex items-center gap-3 text-[11px] font-mono">
+              <span class="flex items-center gap-1 text-slate-400"><span class="inline-block w-3 h-0.5 bg-slate-500"></span> Lý tưởng</span>
+              <span class="flex items-center gap-1 text-cyan-400"><span class="inline-block w-3 h-0.5 bg-cyan-400"></span> Thực tế</span>
+            </div>
+          </div>
+          <div class="relative w-full h-64 bg-slate-950 rounded-lg p-2 border border-slate-800/80">
+            <svg id="svg-burndown" class="w-full h-full" viewBox="0 0 600 240"></svg>
+          </div>
+          <div class="flex items-center justify-between text-[11px] font-mono text-slate-400 pt-1">
+            <span>Sprint 1 (Ngày 1-30)</span>
+            <span>Sprint 2 (Ngày 31-60)</span>
+            <span>Sprint 3 (Ngày 61-90)</span>
+          </div>
+        </div>
+
+        <!-- 90-Cell Heatmap Calendar -->
+        <div class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+            <span class="text-xs font-mono font-bold text-emerald-400">HEATMAP HOẠT ĐỘNG (90 NGÀY):</span>
+            <span class="text-[10px] font-mono text-slate-400">13 tuần × 7 ngày</span>
+          </div>
+          <div id="heatmap-grid" class="flex flex-wrap gap-1.5 p-2 bg-slate-950 rounded-lg border border-slate-800/80 min-h-[160px]">
+            <!-- Rendered 90 cells -->
+          </div>
+          <div class="flex items-center justify-between text-[10px] text-slate-400 pt-1">
+            <div class="flex items-center gap-1">
+              <span>Ít</span>
+              <div class="heatmap-cell heatmap-intensity-0"></div>
+              <div class="heatmap-cell heatmap-intensity-1"></div>
+              <div class="heatmap-cell heatmap-intensity-2"></div>
+              <div class="heatmap-cell heatmap-intensity-3"></div>
+              <span>Nhiều (30m+)</span>
+            </div>
+            <div id="heatmap-tooltip-info" class="text-slate-300 font-mono">Hover vào ô để xem</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Row: Badges Trophy Shelf & Weekly Velocity -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Badges Shelf -->
+        <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+          <h3 class="text-xs font-mono font-bold text-amber-400 border-b border-slate-800 pb-2">🏆 HUY HIỆU THÀNH TÍCH VĨNH VIỄN (GAMIFICATION):</h3>
+          <div id="badges-shelf" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <!-- Badges rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Weekly Velocity Metrics -->
+        <div class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+          <h3 class="text-xs font-mono font-bold text-purple-400 border-b border-slate-800 pb-2">⚡ WEEKLY VELOCITY (13 TUẦN):</h3>
+          <div id="velocity-container" class="space-y-2 max-h-56 overflow-y-auto pr-1 text-xs">
+            <!-- Velocity bars rendered dynamically -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 8: Shadowing Studio (Feature 004) -->
+    <section id="view-shadowing" class="space-y-6 hidden">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div>
+          <h2 class="text-lg font-bold text-slate-100 flex items-center gap-2">
+            <span>🎙️</span> Shadowing Studio with Visual Waveform
+          </h2>
+          <p class="text-xs text-slate-400">Khắc phục cảm âm yếu bằng so sánh sóng âm trực quan (Waveform) xếp chồng và nghe tuần tự Back-to-Back.</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs font-mono">
+          <span class="text-slate-400">Tốc độ mẫu:</span>
+          <button class="shadow-speed-btn px-2 py-1 rounded bg-slate-800 border border-slate-700 text-slate-300 active" data-speed="1.0">1.0x</button>
+          <button class="shadow-speed-btn px-2 py-1 rounded bg-slate-800 border border-slate-700 text-slate-300" data-speed="0.85">0.85x</button>
+          <button class="shadow-speed-btn px-2 py-1 rounded bg-slate-800 border border-slate-700 text-slate-300" data-speed="0.7">0.7x</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Left: Audio Models & Dual Waveforms -->
+        <div class="lg:col-span-8 bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+          <!-- Target Sentence Display -->
+          <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-2">
+            <div class="text-[11px] font-mono text-cyan-400 font-bold">CÂU LUYỆN SHADOWING (HÔM NAY):</div>
+            <p id="shadow-sentence-text" class="text-base text-slate-100 font-semibold leading-relaxed">
+              "Yesterday, I focused on the deployment pipeline, specifically optimizing the build cache."
+            </p>
+            <div id="shadow-phonetic-cue" class="text-xs text-amber-300 font-mono">Âm trọng tâm: /t/ vs /d/ (Ending Consonant release)</div>
+          </div>
+
+          <!-- Action Control Bar -->
+          <div class="flex flex-wrap items-center gap-2.5 pt-1">
+            <button id="btn-shadow-ref-play" class="px-3.5 py-2 bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-800 rounded-lg text-xs font-bold flex items-center gap-1.5 transition">
+              🔊 Nghe câu mẫu
+            </button>
+            <button id="btn-shadow-record" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-bold flex items-center gap-1.5 transition">
+              🎤 <span id="shadow-record-label">Thu âm giọng bạn</span>
+            </button>
+            <button id="btn-shadow-compare-b2b" class="px-3.5 py-2 bg-purple-950 hover:bg-purple-900 text-purple-300 border border-purple-800 rounded-lg text-xs font-bold flex items-center gap-1.5 transition">
+              ▶️ So sánh Tuần tự (B2B)
+            </button>
+            <button id="btn-shadow-toggle-ab" class="px-3.5 py-2 bg-indigo-950 hover:bg-indigo-900 text-indigo-300 border border-indigo-800 rounded-lg text-xs font-bold flex items-center gap-1.5 transition">
+              🔀 Toggle A/B: <span id="shadow-active-track" class="text-cyan-400 font-mono ml-1">Mẫu 🔊</span>
+            </button>
+          </div>
+
+          <!-- Stacked Waveforms -->
+          <div class="space-y-3 pt-2">
+            <div class="space-y-1">
+              <div class="flex items-center justify-between text-[11px] font-mono">
+                <span class="text-cyan-400 font-bold">1. SÓNG ÂM GIỌNG MẪU (REFERENCE):</span>
+                <span id="shadow-ref-duration" class="text-slate-400">3.5s</span>
+              </div>
+              <canvas id="canvas-shadow-ref" width="600" height="70" class="waveform-canvas"></canvas>
+            </div>
+
+            <div class="space-y-1">
+              <div class="flex items-center justify-between text-[11px] font-mono">
+                <span class="text-amber-400 font-bold">2. SÓNG ÂM GIỌNG BẠN (YOUR RECORDING):</span>
+                <span id="shadow-user-duration" class="text-slate-400">0.0s (Chưa thu)</span>
+              </div>
+              <canvas id="canvas-shadow-user" width="600" height="70" class="waveform-canvas"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: AI Shadowing Analysis Card -->
+        <div class="lg:col-span-4 bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+          <h3 class="text-xs font-mono font-bold text-cyan-400 border-b border-slate-800 pb-2">🤖 CHẨN ĐOÁN NHỊP ĐIỆU & PACING:</h3>
+          
+          <button id="btn-shadow-ai-feedback" class="w-full py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold rounded-lg text-xs shadow-md transition">
+            ⚡ Phân Tích Nhịp Điệu Cùng AI
+          </button>
+
+          <div id="shadow-feedback-container" class="bg-slate-950 border border-slate-800 p-3.5 rounded-xl space-y-3 text-xs">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+              <span class="text-slate-400">Điểm nhịp điệu:</span>
+              <span id="shadow-pacing-score" class="font-mono font-bold text-cyan-400 text-sm">--/100</span>
+            </div>
+            <div class="space-y-1">
+              <span class="text-slate-400 font-semibold">Đánh giá tốc độ:</span>
+              <div id="shadow-pacing-diagnosis" class="text-slate-200 font-mono text-[11px] p-2 bg-slate-900 rounded border border-slate-800">
+                Chưa có dữ liệu phân tích.
+              </div>
+            </div>
+            <div class="space-y-1">
+              <span class="text-slate-400 font-semibold">Lời khuyên Stress-Timing:</span>
+              <p id="shadow-stress-tip" class="text-slate-300 text-[11px] leading-relaxed">
+                Nhấn giọng vào từ mang thông tin kỹ thuật chính, lướt nhanh từ chức năng.
+              </p>
+            </div>
+            <div id="shadow-alerts-list" class="space-y-1 text-[11px] text-amber-300">
+              <!-- Alerts -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <!-- MODAL: Sound Practice & AI Grading (Luyện phát âm & Chấm điểm âm/từ) -->
@@ -1089,6 +1270,13 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
           <span id="sound-grade-score" class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-cyan-950 text-cyan-400 border border-cyan-800">
             92/100
           </span>
+        </div>
+        <!-- Phoneme-Level Breakdown (Feature 002) -->
+        <div class="space-y-1.5">
+          <div class="text-[11px] text-slate-400 font-semibold">Chi tiết âm vị & Bắt lỗi cơ học:</div>
+          <div id="modal-phoneme-breakdown" class="flex flex-wrap gap-1.5 text-xs font-mono">
+            <!-- Phoneme badges rendered here -->
+          </div>
         </div>
         <div class="space-y-1">
           <div class="text-[11px] text-slate-400 font-semibold">Chẩn đoán vị trí cơ học:</div>

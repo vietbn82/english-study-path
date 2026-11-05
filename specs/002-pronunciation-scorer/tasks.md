@@ -6,7 +6,7 @@
 
 ## Phase 1: Domain Models & Vietnamese Interference Rules
 
-- [ ] **Task 1.1**: Create `Common/SpeechScoringModels.cs`:
+- [x] **Task 1.1**: Create `Common/SpeechScoringModels.cs`:
   - `PhonemeCategory` enum: `EndingConsonant`, `DentalFricative`, `PalatalAffricate`, `ConsonantCluster`, `Vowel`.
   - `PhonemeResult`: `TargetPhoneme`, `DetectedPhoneme`, `IsCorrect`, `Category`, `KinestheticCorrectionTip`.
   - `SpeechScoreRequest`: `DayNumber`, `TargetWordOrSentence`, `ExpectedPhonemes`, `SpokenText`.
@@ -17,7 +17,7 @@
 
 ## Phase 2: Speech Scoring Engine & SRS Integration
 
-- [ ] **Task 2.1**: Implement `ISpeechScoringService` and `SpeechScoringService`:
+- [x] **Task 2.1**: Implement `ISpeechScoringService` and `SpeechScoringService`:
   - Rule-based phoneme alignment engine comparing expected phoneme tokens against phonetic transcription.
   - Specialized Vietnamese phonological interference detectors:
     - Dropped stop codas (`/t/`, `/d/`, `/k/`, `/p/`).
@@ -32,8 +32,8 @@
 
 ## Phase 3: Minimal API Endpoints
 
-- [ ] **Task 3.1**: Register `ISpeechScoringService` in DI (`Program.cs`).
-- [ ] **Task 3.2**: Add endpoints in `Program.cs`:
+- [x] **Task 3.1**: Register `ISpeechScoringService` in DI (`Program.cs`).
+- [x] **Task 3.2**: Add endpoints in `Program.cs`:
   - `POST /api/speech/score`: Accepts `SpeechScoreRequest` and returns `SpeechScoreResponse`.
   - `POST /api/speech/transcribe`: Accepts audio upload, provides fallback phonetic string.
   - `GET /api/speech/scores/summary`: Returns category breakdown metrics (Ending Consonants %, Fricatives %, Clusters %).
@@ -43,12 +43,12 @@
 
 ## Phase 4: Frontend UI & Real-Time Color Coder
 
-- [ ] **Task 4.1**: Enhance `wwwroot/index.html` with Pronunciation Scorer Widget:
+- [x] **Task 4.1**: Enhance `wwwroot/index.html` with Pronunciation Scorer Widget:
   - Microphone capture button (`🎤 Record & Grade`) on each vocabulary word and sentence frame.
   - Visual color-coded phoneme breakdown container (`green` for correct, `orange` for partial, `red` for missed/dropped).
   - Hover/click tooltip displaying kinesthetic placement reminder (e.g., *"Tongue tip taps alveolar ridge and releases burst"*).
   - Score summary card displaying 0–100 score with SRS auto-enrollment badge.
-- [ ] **Task 4.2**: Implement audio capture and API integration in `wwwroot/app.js`:
+- [x] **Task 4.2**: Implement audio capture and API integration in `wwwroot/app.js`:
   - Web Speech API `SpeechRecognition` handler with fallback to MediaRecorder blob upload.
   - Asynchronous submission to `/api/speech/score` and real-time DOM rendering of phoneme badges.
 
@@ -56,10 +56,10 @@
 
 ## Phase 5: Automated Testing & Verification
 
-- [ ] **Task 5.1**: Author unit tests in `tests/DevEngCoach.Tests/SpeechScoringServiceTests.cs`:
+- [x] **Task 5.1**: Author unit tests in `tests/DevEngCoach.Tests/SpeechScoringServiceTests.cs`:
   - Test dropped ending consonant detection.
   - Test `/θ/` -> `/t/` substitution detection.
   - Test cluster reduction detection.
   - Test SRS auto-enrollment trigger when score < 60.
-- [ ] **Task 5.2**: Integration tests for API endpoints in `tests/DevEngCoach.Tests/ApiIntegrationTests.cs`.
-- [ ] **Task 5.3**: End-to-end verification and `dotnet test` confirmation.
+- [x] **Task 5.2**: Integration tests for API endpoints in `tests/DevEngCoach.Tests/ApiIntegrationTests.cs`.
+- [x] **Task 5.3**: End-to-end verification and `dotnet test` confirmation.

@@ -241,5 +241,46 @@ public class ApiIntegrationTests : IClassFixture<WebApplicationFactory<Program>>
         var reviewedItem = await reviewResponse.Content.ReadFromJsonAsync<SrsItem>();
         reviewedItem.Should().NotBeNull();
         reviewedItem!.LastScore.Should().Be(85);
+     }
+    [Fact]
+    public async Task PostSpeechScore_ReturnsValidPhonemeBreakdown()
+    {
+        var request = new SpeechScoreRequest(1, "commit", "/t/", "commit");
+        var response = await _client.PostAsJsonAsync("/api/speech/score", request);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<SpeechScoreResponse>();
+        result.Should().NotBeNull();
+        result!.OverallAccuracy.Should().Be(100);
+        result.IsPassing.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task GetAnalyticsBurndownAndHeatmap_ReturnsData()
+    {
+        var burndownResponse = await _client.GetAsync("/api/analytics/burndown");
+        burndownResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        var burndown = await burndownResponse.Content.ReadFromJsonAsync<BurndownData>();
+        burndown.Should().NotBeNull();
+        burndown!.TotalDays.Should().Be(90);
+
+        var heatmapResponse = await _client.GetAsync("/api/analytics/heatmap");
+        heatmapResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        var heatmap = await heatmapResponse.Content.ReadFromJsonAsync<List<HeatmapCell>>();
+        heatmap.Should().NotBeNull();
+        heatmap!.Count.Should().Be(90);
+    }
+
+    [Fact]
+    public async Task PostShadowingEvaluate_ReturnsFeedback()
+    {
+        var request = new ShadowingEvaluateRequest(1, "Yesterday, I focused on the deployment pipeline.", 3.5, 3.4);
+        var response = await _client.PostAsJsonAsync("/api/shadowing/evaluate", request);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ShadowingFeedbackResponse>();
+        result.Should().NotBeNull();
+        result!.PacingDiagnosis.Should().Contain("Optimal");
+        result.PacingScore.Should().BeGreaterThanOrEqualTo(80);
     }
 }

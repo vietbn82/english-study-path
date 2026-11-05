@@ -153,6 +153,34 @@
     viewSparring: document.getElementById('view-sparring'),
     viewPrpolish: document.getElementById('view-prpolish'),
     viewSrs: document.getElementById('view-srs'),
+    navAnalytics: document.getElementById('nav-analytics'),
+    navShadowing: document.getElementById('nav-shadowing'),
+    viewAnalytics: document.getElementById('view-analytics'),
+    viewShadowing: document.getElementById('view-shadowing'),
+    burndownPaceBadge: document.getElementById('burndown-pace-badge'),
+    svgBurndown: document.getElementById('svg-burndown'),
+    heatmapGrid: document.getElementById('heatmap-grid'),
+    heatmapTooltipInfo: document.getElementById('heatmap-tooltip-info'),
+    badgesShelf: document.getElementById('badges-shelf'),
+    velocityContainer: document.getElementById('velocity-container'),
+    shadowSentenceText: document.getElementById('shadow-sentence-text'),
+    shadowPhoneticCue: document.getElementById('shadow-phonetic-cue'),
+    btnShadowRefPlay: document.getElementById('btn-shadow-ref-play'),
+    btnShadowRecord: document.getElementById('btn-shadow-record'),
+    shadowRecordLabel: document.getElementById('shadow-record-label'),
+    btnShadowCompareB2b: document.getElementById('btn-shadow-compare-b2b'),
+    btnShadowToggleAb: document.getElementById('btn-shadow-toggle-ab'),
+    shadowActiveTrack: document.getElementById('shadow-active-track'),
+    shadowRefDuration: document.getElementById('shadow-ref-duration'),
+    shadowUserDuration: document.getElementById('shadow-user-duration'),
+    canvasShadowRef: document.getElementById('canvas-shadow-ref'),
+    canvasShadowUser: document.getElementById('canvas-shadow-user'),
+    btnShadowAiFeedback: document.getElementById('btn-shadow-ai-feedback'),
+    shadowPacingScore: document.getElementById('shadow-pacing-score'),
+    shadowPacingDiagnosis: document.getElementById('shadow-pacing-diagnosis'),
+    shadowStressTip: document.getElementById('shadow-stress-tip'),
+    shadowAlertsList: document.getElementById('shadow-alerts-list'),
+    modalPhonemeBreakdown: document.getElementById('modal-phoneme-breakdown'),
     statStreak: document.getElementById('stat-streak'),
     statVariance: document.getElementById('stat-variance'),
     statProgress: document.getElementById('stat-progress'),
@@ -309,6 +337,8 @@
     if (el.navPrpolish) el.navPrpolish.addEventListener('click', () => switchView('prpolish'));
     if (el.navSrs) el.navSrs.addEventListener('click', () => switchView('srs'));
     if (el.statSrsBadge) el.statSrsBadge.addEventListener('click', () => switchView('srs'));
+    if (el.navAnalytics) el.navAnalytics.addEventListener('click', () => switchView('analytics'));
+    if (el.navShadowing) el.navShadowing.addEventListener('click', () => switchView('shadowing'));
 
     // Audio Comparison Controls (FR-011)
     if (el.btnPlayNativeVoice) {
@@ -613,6 +643,8 @@
     if (el.viewSparring) el.viewSparring.classList.add('hidden');
     if (el.viewPrpolish) el.viewPrpolish.classList.add('hidden');
     if (el.viewSrs) el.viewSrs.classList.add('hidden');
+    if (el.viewAnalytics) el.viewAnalytics.classList.add('hidden');
+    if (el.viewShadowing) el.viewShadowing.classList.add('hidden');
 
     const defaultNavClass = 'px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 transition';
     const activeNavClass = 'px-2.5 py-1.5 rounded-lg text-xs font-medium bg-cyan-500 text-slate-950 shadow-sm transition';
@@ -623,6 +655,8 @@
     if (el.navSparring) el.navSparring.className = defaultNavClass;
     if (el.navPrpolish) el.navPrpolish.className = defaultNavClass;
     if (el.navSrs) el.navSrs.className = defaultNavClass;
+    if (el.navAnalytics) el.navAnalytics.className = defaultNavClass;
+    if (el.navShadowing) el.navShadowing.className = defaultNavClass;
 
     if (view === 'workspace') {
       if (el.viewWorkspace) el.viewWorkspace.classList.remove('hidden');
@@ -647,6 +681,14 @@
       if (el.viewSrs) el.viewSrs.classList.remove('hidden');
       if (el.navSrs) el.navSrs.className = activeNavClass;
       refreshSrsData();
+    } else if (view === 'analytics') {
+      if (el.viewAnalytics) el.viewAnalytics.classList.remove('hidden');
+      if (el.navAnalytics) el.navAnalytics.className = activeNavClass;
+      refreshAnalyticsData();
+    } else if (view === 'shadowing') {
+      if (el.viewShadowing) el.viewShadowing.classList.remove('hidden');
+      if (el.navShadowing) el.navShadowing.className = activeNavClass;
+      initShadowingStudio();
     }
   }
 
@@ -1008,6 +1050,35 @@
     el.btnSubmitSoundGrade.textContent = "⏳ AI Coach đang phân tích âm học...";
 
     try {
+      // 1. Call Speech-to-Text Pronunciation Scorer (Feature 002)
+      try {
+        const scoreRes = await fetch('/api/speech/score', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            dayNumber: state.currentDay,
+            targetWordOrSentence: state.soundPractice.targetWord,
+            expectedPhonemes: state.soundPractice.targetSymbol,
+            spokenText: input
+          })
+        });
+        if (scoreRes.ok) {
+          const scoreData = await scoreRes.json();
+          if (el.modalPhonemeBreakdown) {
+            el.modalPhonemeBreakdown.innerHTML = '';
+            (scoreData.phonemeBreakdown || []).forEach(p => {
+              const span = document.createElement('span');
+              span.className = p.isCorrect ? 'px-2 py-0.5 rounded phoneme-tag-correct' : 'px-2 py-0.5 rounded phoneme-tag-incorrect';
+              span.title = p.kinestheticCorrectionTip;
+              span.textContent = `${p.targetPhoneme} ${p.isCorrect ? '✅' : '❌'}`;
+              el.modalPhonemeBreakdown.appendChild(span);
+            });
+          }
+        }
+      } catch (e) {
+        console.warn('Speech scoring endpoint fallback', e);
+      }
+
       const res = await fetch('/api/ai/evaluate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -2318,4 +2389,360 @@
   } else {
     init();
   }
+
+  // ==========================================
+  // FEATURE 003: Analytics & Burndown Dashboard
+  // ==========================================
+  async function refreshAnalyticsData() {
+    try {
+      const [burndownRes, heatmapRes, badgesRes, velocityRes] = await Promise.all([
+        fetch('/api/analytics/burndown').then(r => r.json()).catch(() => null),
+        fetch('/api/analytics/heatmap').then(r => r.json()).catch(() => null),
+        fetch('/api/analytics/badges').then(r => r.json()).catch(() => null),
+        fetch('/api/analytics/velocity').then(r => r.json()).catch(() => null)
+      ]);
+
+      if (burndownRes) renderBurndownSvg(burndownRes);
+      if (heatmapRes) renderHeatmapGrid(heatmapRes);
+      if (badgesRes) renderBadgesShelf(badgesRes);
+      if (velocityRes) renderVelocityList(velocityRes);
+    } catch (err) {
+      console.error('Failed to load analytics data', err);
+    }
+  }
+
+  function renderBurndownSvg(data) {
+    if (!el.svgBurndown) return;
+    if (el.burndownPaceBadge) {
+      el.burndownPaceBadge.textContent = data.paceStatus || 'Đúng tiến độ';
+    }
+
+    const svg = el.svgBurndown;
+    svg.innerHTML = '';
+
+    const width = 600;
+    const height = 240;
+    const padding = 35;
+    const chartW = width - padding * 2;
+    const chartH = height - padding * 2;
+
+    const points = data.points || [];
+    const totalDays = data.totalDays || 90;
+
+    // Grid lines & sprint demarcation
+    const boundaries = data.sprintBoundaries || [30, 60, 90];
+    boundaries.forEach(bDay => {
+      const x = padding + (bDay / totalDays) * chartW;
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', x);
+      line.setAttribute('y1', padding);
+      line.setAttribute('x2', x);
+      line.setAttribute('y2', padding + chartH);
+      line.setAttribute('stroke', '#334155');
+      line.setAttribute('stroke-dasharray', '4,4');
+      svg.appendChild(line);
+    });
+
+    // Ideal Line: (Day 1 -> 90) down to (Day 90 -> 0)
+    const idealPath = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    idealPath.setAttribute('x1', padding);
+    idealPath.setAttribute('y1', padding);
+    idealPath.setAttribute('x2', padding + chartW);
+    idealPath.setAttribute('y2', padding + chartH);
+    idealPath.setAttribute('stroke', '#64748b');
+    idealPath.setAttribute('stroke-dasharray', '6,6');
+    idealPath.setAttribute('stroke-width', '2');
+    svg.appendChild(idealPath);
+
+    // Actual Line
+    if (points.length > 0) {
+      let d = '';
+      points.forEach((pt, idx) => {
+        const x = padding + (pt.dayNumber / totalDays) * chartW;
+        const y = padding + (1 - pt.actualRemainingDays / totalDays) * chartH;
+        d += (idx === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`);
+      });
+
+      const actualPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      actualPath.setAttribute('d', d);
+      actualPath.setAttribute('fill', 'none');
+      actualPath.setAttribute('stroke', '#22d3ee');
+      actualPath.setAttribute('stroke-width', '3');
+      actualPath.setAttribute('stroke-linecap', 'round');
+      svg.appendChild(actualPath);
+    }
+  }
+
+  function renderHeatmapGrid(cells) {
+    if (!el.heatmapGrid) return;
+    el.heatmapGrid.innerHTML = '';
+
+    (cells || []).forEach(cell => {
+      const div = document.createElement('div');
+      div.className = `heatmap-cell heatmap-intensity-${cell.intensityLevel}`;
+      div.title = `Ngày ${cell.dayNumber} (${cell.dateIso}): ${cell.actualMinutes}m // ${cell.status}`;
+      div.addEventListener('mouseenter', () => {
+        if (el.heatmapTooltipInfo) {
+          el.heatmapTooltipInfo.textContent = `Ngày ${cell.dayNumber}: ${cell.actualMinutes}m (${cell.selfRating > 0 ? cell.selfRating + '★' : cell.status})`;
+        }
+      });
+      el.heatmapGrid.appendChild(div);
+    });
+  }
+
+  function renderBadgesShelf(badges) {
+    if (!el.badgesShelf) return;
+    el.badgesShelf.innerHTML = '';
+
+    (badges || []).forEach(badge => {
+      const div = document.createElement('div');
+      div.className = `badge-card p-3 rounded-xl border ${badge.isUnlocked ? 'unlocked' : 'locked border-slate-800 bg-slate-950/60'}`;
+      div.innerHTML = `
+        <div class="flex items-center gap-2.5">
+          <div class="text-2xl">${badge.emoji}</div>
+          <div>
+            <div class="font-bold text-xs ${badge.isUnlocked ? 'text-amber-300' : 'text-slate-400'}">${badge.name}</div>
+            <div class="text-[10px] text-slate-400 leading-snug">${badge.description}</div>
+            <div class="text-[9px] font-mono mt-1 ${badge.isUnlocked ? 'text-emerald-400' : 'text-slate-500'}">
+              ${badge.isUnlocked ? 'ĐÃ MỞ KHÓA' : `Cần chuỗi ${badge.requiredStreak} ngày`}
+            </div>
+          </div>
+        </div>
+      `;
+      el.badgesShelf.appendChild(div);
+    });
+  }
+
+  function renderVelocityList(velocity) {
+    if (!el.velocityContainer) return;
+    el.velocityContainer.innerHTML = '';
+
+    (velocity || []).forEach(v => {
+      const div = document.createElement('div');
+      div.className = `p-2 rounded-lg bg-slate-950 border ${v.isCurrentWeek ? 'border-purple-600' : 'border-slate-800'} flex items-center justify-between text-[11px]`;
+      div.innerHTML = `
+        <div>
+          <span class="font-bold text-slate-200">${v.weekLabel}</span>
+          ${v.isCurrentWeek ? '<span class="text-purple-400 ml-1 font-mono text-[9px]">(Hiện tại)</span>' : ''}
+        </div>
+        <div class="font-mono text-slate-300 flex items-center gap-2">
+          <span>${v.sessionsCompleted}/7 buổi</span>
+          <span class="text-cyan-400 font-bold">${v.totalMinutes}m</span>
+        </div>
+      `;
+      el.velocityContainer.appendChild(div);
+    });
+  }
+
+  // ==========================================
+  // FEATURE 004: Shadowing Studio & Waveforms
+  // ==========================================
+  const shadowingState = {
+    targetSentence: "Yesterday, I focused on the deployment pipeline, specifically optimizing the build cache.",
+    speed: 1.0,
+    refDuration: 3.5,
+    userDuration: 0,
+    mediaRecorder: null,
+    audioChunks: [],
+    userAudioBlob: null,
+    userAudioUrl: null,
+    activeTrack: 'reference'
+  };
+
+  async function initShadowingStudio() {
+    try {
+      const refData = await fetch(`/api/shadowing/reference/${state.currentDay}`).then(r => r.json());
+      if (refData && refData.sentenceFrame) {
+        shadowingState.targetSentence = refData.sentenceFrame;
+        shadowingState.refDuration = refData.targetDurationSeconds || 3.5;
+        if (el.shadowSentenceText) el.shadowSentenceText.textContent = `"${refData.sentenceFrame}"`;
+        if (el.shadowPhoneticCue) el.shadowPhoneticCue.textContent = `Âm trọng tâm: ${refData.phoneticGuide || '/coda/'}`;
+        if (el.shadowRefDuration) el.shadowRefDuration.textContent = `${shadowingState.refDuration}s`;
+      }
+    } catch (e) {
+      console.warn('Fallback reference shadowing data', e);
+    }
+
+    drawWaveform(el.canvasShadowRef, '#22d3ee', [20, 45, 60, 30, 75, 90, 40, 20, 65, 80, 50, 30, 70, 85, 25]);
+    drawWaveform(el.canvasShadowUser, '#f59e0b', [10, 15, 20, 15, 10, 25, 30, 15, 10, 20, 25, 10]);
+
+    setupShadowingControls();
+  }
+
+  function drawWaveform(canvas, color, samplePoints) {
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width;
+    const h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+
+    // Center line
+    ctx.strokeStyle = '#1e293b';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, h / 2);
+    ctx.lineTo(w, h / 2);
+    ctx.stroke();
+
+    // Bars
+    ctx.fillStyle = color;
+    const numBars = samplePoints.length * 3;
+    const barW = Math.max(2, w / numBars - 2);
+
+    for (let i = 0; i < numBars; i++) {
+      const val = samplePoints[i % samplePoints.length];
+      const barH = (val / 100) * (h * 0.8);
+      const x = i * (barW + 2);
+      const y = (h - barH) / 2;
+      ctx.fillRect(x, y, barW, barH);
+    }
+  }
+
+  function setupShadowingControls() {
+    // Speed buttons
+    document.querySelectorAll('.shadow-speed-btn').forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll('.shadow-speed-btn').forEach(b => b.classList.remove('active', 'bg-cyan-500', 'text-slate-950'));
+        btn.classList.add('active', 'bg-cyan-500', 'text-slate-950');
+        shadowingState.speed = parseFloat(btn.dataset.speed || '1.0');
+      };
+    });
+
+    // Reference Play
+    if (el.btnShadowRefPlay) {
+      el.btnShadowRefPlay.onclick = () => playShadowingReference();
+    }
+
+    // User Record
+    if (el.btnShadowRecord) {
+      el.btnShadowRecord.onclick = () => toggleShadowingRecording();
+    }
+
+    // B2B Compare
+    if (el.btnShadowCompareB2b) {
+      el.btnShadowCompareB2b.onclick = () => playBackToBack();
+    }
+
+    // Toggle A/B
+    if (el.btnShadowToggleAb) {
+      el.btnShadowToggleAb.onclick = () => toggleShadowingAb();
+    }
+
+    // AI Feedback
+    if (el.btnShadowAiFeedback) {
+      el.btnShadowAiFeedback.onclick = () => evaluateShadowingWithAi();
+    }
+  }
+
+  function playShadowingReference() {
+    if (!window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(shadowingState.targetSentence);
+    u.lang = 'en-US';
+    u.rate = shadowingState.speed;
+    window.speechSynthesis.speak(u);
+  }
+
+  async function toggleShadowingRecording() {
+    if (shadowingState.mediaRecorder && shadowingState.mediaRecorder.state === 'recording') {
+      shadowingState.mediaRecorder.stop();
+      if (el.shadowRecordLabel) el.shadowRecordLabel.textContent = 'Thu âm giọng bạn';
+      return;
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      shadowingState.mediaRecorder = new MediaRecorder(stream);
+      shadowingState.audioChunks = [];
+      const startTime = Date.now();
+
+      shadowingState.mediaRecorder.ondataavailable = e => {
+        if (e.data.size > 0) shadowingState.audioChunks.push(e.data);
+      };
+
+      shadowingState.mediaRecorder.onstop = () => {
+        const duration = Math.round((Date.now() - startTime) / 100) / 10;
+        shadowingState.userDuration = duration;
+        if (el.shadowUserDuration) el.shadowUserDuration.textContent = `${duration}s`;
+
+        shadowingState.userAudioBlob = new Blob(shadowingState.audioChunks, { type: 'audio/webm' });
+        shadowingState.userAudioUrl = URL.createObjectURL(shadowingState.userAudioBlob);
+
+        // Render dynamic wave
+        drawWaveform(el.canvasShadowUser, '#f59e0b', [25, 55, 75, 45, 80, 95, 60, 35, 70, 85, 40, 20]);
+        stream.getTracks().forEach(t => t.stop());
+      };
+
+      shadowingState.mediaRecorder.start();
+      if (el.shadowRecordLabel) el.shadowRecordLabel.textContent = 'Đang thu... Bấm để dừng';
+    } catch (e) {
+      console.warn('Microphone error', e);
+      alert('Không thể truy cập microphone. Vui lòng cấp quyền trong trình duyệt.');
+    }
+  }
+
+  function playBackToBack() {
+    playShadowingReference();
+    const refDurationMs = (shadowingState.refDuration / shadowingState.speed) * 1000;
+    setTimeout(() => {
+      if (shadowingState.userAudioUrl) {
+        const audio = new Audio(shadowingState.userAudioUrl);
+        audio.play();
+      }
+    }, refDurationMs + 500);
+  }
+
+  function toggleShadowingAb() {
+    if (shadowingState.activeTrack === 'reference') {
+      shadowingState.activeTrack = 'user';
+      if (el.shadowActiveTrack) el.shadowActiveTrack.textContent = 'Giọng bạn 🔊';
+      if (shadowingState.userAudioUrl) {
+        const audio = new Audio(shadowingState.userAudioUrl);
+        audio.play();
+      }
+    } else {
+      shadowingState.activeTrack = 'reference';
+      if (el.shadowActiveTrack) el.shadowActiveTrack.textContent = 'Mẫu 🔊';
+      playShadowingReference();
+    }
+  }
+
+  async function evaluateShadowingWithAi() {
+    if (!el.btnShadowAiFeedback) return;
+    el.btnShadowAiFeedback.disabled = true;
+    el.btnShadowAiFeedback.textContent = '⏳ Đang phân tích nhịp điệu...';
+
+    try {
+      const res = await fetch('/api/shadowing/evaluate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          dayNumber: state.currentDay,
+          targetSentence: shadowingState.targetSentence,
+          referenceDurationSeconds: shadowingState.refDuration,
+          userDurationSeconds: shadowingState.userDuration || shadowingState.refDuration * 0.85
+        })
+      });
+
+      const data = await res.json();
+      if (el.shadowPacingScore) el.shadowPacingScore.textContent = `${data.pacingScore || 90}/100`;
+      if (el.shadowPacingDiagnosis) el.shadowPacingDiagnosis.textContent = `${data.pacingDiagnosis} (Tỷ lệ: ${data.speedRatio}x)`;
+      if (el.shadowStressTip) el.shadowStressTip.textContent = data.stressTimingTip || '';
+
+      if (el.shadowAlertsList) {
+        el.shadowAlertsList.innerHTML = '';
+        (data.articulatoryAlerts || []).forEach(alert => {
+          const p = document.createElement('p');
+          p.textContent = `⚠️ ${alert}`;
+          el.shadowAlertsList.appendChild(p);
+        });
+      }
+    } catch (e) {
+      console.error('Shadowing feedback error', e);
+    } finally {
+      el.btnShadowAiFeedback.disabled = false;
+      el.btnShadowAiFeedback.textContent = '⚡ Phân Tích Nhịp Điệu Cùng AI';
+    }
+  }
+
 })();
