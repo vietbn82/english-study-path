@@ -102,10 +102,37 @@ public sealed class MouthMapService : IMouthMapService
 
     public MouthMapEntry? GetEntry(string phoneme)
     {
-        if (string.IsNullOrWhiteSpace(phoneme)) return null;
+        if (string.IsNullOrWhiteSpace(phoneme)) return Registry["/t/"];
         var clean = phoneme.Trim();
+        
+        // Direct match with exact key (e.g. "/t/", "/d/")
         if (Registry.TryGetValue(clean, out var entry)) return entry;
-        return Registry.Values.FirstOrDefault(e => clean.Contains(e.Phoneme, StringComparison.OrdinalIgnoreCase))
-            ?? Registry["/t/"];
+        
+        // Match with wrapped slashes (e.g. "d" -> "/d/")
+        var withSlashes = clean.StartsWith('/') && clean.EndsWith('/') ? clean : $"/{clean.Trim('/')}/";
+        if (Registry.TryGetValue(withSlashes, out entry)) return entry;
+
+        // Bare match (e.g. "d" or "t")
+        var bare = clean.Trim('/');
+        var match = Registry.Values.FirstOrDefault(e => 
+            e.Phoneme.Trim('/').Equals(bare, StringComparison.OrdinalIgnoreCase) ||
+            clean.Equals(e.Phoneme, StringComparison.OrdinalIgnoreCase)
+        );
+        if (match != null) return match;
+
+        // Substring / token matching (e.g. "Final /t/ vs /d/" or "Dental Fricative /θ/")
+        // If string mentions both /t/ and /d/, default to /t/ unless "d" is explicitly requested
+        if (clean.Contains("/d/", StringComparison.OrdinalIgnoreCase) && !clean.Contains("/t/", StringComparison.OrdinalIgnoreCase))
+        {
+            return Registry["/d/"];
+        }
+
+        foreach (var regEntry in Registry.Values)
+        {
+            if (clean.Contains(regEntry.Phoneme, StringComparison.OrdinalIgnoreCase))
+                return regEntry;
+        }
+
+        return Registry["/t/"];
     }
 }

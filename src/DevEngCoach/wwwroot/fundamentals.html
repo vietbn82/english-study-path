@@ -117,22 +117,37 @@
           <!-- Quick Sound Selector for Handbook Readers -->
           <div class="flex items-center gap-1 w-full overflow-x-auto pb-1.5 mb-3 text-[10px] font-mono scrollbar-thin">
             <button data-sound="/t/" class="sound-tab-btn px-2 py-1 rounded bg-cyan-950/80 text-cyan-300 border border-cyan-800 whitespace-nowrap active font-bold">
-              /t/, /d/ (Gờ lợi)
+              /t/ (Bật gió)
+            </button>
+            <button data-sound="/d/" class="sound-tab-btn px-2 py-1 rounded bg-slate-950 text-slate-300 border border-slate-800 hover:border-slate-700 whitespace-nowrap">
+              /d/ (Rung cổ)
             </button>
             <button data-sound="/θ/" class="sound-tab-btn px-2 py-1 rounded bg-slate-950 text-slate-300 border border-slate-800 hover:border-slate-700 whitespace-nowrap">
-              /θ/, /ð/ (Kẹp răng)
+              /θ/ (Kẹp gió)
+            </button>
+            <button data-sound="/ð/" class="sound-tab-btn px-2 py-1 rounded bg-slate-950 text-slate-300 border border-slate-800 hover:border-slate-700 whitespace-nowrap">
+              /ð/ (Kẹp rung)
             </button>
             <button data-sound="/s/" class="sound-tab-btn px-2 py-1 rounded bg-slate-950 text-slate-300 border border-slate-800 hover:border-slate-700 whitespace-nowrap">
-              /s/, /z/ (Rãnh xì)
+              /s/ (Xì răng)
+            </button>
+            <button data-sound="/z/" class="sound-tab-btn px-2 py-1 rounded bg-slate-950 text-slate-300 border border-slate-800 hover:border-slate-700 whitespace-nowrap">
+              /z/ (Rung ong)
             </button>
             <button data-sound="/ʃ/" class="sound-tab-btn px-2 py-1 rounded bg-slate-950 text-slate-300 border border-slate-800 hover:border-slate-700 whitespace-nowrap">
-              /ʃ/, /ʒ/ (Chu vòm)
+              /ʃ/ (Chu vòm)
             </button>
             <button data-sound="/k/" class="sound-tab-btn px-2 py-1 rounded bg-slate-950 text-slate-300 border border-slate-800 hover:border-slate-700 whitespace-nowrap">
-              /k/, /ɡ/ (Ngạc mềm)
+              /k/ (Ngạc gió)
+            </button>
+            <button data-sound="/ɡ/" class="sound-tab-btn px-2 py-1 rounded bg-slate-950 text-slate-300 border border-slate-800 hover:border-slate-700 whitespace-nowrap">
+              /ɡ/ (Ngạc rung)
             </button>
             <button data-sound="/p/" class="sound-tab-btn px-2 py-1 rounded bg-slate-950 text-slate-300 border border-slate-800 hover:border-slate-700 whitespace-nowrap">
-              /p/, /b/ (Hai môi)
+              /p/ (Môi gió)
+            </button>
+            <button data-sound="/b/" class="sound-tab-btn px-2 py-1 rounded bg-slate-950 text-slate-300 border border-slate-800 hover:border-slate-700 whitespace-nowrap">
+              /b/ (Môi rung)
             </button>
           </div>
           
@@ -1603,7 +1618,19 @@
           labelSec: "⬇️ Giật nổ pop",
           lsx: 195, lsy: 205,
           contact: { cx: 185, cy: 192, color: "#38bdf8" },
-          desc: "💡 <strong>/t/, /d/ (Gờ Lợi):</strong> Đầu lưỡi ép chặt gờ lợi sau chân răng trên (không chạm răng), nén áp suất rồi giật mạnh nhả tiếng nổ (Pop)."
+          desc: "💡 <strong>/t/ (Vô thanh - Bật gió):</strong> Đầu lưỡi ép chặt gờ lợi trên, nén khí rồi giật dứt khoát giải phóng tiếng bật hơi sắc nét (Pop). Dây thanh KHÔNG rung. Thổi bay tờ giấy cách 5cm."
+        },
+        '/d/': {
+          tongue: "M 165 265 C 170 240, 175 210, 185 192 C 205 194, 235 220, 265 240 C 290 260, 300 300, 290 355 C 275 385, 245 390, 230 380 C 215 350, 190 310, 165 265 Z",
+          velum: "M 305 202 C 322 205, 340 212, 348 215 C 344 225, 330 220, 305 212 Z",
+          arrow: "M 180 235 C 178 215, 182 205, 185 194",
+          label: "⬆️ Chạm nhẹ gờ lợi",
+          lx: 195, ly: 218,
+          arrowSec: "M 295 405 C 290 390, 280 340, 250 290",
+          labelSec: "⚡ Rung thanh quản rền",
+          lsx: 235, lsy: 340,
+          contact: { cx: 185, cy: 192, color: "#10b981" },
+          desc: "💡 <strong>/d/ (Hữu thanh - Rung cổ):</strong> Đầu lưỡi chạm nhẹ gờ lợi. Dây thanh quản RUNG MẠNH tạo âm trầm vang trong họng. Nhả êm không phụt gió, tờ giấy đứng yên. Kéo dài nguyên âm trước âm /d/ (ride x2 vs write)."
         },
         '/θ/': {
           tongue: "M 165 265 C 150 250, 138 238, 130 224 C 140 216, 160 218, 190 226 C 235 235, 270 250, 290 280 C 300 305, 298 335, 290 355 C 275 385, 245 390, 230 380 C 215 350, 190 310, 165 265 Z",

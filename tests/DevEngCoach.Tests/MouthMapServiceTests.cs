@@ -30,4 +30,20 @@ public class MouthMapServiceTests
         entry.CommonMistakeAlertVi.Should().Contain("Lỗi phổ biến");
         entry.DevExampleWords.Should().Contain("auth");
     }
+
+    [Theory]
+    [InlineData("/t/", "/t/", "Voiceless")]
+    [InlineData("t", "/t/", "Voiceless")]
+    [InlineData("/d/", "/d/", "Voiced")]
+    [InlineData("d", "/d/", "Voiced")]
+    [InlineData("/s/", "/s/", "Voiceless")]
+    [InlineData("/z/", "/z/", "Voiced")]
+    public void GetEntry_ShouldDistinguishVoicedAndVoicelessCognates(string query, string expectedPhoneme, string expectedType)
+    {
+        var entry = mouthMapService.GetEntry(query);
+
+        entry.Should().NotBeNull();
+        entry!.Phoneme.Should().Be(expectedPhoneme);
+        entry.SoundName.Should().Contain(expectedType);
+    }
 }

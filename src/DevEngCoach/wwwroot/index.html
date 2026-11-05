@@ -218,8 +218,18 @@
           
           <!-- Side-by-Side Vietnamese vs English Mouth-Map (Feature 006) -->
           <div id="mouth-map-card" class="bg-slate-950 border border-cyan-900/60 rounded-xl p-3.5 space-y-3">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-              <span class="text-xs font-mono font-bold text-cyan-400">ĐỐI CHIẾU CƠ HỌC: 🇻🇳 THÓI QUEN VS 🇬🇧 TIẾNG ANH</span>
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2 flex-wrap gap-1">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-mono font-bold text-cyan-400">ĐỐI CHIẾU CƠ HỌC: 🇻🇳 THÓI QUEN VS 🇬🇧 TIẾNG ANH</span>
+                <div class="flex items-center gap-1" id="mouth-map-pills">
+                  <button data-sound="/t/" class="mouth-pill-btn px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-cyan-950 text-cyan-300 border border-cyan-700 shadow-sm transition active">
+                    /t/ (Vô thanh - Bật gió)
+                  </button>
+                  <button data-sound="/d/" class="mouth-pill-btn px-2 py-0.5 rounded text-[10px] font-mono text-slate-400 border border-slate-800 hover:text-cyan-300 transition">
+                    /d/ (Hữu thanh - Rung cổ)
+                  </button>
+                </div>
+              </div>
               <button id="btn-animate-mouth" class="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-[10px] text-cyan-300 font-mono rounded border border-slate-700 transition">
                 ▶️ Xem chuyển động
               </button>
@@ -270,27 +280,42 @@
             </div>
 
             <!-- Quick Sound Articulation Selector Pills -->
-            <div class="flex items-center gap-1 w-full overflow-x-auto pb-1 mb-2 text-[10px] font-mono scrollbar-thin">
+            <div class="flex items-center gap-1 w-full overflow-x-auto pb-1 mb-2 text-[10px] font-mono scrollbar-thin" id="sagittal-sound-pills">
               <button data-sound="/t/" class="sound-tab-btn px-2 py-1 rounded bg-cyan-950/80 text-cyan-300 border border-cyan-800 whitespace-nowrap active font-bold">
-                /t/, /d/ (Gờ lợi)
+                /t/ (Bật gió)
+              </button>
+              <button data-sound="/d/" class="sound-tab-btn px-2 py-1 rounded bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 whitespace-nowrap">
+                /d/ (Rung họng)
               </button>
               <button data-sound="/θ/" class="sound-tab-btn px-2 py-1 rounded bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 whitespace-nowrap">
-                /θ/, /ð/ (Kẹp răng)
+                /θ/ (Kẹp gió)
+              </button>
+              <button data-sound="/ð/" class="sound-tab-btn px-2 py-1 rounded bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 whitespace-nowrap">
+                /ð/ (Kẹp rung)
               </button>
               <button data-sound="/s/" class="sound-tab-btn px-2 py-1 rounded bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 whitespace-nowrap">
-                /s/, /z/ (Rãnh xì)
+                /s/ (Xì răng)
+              </button>
+              <button data-sound="/z/" class="sound-tab-btn px-2 py-1 rounded bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 whitespace-nowrap">
+                /z/ (Rung ong)
               </button>
               <button data-sound="/ʃ/" class="sound-tab-btn px-2 py-1 rounded bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 whitespace-nowrap">
-                /ʃ/, /ʒ/ (Chu vòm)
+                /ʃ/ (Chu vòm)
               </button>
               <button data-sound="/k/" class="sound-tab-btn px-2 py-1 rounded bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 whitespace-nowrap">
-                /k/, /ɡ/ (Ngạc mềm)
+                /k/ (Ngạc gió)
+              </button>
+              <button data-sound="/ɡ/" class="sound-tab-btn px-2 py-1 rounded bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 whitespace-nowrap">
+                /ɡ/ (Ngạc rung)
               </button>
               <button data-sound="/p/" class="sound-tab-btn px-2 py-1 rounded bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 whitespace-nowrap">
-                /p/, /b/ (Hai môi)
+                /p/ (Môi gió)
+              </button>
+              <button data-sound="/b/" class="sound-tab-btn px-2 py-1 rounded bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 whitespace-nowrap">
+                /b/ (Môi rung)
               </button>
               <button data-sound="rest" class="sound-tab-btn px-2 py-1 rounded bg-slate-900 text-slate-400 border border-slate-800 hover:border-slate-700 whitespace-nowrap">
-                Nghỉ (Tự nhiên)
+                Nghỉ
               </button>
             </div>
 
