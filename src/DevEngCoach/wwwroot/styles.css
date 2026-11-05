@@ -291,17 +291,57 @@ pre, code, .font-mono {
 .text-orange-400 { color: #fb923c; }
 .text-red-400 { color: #f87171; }
 
-/* Typography */
-.text-\[10px\] { font-size: 10px; }
-.text-\[11px\] { font-size: 11px; }
-.text-xs { font-size: 0.75rem; line-height: 1rem; }
-.text-sm { font-size: 0.875rem; line-height: 1.25rem; }
-.text-base { font-size: 1rem; line-height: 1.5rem; }
-.text-lg { font-size: 1.125rem; line-height: 1.75rem; }
-.text-xl { font-size: 1.25rem; line-height: 1.75rem; }
-.text-2xl { font-size: 1.5rem; line-height: 2rem; }
-.text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
-.text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
+/* Typography Scale: 1.5x for content and headings (excluding h1) */
+.text-\[10px\] { font-size: 11.5px; }
+.text-\[11px\] { font-size: 13px; }
+.text-xs { font-size: 0.95rem; line-height: 1.4rem; }
+.text-sm { font-size: 1.05rem; line-height: 1.55rem; }
+.text-base { font-size: 1.25rem; line-height: 1.75rem; }
+.text-lg { font-size: 1.35rem; line-height: 1.85rem; }
+.text-xl { font-size: 1.55rem; line-height: 2.1rem; }
+.text-2xl { font-size: 2rem; line-height: 2.4rem; }
+.text-3xl { font-size: 2.5rem; line-height: 2.85rem; }
+.text-4xl { font-size: 2.85rem; line-height: 3.25rem; }
+
+/* Scaled Typography: 1.5x for content and headings (except h1) */
+h2:not(h1) {
+  font-size: 1.5em;
+  line-height: 1.35;
+}
+h3:not(h1) {
+  font-size: 1.25em;
+  line-height: 1.4;
+}
+h4:not(h1), h5:not(h1), h6:not(h1) {
+  font-size: 1.15em;
+  line-height: 1.45;
+}
+/* Strictly preserve h1 size as requested */
+h1 {
+  font-size: 1.875rem !important;
+  line-height: 2.25rem !important;
+}
+@media (min-width: 640px) {
+  h1 {
+    font-size: 2.25rem !important;
+    line-height: 2.5rem !important;
+  }
+}
+
+/* AI Coach Docked Mode: Pushes page content to the right so it is not occluded */
+@media (min-width: 768px) {
+  body.ai-coach-active main,
+  body.ai-coach-active header {
+    margin-left: 440px !important;
+  }
+  body.ai-coach-active .floating-ai-fab {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+main, header {
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
 .font-medium { font-weight: 500; }
 .font-semibold { font-weight: 600; }
 .font-bold { font-weight: 700; }

@@ -10,6 +10,15 @@
       darkMode: 'class',
       theme: {
         extend: {
+          fontSize: {
+            'xs': ['0.95rem', { lineHeight: '1.4rem' }],
+            'sm': ['1.05rem', { lineHeight: '1.55rem' }],
+            'base': ['1.25rem', { lineHeight: '1.75rem' }],
+            'lg': ['1.35rem', { lineHeight: '1.85rem' }],
+            'xl': ['1.55rem', { lineHeight: '2.1rem' }],
+            '2xl': ['2rem', { lineHeight: '2.4rem' }],
+            '3xl': ['2.5rem', { lineHeight: '2.85rem' }]
+          },
           colors: {
             slate: {
               850: '#131c31'
@@ -191,7 +200,7 @@
         <div class="absolute -right-16 -top-16 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none"></div>
 
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          <div class="space-y-2 max-w-3xl">
+          <div class="space-y-2 w-full">
             <div class="flex items-center gap-3 flex-wrap">
               <span class="px-2.5 py-1 rounded-full text-xs font-mono font-semibold bg-cyan-950 text-cyan-400 border border-cyan-800/70" id="badge-day">
                 DAY 1 // SPRINT 1
@@ -219,31 +228,6 @@
             <p class="text-sm text-slate-300 leading-relaxed" id="lesson-objective">
               ...
             </p>
-          </div>
-
-          <!-- 30-Minute Pomodoro Tracker Card -->
-          <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-4 flex flex-col items-center min-w-[280px]">
-            <div class="text-xs font-mono text-slate-400 uppercase tracking-wider mb-1">Session Timer (30 mins)</div>
-            <div class="text-4xl font-mono font-bold text-cyan-400 mb-2" id="timer-display">30:00</div>
-            
-            <div class="w-full bg-slate-800 h-1.5 rounded-full mb-3 overflow-hidden">
-              <div id="timer-progress" class="bg-gradient-to-r from-cyan-500 to-blue-500 h-full w-full transition-all duration-300"></div>
-            </div>
-
-            <div class="flex items-center gap-2 w-full">
-              <button id="btn-timer-start" class="flex-1 py-1.5 px-3 bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold rounded text-xs transition">
-                Start 30m
-              </button>
-              <button id="btn-timer-pause" class="py-1.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-xs transition">
-                Pause
-              </button>
-              <button id="btn-timer-reset" class="py-1.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded text-xs transition">
-                ↺
-              </button>
-            </div>
-            <div class="text-[11px] text-slate-400 mt-2 font-mono" id="timer-phase-hint">
-              Phase: 00-10m Kinesthetic Phonetics
-            </div>
           </div>
         </div>
       </div>
@@ -1720,7 +1704,7 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
   </main>
 
   <!-- MODAL: Sound Practice & AI Grading (Luyện phát âm & Chấm điểm âm/từ) -->
-  <div id="modal-sound-practice" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+  <div id="modal-sound-practice" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
     <div class="bg-slate-900 border border-slate-700/80 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
         <div class="flex items-center gap-2">
@@ -1789,8 +1773,8 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
     <span>AI Coach</span>
   </button>
 
-  <!-- SLIDE-OVER MODAL: Floating AI Assistant Panel -->
-  <div id="modal-floating-ai" class="hidden fixed inset-y-0 right-0 z-50 w-full max-w-md bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col justify-between">
+  <!-- SLIDE-OVER/DOCKED PANEL: Floating AI Assistant Panel (Left Docked to shift page content right) -->
+  <div id="modal-floating-ai" class="hidden fixed inset-y-0 left-0 z-40 w-full md:w-[440px] bg-slate-900 border-r border-slate-800 shadow-2xl flex flex-col justify-between">
     <!-- Header -->
     <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/60">
       <div class="flex items-center gap-2.5">

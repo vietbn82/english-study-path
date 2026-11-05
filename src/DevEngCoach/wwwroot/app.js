@@ -707,6 +707,8 @@
 
         document.getElementById('sel-pop-btn-practice')?.addEventListener('click', (e) => {
           e.stopPropagation();
+          lastDismissedSelection = text;
+          try { window.getSelection()?.removeAllRanges(); } catch (_) {}
           popup.classList.add('hidden');
           const ipa = currentLookupData?.ipa || `/${text}/`;
           const cue = currentLookupData?.phoneticCue || 'Kiểm soát chặt chẽ điểm tiếp xúc lưỡi và luồng hơi';
@@ -1261,6 +1263,10 @@
 
   // Sound Practice Modal Logic (FR-009)
   function openSoundPracticeModal(targetSound, word, ipa, tip) {
+    const pop = document.getElementById('selection-lookup-popup');
+    if (pop) pop.classList.add('hidden');
+    try { window.getSelection()?.removeAllRanges(); } catch (_) {}
+
     state.soundPractice.targetWord = word;
     state.soundPractice.targetSymbol = targetSound;
 
@@ -1370,14 +1376,17 @@
     if (!el.modalFloatingAi) return;
     if (el.modalFloatingAi.classList.contains('hidden')) {
       el.modalFloatingAi.classList.remove('hidden');
+      document.body.classList.add('ai-coach-active');
       if (el.floatingAiInput) el.floatingAiInput.focus();
     } else {
       el.modalFloatingAi.classList.add('hidden');
+      document.body.classList.remove('ai-coach-active');
     }
   }
 
   function closeFloatingAiModal() {
     if (el.modalFloatingAi) el.modalFloatingAi.classList.add('hidden');
+    document.body.classList.remove('ai-coach-active');
   }
 
   async function sendFloatingAiMessage() {
