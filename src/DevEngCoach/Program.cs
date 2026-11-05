@@ -70,7 +70,7 @@ progressApi.MapPost("/reset", (IProgressService progress) =>
     return Results.Ok(new { Message = "Progress reset to Day 1." });
 });
 
-// AI Coach Evaluation Endpoints (AGY CLI integration)
+// AI Coach Evaluation Endpoints
 app.MapPost("/api/ai/evaluate", async ([FromBody] AiEvaluationRequest request, IAiCoachService aiCoach, CancellationToken ct) =>
 {
     if (string.IsNullOrWhiteSpace(request.InputText))

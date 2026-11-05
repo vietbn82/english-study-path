@@ -116,7 +116,7 @@ public sealed class SparringService(ILogger<SparringService>? logger = null) : I
             }
             catch (Exception ex)
             {
-                logger?.LogWarning(ex, "AGY CLI execution failed or timed out. Falling back to built-in heuristic evaluation.");
+                logger?.LogWarning(ex, "AI Coach CLI execution failed or timed out. Falling back to built-in heuristic evaluation.");
             }
         }
 
@@ -138,7 +138,7 @@ public sealed class SparringService(ILogger<SparringService>? logger = null) : I
         return null;
     }
 
-    #region AGY CLI Integration
+    #region External AI Coach CLI Integration
 
     private static async Task<SparringResponse?> RunAgySparringTurnAsync(
         string agyPath,

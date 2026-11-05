@@ -55,7 +55,7 @@ public sealed class PrPolisherService(ILogger<PrPolisherService>? logger = null)
             }
             catch (Exception ex)
             {
-                logger?.LogWarning(ex, "AGY CLI polisher failed or timed out. Falling back to built-in senior heuristics.");
+                logger?.LogWarning(ex, "AI Coach CLI polisher failed or timed out. Falling back to built-in senior heuristics.");
             }
         }
 
@@ -407,7 +407,7 @@ public sealed class PrPolisherService(ILogger<PrPolisherService>? logger = null)
 
     #endregion
 
-    #region AGY CLI Integration
+    #region External AI Coach CLI Integration
 
     private static string? FindAgyExecutable()
     {
@@ -480,7 +480,7 @@ Return ONLY valid JSON matching this exact schema:
 
         return new PrPolishResponse(
             PolishedText: parsed.PolishedText,
-            Explanation: parsed.Explanation ?? "Polished via AGY LLM coach.",
+            Explanation: parsed.Explanation ?? "Polished via AI Coach.",
             KeyPhrasesUsed: parsed.KeyPhrasesUsed ?? [],
             AvoidedAntiPatterns: parsed.AvoidedAntiPatterns ?? [],
             AlternativeDraft: parsed.AlternativeDraft ?? string.Empty

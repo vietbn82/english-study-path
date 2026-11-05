@@ -133,7 +133,7 @@
 | :--- | :--- | :--- |
 | **00:00 - 10:00** (10m) | **Kinesthetic Articulatory Drill** | Mở thẻ bài học trong ngày: xem hình vị trí lưỡi/hàm/dây thanh, nghe âm mẫu, phát âm 10 từ/cụm phụ âm theo cơ học. |
 | **10:00 - 20:00** (10m) | **Sentence Frame Imprinting** | Nạp 2 khung câu cốt lõi (Core Frames). Lắp ghép 3 kịch bản công việc thực tế của chính bạn vào khung. |
-| **20:00 - 30:00** (10m) | **AI Voice Output & Verification** | Đọc to vào micro hoặc nói tự do 1 đoạn mini-speech theo kịch bản ngày hôm đó. AI AGY chấm điểm phát âm & ngữ pháp ngay lập tức. |
+| **20:00 - 30:00** (10m) | **AI Voice Output & Verification** | Đọc to vào micro hoặc nói tự do 1 đoạn mini-speech theo kịch bản ngày hôm đó. AI Coach chấm điểm phát âm & ngữ pháp ngay lập tức. |
 
 ---
 
@@ -143,5 +143,5 @@
 2. **Frontend**: Clean single-page dashboard:
    - **Progress Tracker**: 90 ngày học với trạng thái (Pending, Done, Skipped), so sánh Thực tế vs Kế hoạch (Burn-down chart / Streak).
    - **Daily Workspace**: Bấm vào ngày hôm nay -> Hiển thị toàn bộ giáo trình (vị trí lưỡi/khẩu hình, audio phát âm mẫu, 2 mẫu câu, đoạn hội thoại thực hành). Không cần mở tab khác để search.
-   - **AI Coach Assistant**: Tích hợp trực tiếp Antigravity CLI (AGY CLI) / AI local để kiểm tra âm, sửa lỗi ngữ pháp câu bạn viết/nói và phản hồi tức thì.
+   - **AI Coach Assistant**: Tích hợp trực tiếp Antigravity CLI (AI Coach) / AI local để kiểm tra âm, sửa lỗi ngữ pháp câu bạn viết/nói và phản hồi tức thì.
    - **Daily Reminder**: Thông báo nhắc nhở desktop khi đến giờ học hàng ngày.

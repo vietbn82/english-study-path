@@ -3,7 +3,7 @@
 **Branch**: `001-local-learning-dashboard` | **Date**: 2026-11-04 | **Spec**: [spec.md](file:///E:/english/specs/001-local-learning-dashboard/spec.md)
 
 ## Summary
-Deliver a high-performance local web application built on **C# 12+ / .NET 10 Minimal APIs** with an embedded, zero-build single-page application (SPA). The app pre-packages the complete 90-day Kinesthetic English Curriculum (Standup, Demo, Architecture Review, 1-on-1s), enforces the 30-minute daily habit at 22:00, compares actual study time against planned duration, and integrates directly with the **Antigravity CLI (AGY CLI)** for instant AI feedback.
+Deliver a high-performance local web application built on **C# 12+ / .NET 10 Minimal APIs** with an embedded, zero-build single-page application (SPA). The app pre-packages the complete 90-day Kinesthetic English Curriculum (Standup, Demo, Architecture Review, 1-on-1s), enforces the 30-minute daily habit at 22:00, compares actual study time against planned duration, and integrates directly with the **Antigravity CLI (AI Coach)** for instant AI feedback.
 
 ---
 
@@ -14,7 +14,7 @@ Deliver a high-performance local web application built on **C# 12+ / .NET 10 Min
 - **Storage**: Local JSON database (`data/progress.json`) + Pre-compiled Curriculum Store (`data/curriculum.json`)
 - **Testing**: xUnit + FluentAssertions + Microsoft.AspNetCore.Mvc.Testing
 - **Target Platform**: Windows 11 (localhost)
-- **AI Integration**: Subprocess invocation of Antigravity CLI (`agy`) or local AI runner with structured prompt templates.
+- **AI Integration**: Subprocess invocation of AI Coach / local AI runner with structured prompt templates.
 - **Performance Goals**: Server startup < 1.0 second, memory footprint < 50MB, lesson retrieval < 10ms.
 - **Constraints**: 100% offline-capable for lessons; zero external API keys required to view curriculum; zero research needed by the learner at 22:00.
 
@@ -49,7 +49,7 @@ E:\english\
 │       │   ├── CurriculumService.cs
 │       │   ├── IProgressService.cs           # Progress, streak, plan vs actual
 │       │   ├── ProgressService.cs
-│       │   ├── IAiCoachService.cs            # AGY CLI process runner & parser
+│       │   ├── IAiCoachService.cs            # AI Coach process runner & parser
 │       │   ├── AiCoachService.cs
 │       │   ├── IReminderService.cs           # 22:00 scheduler & notifier
 │       │   └── ReminderService.cs
@@ -79,7 +79,7 @@ E:\english\
 | `GET` | `/api/curriculum/{day}` | Returns day's articulatory drill, frames, and task |
 | `GET` | `/api/progress` | Returns overall streak, completed count, plan vs actual stats |
 | `POST` | `/api/progress/complete` | Saves session completion (actual minutes, rating, notes) |
-| `POST` | `/api/ai/evaluate` | Invokes AGY CLI to critique learner's spoken/written output |
+| `POST` | `/api/ai/evaluate` | Invokes AI Coach to critique learner's spoken/written output |
 | `GET` | `/api/reminder/status` | Returns 22:00 notification status & schedule |
 | `POST` | `/api/reminder/test` | Triggers a test desktop toast notification |
 
@@ -95,7 +95,7 @@ E:\english\
 3. **Implement Services & Domain Logic**:
    - `CurriculumService`: Fast indexed lookup.
    - `ProgressService`: Streak calculation, plan-vs-actual variance, JSON file persistence.
-   - `AiCoachService`: Subprocess runner for AGY CLI / Gemini fallback with prompt engineering tailored to Vietnamese developers.
+   - `AiCoachService`: Subprocess runner for AI Coach / Gemini fallback with prompt engineering tailored to Vietnamese developers.
    - `ReminderService`: Background service checking 22:00 schedule and issuing desktop notifications.
 4. **Develop Single-Page UI (`wwwroot`)**:
    - Calendar / Timeline view (color-coded by Sprint).

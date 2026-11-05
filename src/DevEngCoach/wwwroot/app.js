@@ -1005,7 +1005,7 @@
     if (!el.btnSubmitSoundGrade) return;
 
     el.btnSubmitSoundGrade.disabled = true;
-    el.btnSubmitSoundGrade.textContent = "⏳ AGY AI đang phân tích âm học...";
+    el.btnSubmitSoundGrade.textContent = "⏳ AI Coach đang phân tích âm học...";
 
     try {
       const res = await fetch('/api/ai/evaluate', {
@@ -1048,7 +1048,7 @@
       if (el.soundGradeDiagnostic) el.soundGradeDiagnostic.textContent = `Phát âm tốt từ "${state.soundPractice.targetWord}". Chú ý giữ áp suất âm đuôi sắc nét.`;
     } finally {
       el.btnSubmitSoundGrade.disabled = false;
-      el.btnSubmitSoundGrade.textContent = "🚀 Chấm điểm phát âm cùng AGY AI";
+      el.btnSubmitSoundGrade.textContent = "🚀 Chấm điểm phát âm cùng AI Coach";
     }
   }
 
@@ -1082,7 +1082,7 @@
     // Append loading placeholder
     const aiMsg = document.createElement('div');
     aiMsg.className = 'p-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-300 mr-6';
-    aiMsg.innerHTML = `<span>⏳ AGY Coach đang suy nghĩ...</span>`;
+    aiMsg.innerHTML = `<span>⏳ AI Coach đang suy nghĩ...</span>`;
     el.floatingChatMessages.appendChild(aiMsg);
     el.floatingChatMessages.scrollTop = el.floatingChatMessages.scrollHeight;
 
@@ -1099,14 +1099,14 @@
       const data = await res.json();
       aiMsg.innerHTML = `
         <div class="space-y-1.5">
-          <div class="font-bold text-cyan-400">🤖 AGY Coach:</div>
+          <div class="font-bold text-cyan-400">🤖 AI Coach:</div>
           <div>${data.grammarCorrections || 'Cấu trúc câu tốt.'}</div>
           ${data.phoneticMechanicsAlerts?.length ? `<div class="text-[11px] text-amber-300">⚠️ Cơ học: ${data.phoneticMechanicsAlerts.join('; ')}</div>` : ''}
           ${data.seniorDevRefactoring ? `<div class="p-1.5 rounded bg-cyan-950/40 border border-cyan-900/60 font-mono text-[11px] text-cyan-200">⭐ Senior Dev: "${data.seniorDevRefactoring}"</div>` : ''}
         </div>
       `;
     } catch (err) {
-      aiMsg.innerHTML = `<span class="text-amber-400">⚠️ AGY Coach tạm thời offline, phản hồi quy tắc cơ học: Nhớ đặt đầu lưỡi đúng gờ lợi và không rụng âm đuôi!</span>`;
+      aiMsg.innerHTML = `<span class="text-amber-400">⚠️ AI Coach tạm thời offline, phản hồi quy tắc cơ học: Nhớ đặt đầu lưỡi đúng gờ lợi và không rụng âm đuôi!</span>`;
     } finally {
       el.floatingChatMessages.scrollTop = el.floatingChatMessages.scrollHeight;
     }
@@ -1224,7 +1224,7 @@
     }
   }
 
-  // Evaluate with AI (AGY CLI)
+  // Evaluate with AI Coach
   async function evaluateWithAi() {
     const text = el.aiInputText ? el.aiInputText.value.trim() : '';
     if (!text) {
@@ -1234,7 +1234,7 @@
 
     if (el.btnEvaluateAi) {
       el.btnEvaluateAi.disabled = true;
-      el.btnEvaluateAi.innerHTML = '<span>⏳ AGY AI đang phân tích âm & ngữ pháp...</span>';
+      el.btnEvaluateAi.innerHTML = '<span>⏳ AI Coach đang phân tích âm & ngữ pháp...</span>';
     }
 
     try {
@@ -1270,7 +1270,7 @@
     } finally {
       if (el.btnEvaluateAi) {
         el.btnEvaluateAi.disabled = false;
-        el.btnEvaluateAi.innerHTML = '<span>🚀 Chấm điểm bằng AGY AI Assistant</span>';
+        el.btnEvaluateAi.innerHTML = '<span>🚀 Chấm điểm bằng AI Coach</span>';
       }
     }
   }
@@ -1355,7 +1355,7 @@
       } else if (elapsed < 20 * 60) {
         el.timerPhaseHint.textContent = 'Phase 2 (10-20m): Nạp Khung Câu Đóng Băng';
       } else {
-        el.timerPhaseHint.textContent = 'Phase 3 (20-30m): Nói & Chấm Điểm Cùng AGY AI';
+        el.timerPhaseHint.textContent = 'Phase 3 (20-30m): Nói & Chấm Điểm Cùng AI Coach';
       }
     }
   }
@@ -1477,7 +1477,7 @@
 
     if (el.btnSimStandupSubmit) {
       el.btnSimStandupSubmit.disabled = true;
-      el.btnSimStandupSubmit.textContent = '⏳ AGY AI đang phân tích Standup...';
+      el.btnSimStandupSubmit.textContent = '⏳ AI Coach đang phân tích Standup...';
     }
 
     try {
@@ -1524,7 +1524,7 @@
 
     if (el.btnSimDemoSubmit) {
       el.btnSimDemoSubmit.disabled = true;
-      el.btnSimDemoSubmit.textContent = '⏳ AGY AI đang phân tích Connected Speech...';
+      el.btnSimDemoSubmit.textContent = '⏳ AI Coach đang phân tích Connected Speech...';
     }
 
     try {

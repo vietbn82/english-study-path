@@ -24,7 +24,7 @@ Grammar rules (tenses, conjugation drills) must not be taught in isolation. The 
 ### Principle V: Clean .NET Architecture & Local Resilience
 - **Backend**: C# 12+ / .NET 10 Minimal API. File-scoped namespaces, primary constructors, clean architecture, high task efficiency, zero bloated dependencies.
 - **Storage**: Local-first embedded storage (JSON / SQLite) tracking daily completions, actual vs. planned duration, streak, and audio evaluation records.
-- **AI Assistant**: Native integration with Antigravity (AGY CLI) / local AI runner for prompt evaluation and instant pronunciation/grammar feedback.
+- **AI Assistant**: Native integration with Antigravity (AI Coach) / local AI runner for prompt evaluation and instant pronunciation/grammar feedback.
 - **Notifications**: Automated 22:00 daily reminder hook.
 
 ---
@@ -36,7 +36,7 @@ Grammar rules (tenses, conjugation drills) must not be taught in isolation. The 
    - Calendar / Timeline: Day 1 to Day 90 with status (`Completed`, `Pending`, `Skipped`).
    - Planned vs. Actual progress metrics.
    - Day N Workspace: The 3-stage Pomodoro (10m Articulatory Drill -> 10m Sentence Frame -> 10m AI Output).
-   - Embedded AGY CLI Assistant console for immediate submission and feedback.
+   - Embedded AI Coach Assistant console for immediate submission and feedback.
 3. **Telemetry & Feedback Integrity**: Progress tracking must accurately differentiate between "Plan" (30m target at 22:00) and "Actual" (real time spent, completion timestamp, performance score).
 
 ---

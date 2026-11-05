@@ -38,10 +38,10 @@
 
 ---
 
-## Phase 4: Embedded AGY CLI AI Assistant Integration
+## Phase 4: Embedded AI Coach Integration
 
 - [x] **Task 4.1**: Implement `AiCoachService`:
-  - Subprocess runner executing `agy` CLI (or local Gemini CLI prompt runner) with structured input.
+  - Subprocess runner executing AI Coach CLI (or local Gemini CLI prompt runner) with structured input.
   - Prompt engineered specifically for Vietnamese IT developers: evaluating phonetic precision on ending sounds, syntax correction, and natural tech re-phrasing.
   - Mock/fallback evaluation for offline resiliency.
 
@@ -78,7 +78,7 @@
 - [x] **Task 7.3**: Implement Contrastive Minimal Pairs Module in Workspace (Side-by-side comparison of `/t/` vs `/d/`, `/s/` vs `/z/`, `/θ/` vs `/ð/` with visual articulatory contrast).
 - [x] **Task 7.4**: Implement Instant Sound-level Practice & AI Grading Modal across Homepage and Fundamentals (Mic capture, scoring, articulatory correction feedback).
 - [x] **Task 7.5**: Add omnipresent 1-click audio playback (`🔊`) to every single IPA symbol, example word, and phrase.
-- [x] **Task 7.6**: Add persistent Global Floating AGY AI Assistant widget (FAB) across all pages.
+- [x] **Task 7.6**: Add persistent Global Floating AI Coach widget (FAB) across all pages.
 - [x] **Task 7.7**: End-to-End browser verification and automated test suite execution.
 
 ---

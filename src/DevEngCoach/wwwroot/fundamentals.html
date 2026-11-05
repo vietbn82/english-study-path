@@ -831,7 +831,7 @@
       </div>
 
       <button id="btn-submit-sound-grade" class="w-full py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold rounded-lg text-xs shadow-md transition">
-        🚀 Chấm điểm phát âm cùng AGY AI
+        🚀 Chấm điểm phát âm cùng AI Coach
       </button>
 
       <div id="sound-grade-result" class="hidden bg-slate-950 border border-cyan-900/60 rounded-xl p-3.5 space-y-2 text-xs">
@@ -842,17 +842,17 @@
           </span>
         </div>
         <div class="space-y-1">
-          <div class="text-[11px] text-slate-400 font-semibold">Chẩn đoán từ AGY AI:</div>
+          <div class="text-[11px] text-slate-400 font-semibold">Chẩn đoán từ AI Coach:</div>
           <p id="sound-grade-diagnostic" class="text-slate-200 bg-slate-900/80 p-2 rounded border border-slate-800">...</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- FLOATING ACTION BUTTON (GLOBAL AGY AI ASSISTANT) -->
-  <button id="btn-floating-ai" title="Mở AGY AI Assistant" class="floating-ai-fab fixed bottom-6 right-6 z-50 px-4 py-3 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-bold text-xs rounded-full shadow-2xl flex items-center gap-2 border border-purple-400/40 cursor-pointer transition transform hover:scale-105">
+  <!-- FLOATING ACTION BUTTON (GLOBAL AI COACH) -->
+  <button id="btn-floating-ai" title="Mở AI Coach" class="floating-ai-fab fixed bottom-6 right-6 z-50 px-4 py-3 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-bold text-xs rounded-full shadow-2xl flex items-center gap-2 border border-purple-400/40 cursor-pointer transition transform hover:scale-105">
     <span class="text-base animate-pulse">🤖</span>
-    <span>AGY AI Coach</span>
+    <span>AI Coach</span>
   </button>
 
   <!-- SLIDE-OVER MODAL: Floating AI Assistant Panel -->
@@ -863,7 +863,7 @@
           🤖
         </div>
         <div>
-          <div class="font-bold text-sm text-white">AGY AI Assistant</div>
+          <div class="font-bold text-sm text-white">AI Coach</div>
           <div class="text-[10px] text-purple-300 font-mono">Senior Dev English Pronunciation Coach</div>
         </div>
       </div>
@@ -972,7 +972,7 @@
         const input = document.getElementById('input-sound-transcript').value.trim() || targetSoundWord;
         const btn = document.getElementById('btn-submit-sound-grade');
         btn.disabled = true;
-        btn.textContent = '⏳ AGY AI đang phân tích âm học...';
+        btn.textContent = '⏳ AI Coach đang phân tích âm học...';
 
         try {
           const res = await fetch('/api/ai/evaluate', {
@@ -994,7 +994,7 @@
           document.getElementById('sound-grade-diagnostic').textContent = `Âm vị đạt yêu cầu đối với ${targetSoundWord}. Nhớ duy trì độ nổ sắc bén ở đuôi âm.`;
         } finally {
           btn.disabled = false;
-          btn.textContent = '🚀 Chấm điểm phát âm cùng AGY AI';
+          btn.textContent = '🚀 Chấm điểm phát âm cùng AI Coach';
         }
       });
 
@@ -1025,7 +1025,7 @@
 
         const aiMsg = document.createElement('div');
         aiMsg.className = 'p-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-300 mr-6';
-        aiMsg.innerHTML = '<span>⏳ AGY Coach đang phân tích...</span>';
+        aiMsg.innerHTML = '<span>⏳ AI Coach đang phân tích...</span>';
         messages.appendChild(aiMsg);
         messages.scrollTop = messages.scrollHeight;
 
@@ -1038,13 +1038,13 @@
           const data = await res.json();
           aiMsg.innerHTML = `
             <div class="space-y-1">
-              <div class="font-bold text-cyan-400">🤖 AGY Coach:</div>
+              <div class="font-bold text-cyan-400">🤖 AI Coach:</div>
               <div>${data.grammarCorrections || 'Ngữ pháp chuẩn.'}</div>
               ${data.seniorDevRefactoring ? `<div class="p-1.5 rounded bg-cyan-950/40 border border-cyan-900/60 font-mono text-[11px] text-cyan-200">⭐ Senior Dev: "${data.seniorDevRefactoring}"</div>` : ''}
             </div>
           `;
         } catch (err) {
-          aiMsg.innerHTML = `<span class="text-amber-400">⚠️ AGY Coach: Luôn ghi nhớ vị trí tiếp xúc gờ lợi và kiểm tra độ rung thanh quản!</span>`;
+          aiMsg.innerHTML = `<span class="text-amber-400">⚠️ AI Coach: Luôn ghi nhớ vị trí tiếp xúc gờ lợi và kiểm tra độ rung thanh quản!</span>`;
         } finally {
           messages.scrollTop = messages.scrollHeight;
         }

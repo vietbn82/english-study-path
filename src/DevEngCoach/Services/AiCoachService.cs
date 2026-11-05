@@ -44,7 +44,7 @@ public sealed class AiCoachService(ICurriculumService curriculumService, ILogger
             }
             catch (Exception ex)
             {
-                logger.LogWarning(ex, "AGY CLI execution failed or timed out. Falling back to built-in phonetic analysis engine.");
+                logger.LogWarning(ex, "AI Coach CLI execution failed or timed out. Falling back to built-in phonetic analysis engine.");
             }
         }
 
@@ -68,7 +68,7 @@ public sealed class AiCoachService(ICurriculumService curriculumService, ILogger
             }
             catch (Exception ex)
             {
-                logger.LogWarning(ex, "AGY CLI standup simulation failed. Falling back to built-in heuristics.");
+                logger.LogWarning(ex, "AI Coach CLI standup simulation failed. Falling back to built-in heuristics.");
             }
         }
 
@@ -91,7 +91,7 @@ public sealed class AiCoachService(ICurriculumService curriculumService, ILogger
             }
             catch (Exception ex)
             {
-                logger.LogWarning(ex, "AGY CLI demo simulation failed. Falling back to built-in heuristics.");
+                logger.LogWarning(ex, "AI Coach CLI demo simulation failed. Falling back to built-in heuristics.");
             }
         }
 
@@ -114,7 +114,7 @@ public sealed class AiCoachService(ICurriculumService curriculumService, ILogger
             }
             catch (Exception ex)
             {
-                logger.LogWarning(ex, "AGY CLI ping-pong simulation failed. Falling back to built-in heuristics.");
+                logger.LogWarning(ex, "AI Coach CLI ping-pong simulation failed. Falling back to built-in heuristics.");
             }
         }
 
@@ -142,7 +142,7 @@ public sealed class AiCoachService(ICurriculumService curriculumService, ILogger
             return new QuickLookupResponse(true, text, termData.Ipa, termData.MeaningVi, termData.Cue);
         }
 
-        // 3. Attempt AGY CLI lookup for arbitrary sentence or word
+        // 3. Attempt AI Coach CLI lookup for arbitrary sentence or word
         var agyPath = FindAgyExecutable();
         if (agyPath is not null)
         {
@@ -156,7 +156,7 @@ public sealed class AiCoachService(ICurriculumService curriculumService, ILogger
             }
             catch (Exception ex)
             {
-                logger.LogWarning(ex, "AGY lookup failed for '{Text}'", text);
+                logger.LogWarning(ex, "AI Coach CLI lookup failed for '{Text}'", text);
             }
         }
 
@@ -204,7 +204,7 @@ public sealed class AiCoachService(ICurriculumService curriculumService, ILogger
         return null;
     }
 
-    #region AGY CLI Integrations
+    #region External AI Coach CLI Integrations
 
     private async Task<AiEvaluationResponse?> RunAgyEvaluationAsync(
         string agyPath,

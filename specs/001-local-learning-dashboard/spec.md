@@ -1,9 +1,9 @@
-# Feature Specification: Local Learning Dashboard & Pre-compiled Material Manager with AGY AI Assistant
+# Feature Specification: Local Learning Dashboard & Pre-compiled Material Manager with AI Coach
 
 **Feature Branch**: `001-local-learning-dashboard`  
 **Created**: 2026-11-04  
 **Status**: Ready for Planning  
-**Input**: User description: "Local learning dashboard to track 90-day progress, 22:00 reminder, plan vs actual comparison, pre-compiled daily materials (zero research), and embedded AGY CLI AI Assistant."
+**Input**: User description: "Local learning dashboard to track 90-day progress, 22:00 reminder, plan vs actual comparison, pre-compiled daily materials (zero research), and embedded AI Coach."
 
 ---
 
@@ -35,15 +35,15 @@ As a learner, I want the dashboard to track my completion status, log actual stu
 
 ---
 
-### User Story 3 - Embedded AI Assistant via AGY CLI (Priority: P3)
-As a developer, I want to submit my daily speech transcript or practice sentence directly to an embedded AGY CLI AI Assistant inside the dashboard, so that I receive immediate, actionable corrections on technical pronunciation cues, syntax errors, and sentence naturalness without leaving the app.
+### User Story 3 - Embedded AI Assistant via AI Coach (Priority: P3)
+As a developer, I want to submit my daily speech transcript or practice sentence directly to an embedded AI Coach inside the dashboard, so that I receive immediate, actionable corrections on technical pronunciation cues, syntax errors, and sentence naturalness without leaving the app.
 
 **Why this priority**: Replaces expensive private tutors with an on-demand, high-signal AI evaluator tailored to Vietnamese developers.
 
-**Independent Test**: Submit a practice sentence (e.g., *"Yesterday I fix bug in auth controller"*), verify the embedded AGY CLI integration returns: (1) Grammar correction, (2) Kinesthetic pronunciation reminder for `-ed` and `/θ/` in `auth`, and (3) a natural senior dev refactoring of the sentence.
+**Independent Test**: Submit a practice sentence (e.g., *"Yesterday I fix bug in auth controller"*), verify the embedded AI Coach integration returns: (1) Grammar correction, (2) Kinesthetic pronunciation reminder for `-ed` and `/θ/` in `auth`, and (3) a natural senior dev refactoring of the sentence.
 
 **Acceptance Scenarios**:
-1. **Given** the user enters their draft sentence or speech transcript in the AI Coach tab, **When** they click "Evaluate with AGY AI", **Then** the backend executes the AGY CLI prompt runner and displays structured feedback within 5 seconds.
+1. **Given** the user enters their draft sentence or speech transcript in the AI Coach tab, **When** they click "Evaluate with AI Coach", **Then** the backend executes the AI Coach prompt runner and displays structured feedback within 5 seconds.
 
 ---
 
@@ -61,10 +61,10 @@ As a developer, I want to submit my daily speech transcript or practice sentence
   - Actual: Start time, finish time, duration (minutes), completion status (`Pending`, `Completed`, `Skipped`).
   - Progress metrics: Current Streak, Total Completed Days, Overall Completion Percentage.
 - **FR-004 (22:00 Reminder Hook - DROPPED FROM SCOPE)**: [Removed from backlog per user request]. Daily habit tracking relies on the in-dashboard Pomodoro timer and plan vs. actual telemetry.
-- **FR-005 (AGY CLI Integration)**: The backend MUST expose an API endpoint (`/api/ai/evaluate`) that invokes the local Antigravity CLI / Gemini AI to evaluate learner input against the day's phonetic targets and sentence frames.
+- **FR-005 (AI Coach Integration)**: The backend MUST expose an API endpoint (`/api/ai/evaluate`) that invokes the local Antigravity CLI / Gemini AI to evaluate learner input against the day's phonetic targets and sentence frames.
 - **FR-006 (Zero External Dependency for Core Curriculum)**: The entire 90-day curriculum and dashboard MUST function completely offline on `localhost`.
 - **FR-007 (Omnipresent Audio Playback)**: Every IPA symbol, vocabulary word, example sentence, and minimal pair comparison across all pages (Dashboard & Fundamentals) MUST provide a 1-click audio playback button (`🔊`).
-- **FR-008 (Global Floating AGY AI Assistant)**: A persistent Floating Action Button (FAB) and slide-out chat modal MUST be present on all pages (`index.html`, `fundamentals.html`) to invoke AGY CLI assistance at any point.
+- **FR-008 (Global Floating AI Coach)**: A persistent Floating Action Button (FAB) and slide-out chat modal MUST be present on all pages (`index.html`, `fundamentals.html`) to invoke AI Coach assistance at any point.
 - **FR-009 (Interactive Sound-Level Speech Grading)**: Every phonetic unit and minimal pair entry MUST include a direct "Nói & Chấm Điểm" (Practice & Grade with AI) action with mic recording and immediate 1-100 fluency/accuracy scoring.
 - **FR-010 (Contrastive Minimal Pairs Matrix)**: Each lesson and the Fundamentals reference MUST explicitly feature side-by-side contrastive sound pairs (e.g., `/t/` vs `/d/`, `/s/` vs `/z/`, `/θ/` vs `/ð/`, `/iː/` vs `/ɪ/`) highlighting articulatory differences (voicing, aspiration, duration).
 
@@ -90,5 +90,5 @@ As a developer, I want to submit my daily speech transcript or practice sentence
 ## Assumptions & Boundaries
 
 - Target user runs the dashboard locally on Windows 11 with .NET 10 installed.
-- AGY CLI / Gemini environment is configured on the host machine.
+- AI Coach / Gemini environment is configured on the host machine.
 - Audio recording in browser uses the Web Audio API / MediaRecorder, with fallback to text input.

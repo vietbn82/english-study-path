@@ -16,7 +16,7 @@
 ## Global Constraints
 - Modern C# idioms: file-scoped namespaces, primary constructors, strongly-typed records.
 - Zero breaking changes to existing 90-day curriculum and progress endpoints.
-- 100% offline resilience: fallback heuristic engines when AGY CLI / Gemini is not available.
+- 100% offline resilience: fallback heuristic engines when AI Coach / Gemini is not available.
 - All unit and integration tests must pass cleanly.
 
 ---

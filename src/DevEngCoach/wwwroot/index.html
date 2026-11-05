@@ -36,7 +36,7 @@
         <div>
           <div class="font-bold text-base tracking-tight flex items-center gap-2">
             <span>DevEng Coach</span>
-            <span class="text-xs px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800/60 font-mono">.NET 10 // AGY</span>
+            <span class="text-xs px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800/60 font-mono">.NET 10 // AI Coach</span>
           </div>
           <div class="text-xs text-slate-400 font-mono">Kinesthetic English Engine for Senior Devs</div>
         </div>
@@ -323,7 +323,7 @@
           </div>
         </div>
 
-        <!-- STAGE 3: AI SPEECH & AGY ASSISTANT (10 MINS) -->
+        <!-- STAGE 3: AI SPEECH & AI COACH (10 MINS) -->
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 flex flex-col space-y-4 shadow-lg">
           <div class="flex items-center justify-between border-b border-slate-800 pb-3">
             <div class="flex items-center gap-2">
@@ -331,7 +331,7 @@
               <h2 class="font-bold text-slate-100 text-sm tracking-wide">AI Coach Assistant (10m)</h2>
             </div>
             <span class="text-xs font-mono text-purple-400 bg-purple-950/80 px-2 py-0.5 rounded border border-purple-900">
-              AGY CLI Powered
+              AI Coach Powered
             </span>
           </div>
 
@@ -353,7 +353,7 @@
             <textarea id="ai-input-text" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-100 font-mono focus:outline-none focus:border-cyan-500 transition resize-none" placeholder="Ví dụ: Yesterday, I worked on the auth module and fixed the token validation bug..."></textarea>
             
             <button id="btn-evaluate-ai" class="w-full py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold rounded-lg text-xs shadow-md transition flex items-center justify-center gap-2">
-              <span>🚀 Chấm điểm bằng AGY AI Assistant</span>
+              <span>🚀 Chấm điểm bằng AI Coach</span>
             </button>
           </div>
 
@@ -382,7 +382,7 @@
           <!-- AI Evaluation Feedback Result Box -->
           <div id="ai-feedback-box" class="hidden bg-slate-950 border border-purple-900/50 rounded-lg p-3 space-y-2.5 text-xs">
             <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-              <span class="font-bold text-purple-300">Đánh giá từ AGY Coach:</span>
+              <span class="font-bold text-purple-300">Đánh giá từ AI Coach:</span>
               <span id="ai-fluency-badge" class="px-2 py-0.5 rounded text-xs font-mono font-bold bg-purple-950 text-purple-400 border border-purple-800">
                 Score: 85/100
               </span>
@@ -1079,7 +1079,7 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
       </div>
 
       <button id="btn-submit-sound-grade" class="w-full py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold rounded-lg text-xs shadow-md transition">
-        🚀 Chấm điểm phát âm cùng AGY AI
+        🚀 Chấm điểm phát âm cùng AI Coach
       </button>
 
       <!-- Feedback Result -->
@@ -1098,10 +1098,10 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
     </div>
   </div>
 
-  <!-- FLOATING ACTION BUTTON (GLOBAL AGY AI ASSISTANT) -->
-  <button id="btn-floating-ai" title="Mở AGY AI Assistant" class="floating-ai-fab fixed bottom-6 right-6 z-50 px-4 py-3 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-bold text-xs rounded-full shadow-2xl flex items-center gap-2 border border-purple-400/40 cursor-pointer transition transform hover:scale-105">
+  <!-- FLOATING ACTION BUTTON (GLOBAL AI COACH) -->
+  <button id="btn-floating-ai" title="Mở AI Coach" class="floating-ai-fab fixed bottom-6 right-6 z-50 px-4 py-3 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-bold text-xs rounded-full shadow-2xl flex items-center gap-2 border border-purple-400/40 cursor-pointer transition transform hover:scale-105">
     <span class="text-base animate-pulse">🤖</span>
-    <span>AGY AI Coach</span>
+    <span>AI Coach</span>
   </button>
 
   <!-- SLIDE-OVER MODAL: Floating AI Assistant Panel -->
@@ -1113,7 +1113,7 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
           🤖
         </div>
         <div>
-          <div class="font-bold text-sm text-white">AGY AI Assistant</div>
+          <div class="font-bold text-sm text-white">AI Coach</div>
           <div class="text-[10px] text-purple-300 font-mono">Senior Dev English Pronunciation Coach</div>
         </div>
       </div>
@@ -1123,7 +1123,7 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
     <!-- Chat / Feedback History -->
     <div id="floating-chat-messages" class="flex-1 p-4 overflow-y-auto space-y-3 text-xs">
       <div class="p-3 rounded-lg bg-slate-950 border border-slate-800 text-slate-300 leading-relaxed">
-        👋 Xin chào! Tôi là <strong>AGY Coach</strong>. Bạn có thể hỏi tôi bất kỳ thắc mắc nào về:
+        👋 Xin chào! Tôi là <strong>AI Coach</strong>. Bạn có thể hỏi tôi bất kỳ thắc mắc nào về:
         <ul class="list-disc list-inside mt-1.5 space-y-0.5 text-slate-400">
           <li>Cách đặt đầu lưỡi cho các âm khó (/θ/, /ð/, /tʃ/, /dʒ/).</li>
           <li>Chấm điểm một câu bạn nói trong Daily Standup.</li>
