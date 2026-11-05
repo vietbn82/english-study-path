@@ -810,720 +810,717 @@
     // Render Contrastive Minimal Pairs (FR-010)
     renderContrastivePairs(lesson);
 
-    // Dynamic Vocal Tract SVG Illumination (FR-007)
-    updateVocalTractSVG(lesson);
+    // =========================================================================
+  // SAGITTAL VOCAL TRACT INTERACTIVE ANATOMICAL ENGINE WITH KINEMATIC VECTORS
+  // =========================================================================
+  let currentSagittalSound = '/t/';
+  let currentSagittalMode = 'target'; // 'target' | 'vn'
 
-    // Vietnamese Mouth-Map (Feature 006) & IPA Tooltips (Feature 010)
-    loadMouthMap(lesson.phonetics.targetSound);
-    setTimeout(attachIpaTooltips, 100);
-
-    // Drills (With Omnipresent Audio & Practice buttons)
-    if (el.drillsContainer) {
-      el.drillsContainer.innerHTML = '';
-      lesson.vocabularyDrills.forEach(drill => {
-        const row = document.createElement('div');
-        row.className = 'flex items-center justify-between p-2 rounded bg-slate-950/70 border border-slate-800 text-xs hover:border-slate-700 transition';
-        row.innerHTML = `
-          <div class="flex items-center gap-2">
-            <button class="speak-btn text-cyan-400 hover:text-cyan-300 font-bold px-1.5 py-0.5 rounded hover:bg-slate-800 transition" data-word="${drill.word}" title="Bấm nghe phát âm">🔊</button>
-            <div>
-              <span class="font-bold text-slate-100">${drill.word}</span>
-              <span class="font-mono text-cyan-400 text-[11px] ml-1">${drill.ipa}</span>
-              <span class="text-slate-400 ml-1.5">— ${drill.meaningVi}</span>
-            </div>
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="text-[11px] text-slate-400 italic hidden sm:block">${drill.physicalNote}</span>
-            <button class="drill-practice-btn px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 transition" data-word="${drill.word}" data-ipa="${drill.ipa}" data-tip="${drill.physicalNote}">
-              🎤 Luyện
-            </button>
-          </div>
-        `;
-        el.drillsContainer.appendChild(row);
-      });
-    }
-
-    // Stage 2: Sentence Frames
-    if (el.framesContainer) {
-      el.framesContainer.innerHTML = '';
-      const allVars = new Set();
-      lesson.sentenceFrames.forEach(frame => {
-        frame.devVariables.forEach(v => allVars.add(v));
-        const card = document.createElement('div');
-        card.className = 'p-3 rounded-lg bg-slate-950/80 border border-slate-800 space-y-1.5';
-        card.innerHTML = `
-          <div class="flex items-center justify-between">
-            <span class="font-bold text-blue-400 text-xs">${frame.templateName}</span>
-            <button class="copy-frame-btn text-[11px] text-slate-400 hover:text-slate-200" data-pattern="${frame.templatePattern}">📋 Copy</button>
-          </div>
-          <div class="font-mono text-xs text-slate-200 bg-slate-900/90 p-2 rounded border border-slate-800/80">${frame.templatePattern}</div>
-          <div class="text-[11px] text-slate-400 flex items-center justify-between pt-1">
-            <span class="line-clamp-1">Ví dụ: "${frame.exampleUsage}"</span>
-            <button class="speak-btn text-blue-400 hover:text-blue-300 font-bold px-2 py-0.5 rounded hover:bg-slate-800 shrink-0 ml-2 transition" data-word="${frame.exampleUsage}" title="Nghe phát âm">🔊 Nghe</button>
-          </div>
-        `;
-        el.framesContainer.appendChild(card);
-      });
-
-      if (el.frameVariables) {
-        el.frameVariables.textContent = Array.from(allVars).join(', ') || '[Feature], [Component], [Task]';
+  const SAGITTAL_DATA = {
+    '/t/': {
+      soundName: '/t/, /d/ — Alveolar Stop (Âm Gờ Lợi)',
+      organText: 'Đầu lưỡi ➜ Gờ lợi trên',
+      voicing: 'Vô thanh /t/ (Gió) | Hữu thanh /d/ (Rung cổ)',
+      motion: {
+        arrowD: "M 180 235 C 178 215, 182 205, 185 194",
+        arrowMarker: "url(#arrow-motion)",
+        arrowStroke: "#38bdf8",
+        label: "⬆️ Nâng đầu lưỡi lên gờ lợi",
+        labelX: 195,
+        labelY: 218,
+        labelColor: "#38bdf8",
+        arrowSecD: "M 185 192 L 185 218",
+        arrowSecMarker: "url(#arrow-motion-amber)",
+        arrowSecStroke: "#f59e0b",
+        labelSec: "⬇️ Giật dứt khoát giải phóng Pop",
+        labelSecX: 195,
+        labelSecY: 205,
+        labelSecColor: "#f59e0b",
+        showSec: true
+      },
+      kinematicSteps: {
+        start: 'Đầu lưỡi nghỉ ở sàn miệng',
+        motion: '⬆️ Nâng lên ép chặt Gờ Lợi',
+        pressure: '🛑 Khóa khí nén sau đầu lưỡi',
+        release: '⬇️ Giật dứt khoát giải phóng Pop'
+      },
+      vnMotionText: 'Lỗi hướng người Việt: Đập lưỡi vào mặt sau răng cửa thay vì gờ lợi, không có pha giật nhả xuống mà ngậm miệng nuốt âm (commit -> côm-mít).',
+      target: {
+        tonguePath: "M 165 265 C 170 240, 175 210, 185 192 C 205 194, 235 220, 265 240 C 290 260, 300 300, 290 355 C 275 385, 245 390, 230 380 C 215 350, 190 310, 165 265 Z",
+        velumPath: "M 305 202 C 322 205, 340 212, 348 215 C 344 225, 330 220, 305 212 Z",
+        tipPoint: { cx: 185, cy: 192 },
+        contactPoint: { cx: 185, cy: 192, show: true, color: '#38bdf8' },
+        burstPoint: { cx: 185, cy: 192, show: true },
+        airStream: { d: "M 270 390 C 270 330, 260 250, 215 220", show: true },
+        popArrow: { d: "M 185 192 L 185 215", show: true },
+        desc: "Đầu lưỡi dán chặt gờ lợi sau răng trên, nén áp suất khí rồi giật lưỡi dứt khoát giải phóng tiếng bật hơi sắc nét (Pop).",
+        badge: "🇬🇧 Chuẩn Target (Ép gờ lợi -> Bật nổ)"
+      },
+      vn: {
+        tonguePath: "M 165 265 C 160 240, 155 225, 156 218 C 175 224, 210 235, 255 245 C 285 265, 295 305, 290 355 C 275 385, 245 390, 230 380 C 215 350, 190 310, 165 265 Z",
+        velumPath: "M 305 202 C 322 205, 340 212, 348 215 C 344 225, 330 220, 305 212 Z",
+        tipPoint: { cx: 156, cy: 218 },
+        contactPoint: { cx: 156, cy: 218, show: true, color: '#f43f5e' },
+        burstPoint: { show: false },
+        airStream: { d: "M 270 390 C 270 330, 260 250, 215 240", show: true },
+        popArrow: { show: false },
+        desc: "⚠️ Thói quen Việt: Đầu lưỡi đập vào răng cửa hoặc ngậm miệng nuốt âm (unreleased coda). Từ 'commit' đọc thành 'côm-mít' cụt ngủn.",
+        badge: "🇻🇳 Lỗi Thường Gặp (Chặn răng / Nuốt âm)"
+      }
+    },
+    '/θ/': {
+      soundName: '/θ/, /ð/ — Interdental Fricative (Âm Kẹp Răng)',
+      organText: 'Đầu lưỡi ➜ Giữa 2 hàm răng',
+      voicing: 'Vô thanh /θ/ (Xì gió) | Hữu thanh /ð/ (Rung họng)',
+      motion: {
+        arrowD: "M 170 232 C 155 230, 142 228, 126 224",
+        arrowMarker: "url(#arrow-motion-emerald)",
+        arrowStroke: "#10b981",
+        label: "⬅️ Đẩy nhô ra trước 2-3mm",
+        labelX: 85,
+        labelY: 208,
+        labelColor: "#10b981",
+        arrowSecD: "M 124 224 L 95 224",
+        arrowSecMarker: "url(#arrow-motion)",
+        arrowSecStroke: "#38bdf8",
+        labelSec: "💨 Xì hơi liên tục qua kẽ răng",
+        labelSecX: 60,
+        labelSecY: 240,
+        labelSecColor: "#38bdf8",
+        showSec: true
+      },
+      kinematicSteps: {
+        start: 'Đầu lưỡi nằm trong miệng',
+        motion: '⬅️ Đẩy nhô ra giữa 2 hàm răng',
+        pressure: '🦷 Răng cắn nhẹ giữ đầu lưỡi',
+        release: '💨 Thổi luồng gió xì liên tục'
+      },
+      vnMotionText: 'Lỗi hướng người Việt: Rụt đầu lưỡi lùi sâu vào trong vòm họng thay vì nhô ra ngoài kẹp răng (think -> tinh, auth -> ót).',
+      target: {
+        tonguePath: "M 165 265 C 150 250, 138 238, 130 224 C 140 216, 160 218, 190 226 C 235 235, 270 250, 290 280 C 300 305, 298 335, 290 355 C 275 385, 245 390, 230 380 C 215 350, 190 310, 165 265 Z",
+        velumPath: "M 305 202 C 322 205, 340 212, 348 215 C 344 225, 330 220, 305 212 Z",
+        tipPoint: { cx: 130, cy: 224 },
+        contactPoint: { cx: 130, cy: 224, show: true, color: '#10b981' },
+        burstPoint: { show: false },
+        airStream: { d: "M 270 390 C 260 300, 210 230, 120 224", show: true },
+        popArrow: { show: false },
+        desc: "Thè đầu lưỡi ra giữa 2 hàm răng 2-3mm, cắn nhẹ bằng răng cửa, đẩy hơi rít liên tục qua khe răng - lưỡi (không rung cổ với /θ/, rung cổ với /ð/).",
+        badge: "🇬🇧 Chuẩn Target (Thè kẹp răng)"
+      },
+      vn: {
+        tonguePath: "M 165 265 C 170 250, 172 238, 175 230 C 190 232, 225 236, 260 245 C 285 265, 295 305, 290 355 C 275 385, 245 390, 230 380 C 215 350, 190 310, 165 265 Z",
+        velumPath: "M 305 202 C 322 205, 340 212, 348 215 C 344 225, 330 220, 305 212 Z",
+        tipPoint: { cx: 175, cy: 230 },
+        contactPoint: { cx: 175, cy: 230, show: true, color: '#f43f5e' },
+        burstPoint: { show: false },
+        airStream: { d: "M 270 390 C 270 300, 230 235, 145 220", show: true },
+        popArrow: { show: false },
+        desc: "⚠️ Thói quen Việt: Rụt lưỡi sâu trong miệng, phát âm thành âm 'th' hoặc 't' tiếng Việt (think -> tinh, auth -> ót, with -> uýt).",
+        badge: "🇻🇳 Lỗi Thường Gặp (Rụt lưỡi / Nói th-t)"
+      }
+    },
+    '/s/': {
+      soundName: '/s/, /z/ — Alveolar Fricative (Âm Rãnh Xì)',
+      organText: 'Đầu lưỡi ➜ Sát gờ lợi (Rãnh 1mm)',
+      voicing: 'Vô thanh /s/ (Rít gió sắc) | Hữu thanh /z/ (Rung ong)',
+      motion: {
+        arrowD: "M 180 235 C 178 215, 180 205, 182 198",
+        arrowMarker: "url(#arrow-motion)",
+        arrowStroke: "#06b6d4",
+        label: "⬆️ Nâng sát gờ lợi 1mm",
+        labelX: 195,
+        labelY: 218,
+        labelColor: "#06b6d4",
+        arrowSecD: "M 182 198 C 170 205, 155 210, 130 215",
+        arrowSecMarker: "url(#arrow-motion-amber)",
+        arrowSecStroke: "#f59e0b",
+        labelSec: "➡️ Tia khí xì qua kẽ răng",
+        labelSecX: 105,
+        labelSecY: 235,
+        labelSecColor: "#f59e0b",
+        showSec: true
+      },
+      kinematicSteps: {
+        start: 'Mép môi cười nhẹ sang hai bên',
+        motion: '⬆️ Nâng đầu lưỡi sát gờ lợi 1mm',
+        pressure: '🔬 Hai rìa lưỡi áp chặt răng hàm',
+        release: '➡️ Phun tia khí sắc bén qua kẽ răng'
+      },
+      vnMotionText: 'Lỗi hướng người Việt: Bỏ quên hướng nâng đầu lưỡi ở cuối từ, nuốt hoàn toàn âm đuôi s-z (response -> rì-pón).',
+      target: {
+        tonguePath: "M 165 265 C 170 240, 176 215, 182 198 C 195 204, 225 220, 260 240 C 285 265, 298 305, 290 355 C 275 385, 245 390, 230 380 C 215 350, 190 310, 165 265 Z",
+        velumPath: "M 305 202 C 322 205, 340 212, 348 215 C 344 225, 330 220, 305 212 Z",
+        tipPoint: { cx: 182, cy: 198 },
+        contactPoint: { cx: 182, cy: 198, show: true, color: '#06b6d4' },
+        burstPoint: { show: false },
+        airStream: { d: "M 270 390 C 260 300, 220 210, 135 215", show: true },
+        popArrow: { show: false },
+        desc: "Mép môi hơi bè như cười nhẹ, đầu lưỡi nâng sát gờ lợi tạo rãnh hẹp, luồng hơi rít mạnh sắc bén qua kẽ răng.",
+        badge: "🇬🇧 Chuẩn Target (Rãnh xì sắc nét)"
+      },
+      vn: {
+        tonguePath: "M 165 265 C 175 250, 185 240, 205 238 C 240 235, 275 245, 295 275 C 305 295, 300 330, 290 360 C 275 385, 245 390, 230 380 C 215 350, 190 310, 165 265 Z",
+        velumPath: "M 305 202 C 322 205, 340 212, 348 215 C 344 225, 330 220, 305 212 Z",
+        tipPoint: { cx: 190, cy: 240 },
+        contactPoint: { show: false },
+        burstPoint: { show: false },
+        airStream: { show: false },
+        popArrow: { show: false },
+        desc: "⚠️ Thói quen Việt: Thường xuyên nuốt âm đuôi /s/, /z/ (response -> 'rì-pón', database -> 'đây-tơ-bây').",
+        badge: "🇻🇳 Lỗi Thường Gặp (Rụng đuôi s-z)"
+      }
+    },
+    '/ʃ/': {
+      soundName: '/ʃ/, /ʒ/ — Postalveolar Fricative (Âm Chu Vòm)',
+      organText: 'Phiến lưỡi ➜ Sau gờ lợi + Chu môi',
+      voicing: 'Vô thanh /ʃ/ (Suỵt gió dày) | Hữu thanh /ʒ/ (Rung dày)',
+      motion: {
+        arrowD: "M 230 240 C 225 225, 220 215, 215 202",
+        arrowMarker: "url(#arrow-motion-rose)",
+        arrowStroke: "#a855f7",
+        label: "↗️ Thân lưỡi vồng cao",
+        labelX: 225,
+        labelY: 220,
+        labelColor: "#a855f7",
+        arrowSecD: "M 124 195 L 105 195 M 124 245 L 105 245",
+        arrowSecMarker: "url(#arrow-motion-rose)",
+        arrowSecStroke: "#f43f5e",
+        labelSec: "⬅️ Môi chu tròn về trước",
+        labelSecX: 70,
+        labelSecY: 185,
+        labelSecColor: "#f43f5e",
+        showSec: true
+      },
+      kinematicSteps: {
+        start: 'Miệng thả lỏng',
+        motion: '⬅️ Chu môi phễu + ↗️ Vồng thân lưỡi',
+        pressure: '💨 Khoang miệng cộng hưởng âm sâu',
+        release: '🌊 Thổi luồng gió suỵt dày đục'
+      },
+      vnMotionText: 'Lỗi hướng người Việt: Miệng bẹt sang hai bên thay vì chu tròn về phía trước, biến /ʃ/ thành /s/ thông thường.',
+      target: {
+        tonguePath: "M 165 265 C 172 245, 185 225, 215 202 C 240 205, 265 225, 285 255 C 298 285, 300 325, 290 355 C 275 385, 245 390, 230 380 C 215 350, 190 310, 165 265 Z",
+        velumPath: "M 305 202 C 322 205, 340 212, 348 215 C 344 225, 330 220, 305 212 Z",
+        tipPoint: { cx: 215, cy: 202 },
+        contactPoint: { cx: 215, cy: 202, show: true, color: '#a855f7' },
+        burstPoint: { show: false },
+        airStream: { d: "M 270 390 C 260 290, 225 215, 120 210", show: true },
+        popArrow: { show: false },
+        desc: "Môi chu tròn hướng ra phía trước (như huýt sáo), thân lưỡi vồng cao về ngạc cứng đẩy luồng gió dày đục (âm suỵt bảo im lặng).",
+        badge: "🇬🇧 Chuẩn Target (Chu môi + Vồng vòm)"
+      },
+      vn: {
+        tonguePath: "M 165 265 C 170 240, 176 215, 182 198 C 195 204, 225 220, 260 240 C 285 265, 298 305, 290 355 C 275 385, 245 390, 230 380 C 215 350, 190 310, 165 265 Z",
+        velumPath: "M 305 202 C 322 205, 340 212, 348 215 C 344 225, 330 220, 305 212 Z",
+        tipPoint: { cx: 182, cy: 198 },
+        contactPoint: { cx: 182, cy: 198, show: true, color: '#f43f5e' },
+        burstPoint: { show: false },
+        airStream: { d: "M 270 390 C 260 300, 220 210, 135 215", show: true },
+        popArrow: { show: false },
+        desc: "⚠️ Thói quen Việt: Miệng bẹt, đọc âm /ʃ/ thành /s/ bình thường (push đọc thành 'pút-s' thay vì chu mỏ xì dày).",
+        badge: "🇻🇳 Lỗi Thường Gặp (Miệng bẹt thành s)"
+      }
+    },
+    '/k/': {
+      soundName: '/k/, /ɡ/ — Velar Stop (Âm Ngạc Mềm)',
+      organText: 'Gốc lưỡi ➜ Ngạc mềm (Velum)',
+      voicing: 'Vô thanh /k/ (Nổ cộc) | Hữu thanh /ɡ/ (Rung họng)',
+      motion: {
+        arrowD: "M 260 250 C 275 240, 285 225, 295 205",
+        arrowMarker: "url(#arrow-motion-amber)",
+        arrowStroke: "#eab308",
+        label: "↗️ Gốc lưỡi ép ngạc mềm",
+        labelX: 235,
+        labelY: 238,
+        labelColor: "#eab308",
+        arrowSecD: "M 295 205 L 270 230",
+        arrowSecMarker: "url(#arrow-motion)",
+        arrowSecStroke: "#38bdf8",
+        labelSec: "↙️ Hạ nhanh bung nổ",
+        labelSecX: 240,
+        labelSecY: 215,
+        labelSecColor: "#38bdf8",
+        showSec: true
+      },
+      kinematicSteps: {
+        start: 'Đầu lưỡi nằm yên ở sàn miệng',
+        motion: '↗️ Nhấc bổng gốc lưỡi ép ngạc mềm',
+        pressure: '🛑 Chặn kín luồng hơi trong họng',
+        release: '↙️ Hạ nhanh gốc lưỡi nổ bật âm cộc'
+      },
+      vnMotionText: 'Lỗi hướng người Việt: Ép gốc lưỡi lại rồi khóa chặt cổ họng không nhả, nuốt mất tiếng nổ bật (network -> nét-uốc ngậm họng).',
+      target: {
+        tonguePath: "M 165 265 C 175 260, 185 255, 205 255 C 235 255, 270 230, 295 205 C 310 225, 310 270, 300 320 C 290 355, 275 385, 245 390 C 230 380, 215 350, 165 265 Z",
+        velumPath: "M 305 202 C 322 205, 340 212, 348 215 C 344 225, 330 220, 305 212 Z",
+        tipPoint: { cx: 185, cy: 255 },
+        contactPoint: { cx: 295, cy: 205, show: true, color: '#eab308' },
+        burstPoint: { cx: 295, cy: 205, show: true },
+        airStream: { d: "M 270 390 C 275 320, 285 250, 295 205", show: true },
+        popArrow: { d: "M 295 205 L 265 230", show: true },
+        desc: "Gốc lưỡi phía sau nâng cao ép chặt vào vòm ngạc mềm chặn hoàn toàn khí, sau đó hạ nhanh gốc lưỡi nổ bật âm /k/ sắc nét.",
+        badge: "🇬🇧 Chuẩn Target (Ép ngạc mềm -> Nổ)"
+      },
+      vn: {
+        tonguePath: "M 165 265 C 175 260, 185 255, 205 255 C 235 255, 270 230, 295 205 C 310 225, 310 270, 300 320 C 290 355, 275 385, 245 390 C 230 380, 215 350, 165 265 Z",
+        velumPath: "M 305 202 C 322 205, 340 212, 348 215 C 344 225, 330 220, 305 212 Z",
+        tipPoint: { cx: 185, cy: 255 },
+        contactPoint: { cx: 295, cy: 205, show: true, color: '#f43f5e' },
+        burstPoint: { show: false },
+        airStream: { show: false },
+        popArrow: { show: false },
+        desc: "⚠️ Thói quen Việt: Ép lưỡi lại rồi khóa chặt cổ họng không nhả (network -> 'nét-uốc' ngậm họng, ngắt âm bất thình lình).",
+        badge: "🇻🇳 Lỗi Thường Gặp (Khóa họng / Nuốt cộc)"
+      }
+    },
+    '/p/': {
+      soundName: '/p/, /b/ — Bilabial Stop (Âm Hai Môi)',
+      organText: 'Môi trên ➜ Môi dưới ép chặt',
+      voicing: 'Vô thanh /p/ (Bật gió nổ) | Hữu thanh /b/ (Rung môi nổ)',
+      motion: {
+        arrowD: "M 124 188 L 132 208 M 126 250 L 132 222",
+        arrowMarker: "url(#arrow-motion-rose)",
+        arrowStroke: "#f43f5e",
+        label: "↕️ Hai môi mím chặt",
+        labelX: 140,
+        labelY: 215,
+        labelColor: "#f43f5e",
+        arrowSecD: "M 132 215 L 100 215",
+        arrowSecMarker: "url(#arrow-motion)",
+        arrowSecStroke: "#38bdf8",
+        labelSec: "⬅️ Bung mở nổ áp suất",
+        labelSecX: 75,
+        labelSecY: 235,
+        labelSecColor: "#38bdf8",
+        showSec: true
+      },
+      kinematicSteps: {
+        start: 'Môi mở tự nhiên',
+        motion: '↕️ Hai môi mím dán chặt bờ trong',
+        pressure: '🛑 Áp suất dồn ứ sau bờ môi',
+        release: '⬅️ Bung mở đột ngột nổ tiếng Pop'
+      },
+      vnMotionText: 'Lỗi hướng người Việt: Không có pha mím nén bật hơi dứt khoát, dễ lẫn /p/ thành /b/ hoặc ngậm môi nuốt luôn âm cuối.',
+      target: {
+        tonguePath: "M 165 265 C 175 250, 185 240, 205 238 C 240 235, 275 245, 295 275 C 305 295, 300 330, 290 360 C 275 385, 245 390, 230 380 C 215 350, 190 310, 165 265 Z",
+        velumPath: "M 305 202 C 322 205, 340 212, 348 215 C 344 225, 330 220, 305 212 Z",
+        tipPoint: { cx: 190, cy: 240 },
+        contactPoint: { cx: 132, cy: 215, show: true, color: '#f43f5e' },
+        burstPoint: { cx: 132, cy: 215, show: true },
+        airStream: { d: "M 270 390 C 260 300, 200 230, 135 215", show: true },
+        popArrow: { d: "M 132 215 L 105 215", show: true },
+        desc: "Mím chặt 2 bờ môi lại, nén luồng khí dồn sau khoang miệng rồi mở bung hai môi giải phóng âm bật /p/ như mở nắp chai sâm-panh.",
+        badge: "🇬🇧 Chuẩn Target (Nén hai môi -> Bật)"
+      },
+      vn: {
+        tonguePath: "M 165 265 C 175 250, 185 240, 205 238 C 240 235, 275 245, 295 275 C 305 295, 300 330, 290 360 C 275 385, 245 390, 230 380 C 215 350, 190 310, 165 265 Z",
+        velumPath: "M 305 202 C 322 205, 340 212, 348 215 C 344 225, 330 220, 305 212 Z",
+        tipPoint: { cx: 190, cy: 240 },
+        contactPoint: { cx: 132, cy: 215, show: true, color: '#f43f5e' },
+        burstPoint: { show: false },
+        airStream: { show: false },
+        popArrow: { show: false },
+        desc: "⚠️ Thói quen Việt: Biến âm /p/ ở đầu từ thành âm /b/ (people -> 'bi-bồ'), hoặc ở đuôi thì ngậm môi không bật (help -> 'hép' cụt).",
+        badge: "🇻🇳 Lỗi Thường Gặp (Biến p thành b)"
+      }
+    },
+    'rest': {
+      soundName: 'Trạng Thái Tự Nhiên (Rest / Neutral)',
+      organText: 'Khoang miệng thả lỏng',
+      voicing: 'Thanh quản mở tự nhiên',
+      motion: {
+        arrowD: "M 0 0",
+        label: "",
+        showSec: false
+      },
+      kinematicSteps: {
+        start: 'Khoang miệng ở vị trí nghỉ sinh lý',
+        motion: 'Cơ hàm và lưỡi hoàn toàn thả lỏng',
+        pressure: 'Không có nén khí',
+        release: 'Hít thở tự nhiên qua mũi'
+      },
+      vnMotionText: 'Trạng thái thư giãn bình thường.',
+      target: {
+        tonguePath: "M 165 265 C 175 250, 185 240, 205 238 C 240 235, 275 245, 295 275 C 305 295, 300 330, 290 360 C 275 385, 245 390, 230 380 C 215 350, 190 310, 165 265 Z",
+        velumPath: "M 305 202 C 320 215, 330 235, 326 255 C 323 262, 318 262, 316 255 C 314 240, 310 220, 300 208 Z",
+        tipPoint: { cx: 190, cy: 240 },
+        contactPoint: { show: false },
+        burstPoint: { show: false },
+        airStream: { show: false },
+        popArrow: { show: false },
+        desc: "Khoang miệng và lưỡi ở vị trí nghỉ sinh lý. Đầu lưỡi hạ thấp dưới răng cửa dưới, ngạc mềm hạ nhẹ thông với mũi.",
+        badge: "Vị trí nghỉ tự nhiên"
+      },
+      vn: {
+        tonguePath: "M 165 265 C 175 250, 185 240, 205 238 C 240 235, 275 245, 295 275 C 305 295, 300 330, 290 360 C 275 385, 245 390, 230 380 C 215 350, 190 310, 165 265 Z",
+        velumPath: "M 305 202 C 320 215, 330 235, 326 255 C 323 262, 318 262, 316 255 C 314 240, 310 220, 300 208 Z",
+        tipPoint: { cx: 190, cy: 240 },
+        contactPoint: { show: false },
+        burstPoint: { show: false },
+        airStream: { show: false },
+        popArrow: { show: false },
+        desc: "Khoang miệng và lưỡi ở vị trí nghỉ sinh lý.",
+        badge: "Vị trí nghỉ tự nhiên"
       }
     }
+  };
 
-    // Stage 3: Practice Task
-    if (el.taskPrompt) el.taskPrompt.textContent = lesson.practiceTask.prompt;
-    if (el.taskScenario) el.taskScenario.textContent = `Ngữ cảnh: ${lesson.practiceTask.scenarioVi}`;
-    if (el.aiInputText) el.aiInputText.value = '';
-    if (el.aiFeedbackBox) el.aiFeedbackBox.classList.add('hidden');
-
-    // Completion / Self-Rating & Personal Notes state
-    const session = state.sessions[lesson.dayNumber];
-    const isCompleted = session?.status === 'Completed';
-
-    if (isCompleted) {
-      const rating = session.selfRating || 5;
-      const minutes = session.actualMinutes || 30;
-      const notes = session.learnerNotes || '';
-
-      setSelfRating(rating);
-      if (el.inputLearnerNotes) el.inputLearnerNotes.value = notes;
-      if (el.inputActualMinutes) el.inputActualMinutes.value = minutes;
-
-      if (el.sessionCompletedBanner) el.sessionCompletedBanner.classList.remove('hidden');
-      if (el.sessionCompletedInfo) el.sessionCompletedInfo.textContent = `Đã hoàn thành: ${minutes} phút - ${rating} sao`;
-      if (el.sessionCompletedStars) el.sessionCompletedStars.textContent = '⭐'.repeat(rating);
-    } else {
-      setSelfRating(5);
-      if (el.inputLearnerNotes) el.inputLearnerNotes.value = '';
-      if (el.inputActualMinutes) el.inputActualMinutes.value = "30";
-
-      if (el.sessionCompletedBanner) el.sessionCompletedBanner.classList.add('hidden');
+  const ARTICULATOR_INFO = {
+    'alveolar': {
+      title: '3. Gờ Lợi (Alveolar Ridge) — Trọng tâm số 1 tiếng Anh',
+      desc: 'Dải thịt gồ ghề ngay sát chân răng cửa trên. Đây là điểm tựa cấu âm của /t/, /d/, /s/, /z/, /n/, /l/. Người Việt thường đập vào răng cửa (sai) thay vì ép chặt gờ lợi.',
+      organ: 'Đầu lưỡi ➜ Gờ lợi trên',
+      voicing: '/t/, /s/: Vô thanh | /d/, /z/: Hữu thanh'
+    },
+    'tongue-tip': {
+      title: 'Đầu Lưỡi (Tongue Tip / Apex)',
+      desc: 'Cơ quan cấu âm chủ động linh hoạt nhất. Đầu lưỡi chịu trách nhiệm tạo âm gờ lợi (/t/, /d/), kẹp răng (/θ/, /ð/), và âm xì (/s/, /z/). Cần cảm nhận rõ vị trí đặt lưỡi trước khi bật hơi.',
+      organ: 'Đầu lưỡi (Active Articulator)',
+      voicing: 'Tùy thuộc âm vị'
+    },
+    'velum': {
+      title: '5. Ngạc Mềm & Lưỡi Gà (Soft Palate / Velum)',
+      desc: 'Chiếc van cơ học đóng mở khoang mũi. Khi nâng lên đóng kín: tạo các âm miệng (/k/, /g/, /p/, /t/). Khi hạ xuống mở thông: hơi thoát lên mũi tạo /m/, /n/, /ŋ/.',
+      organ: 'Gốc lưỡi ➜ Ngạc mềm',
+      voicing: '/k/: Vô thanh | /ɡ/, /ŋ/: Hữu thanh'
+    },
+    'vocal-cords': {
+      title: 'Dây Thanh Âm (Vocal Folds) — Cảm ứng rung thanh quản',
+      desc: 'Nằm trong sụn thanh quản (trái cổ). Khép rung dữ dội = Âm Hữu Thanh (Voiced: /d/, /z/, /ɡ/, /b/, /v/). Mở rộng chỉ có luồng gió = Âm Vô Thanh (Voiceless: /t/, /s/, /k/, /p/, /f/, /θ/).',
+      organ: 'Dây thanh âm (Glottis)',
+      voicing: 'Máy phát rung âm thanh'
+    },
+    'hard-palate': {
+      title: '4. Ngạc Cứng (Hard Palate) — Vòm họng cứng',
+      desc: 'Phần mái vòm hình cung có xương nâng đỡ, trơn láng. Thân lưỡi nâng ép sát vòm ngạc cứng để tạo âm /j/ (yes, user) và phối hợp với gờ lợi tạo /ʃ/, /tʃ/, /dʒ/.',
+      organ: 'Thân lưỡi ➜ Vòm ngạc cứng',
+      voicing: '/j/: Hữu thanh | /ʃ/: Vô thanh'
+    },
+    'lips': {
+      title: '1. Môi (Lips) — Âm Hai Môi (Bilabial)',
+      desc: 'Môi trên và môi dưới mím chặt chặn kín luồng khí nén sau miệng rồi bung ra tạo /p/, /b/, hoặc khép ngân tạo /m/. Người Việt hay lẫn lộn /p/ thành /b/.',
+      organ: 'Môi trên ➜ Môi dưới',
+      voicing: '/p/: Vô thanh | /b/, /m/: Hữu thanh'
+    },
+    'teeth': {
+      title: '2. Răng Cửa (Incisors) — Âm Răng & Kẹp Răng',
+      desc: 'Răng cửa trên và dưới đóng vai trò chướng ngại vật tạo tiếng rít sắc cho /s/, /z/, hoặc kẹp đầu lưỡi ở giữa tạo /θ/, /ð/.',
+      organ: 'Răng cửa trên & dưới',
+      voicing: 'Cơ quan thụ động'
     }
+  };
 
-    switchView('workspace');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
+  function renderSagittalSound(soundKey, mode) {
+    currentSagittalSound = soundKey || currentSagittalSound || '/t/';
+    currentSagittalMode = mode || currentSagittalMode || 'target';
 
-  // Render Contrastive Minimal Pairs (FR-010)
-  function renderContrastivePairs(lesson) {
-    if (!el.contrastPairContainer) return;
-    el.contrastPairContainer.innerHTML = '';
+    const soundCfg = SAGITTAL_DATA[currentSagittalSound] || SAGITTAL_DATA['/t/'];
+    const modeCfg = soundCfg[currentSagittalMode] || soundCfg.target;
 
-    // Find custom or mapped pair
-    const contrastData = CONTRASTIVE_PAIRS[lesson.dayNumber] || CONTRASTIVE_PAIRS[1];
-
-    const card = document.createElement('div');
-    card.className = 'bg-slate-900/90 border border-slate-800 rounded-lg p-3 space-y-2 text-xs font-sans';
-    card.innerHTML = `
-      <div class="grid grid-cols-2 gap-2 text-center pb-2 border-b border-slate-800 font-mono">
-        <div class="p-2 rounded bg-slate-950 border border-slate-800/80">
-          <div class="flex items-center justify-center gap-1.5">
-            <span class="text-base font-bold text-cyan-400">${contrastData.soundA.symbol}</span>
-            <button class="speak-btn text-xs text-slate-400 hover:text-cyan-300" data-word="${contrastData.drills[0]?.wordA || 'test'}">🔊</button>
-          </div>
-          <div class="text-[10px] text-cyan-300 font-bold">${contrastData.soundA.name}</div>
-          <div class="text-[10px] text-slate-400 mt-1">${contrastData.soundA.cue}</div>
-        </div>
-        <div class="p-2 rounded bg-slate-950 border border-slate-800/80">
-          <div class="flex items-center justify-center gap-1.5">
-            <span class="text-base font-bold text-purple-400">${contrastData.soundB.symbol}</span>
-            <button class="speak-btn text-xs text-slate-400 hover:text-purple-300" data-word="${contrastData.drills[0]?.wordB || 'dead'}">🔊</button>
-          </div>
-          <div class="text-[10px] text-purple-300 font-bold">${contrastData.soundB.name}</div>
-          <div class="text-[10px] text-slate-400 mt-1">${contrastData.soundB.cue}</div>
-        </div>
-      </div>
-      <div class="space-y-1.5 pt-1">
-        <div class="text-[11px] font-semibold text-slate-400 font-mono">Cặp từ đối lập phân biệt:</div>
-        ${contrastData.drills.map(d => `
-          <div class="flex items-center justify-between p-1.5 rounded bg-slate-950/60 border border-slate-800/60 text-xs">
-            <div class="flex items-center gap-2">
-              <button class="speak-btn text-cyan-400 font-bold" data-word="${d.wordA}">🔊</button>
-              <span class="font-bold text-slate-200">${d.wordA}</span>
-              <span class="font-mono text-cyan-400 text-[10px]">${d.ipaA}</span>
-            </div>
-            <span class="text-slate-500 font-mono">⟷</span>
-            <div class="flex items-center gap-2">
-              <span class="font-bold text-slate-200">${d.wordB}</span>
-              <span class="font-mono text-purple-400 text-[10px]">${d.ipaB}</span>
-              <button class="speak-btn text-purple-400 font-bold" data-word="${d.wordB}">🔊</button>
-            </div>
-          </div>
-        `).join('')}
-      </div>
-    `;
-    el.contrastPairContainer.appendChild(card);
-  }
-
-  // Render 90-Day Curriculum Grid
-  function renderCurriculumGrid(sprintFilter = 'all') {
-    if (!el.curriculumGrid) return;
-    el.curriculumGrid.innerHTML = '';
-
-    const filtered = state.lessons.filter(l => {
-      if (sprintFilter === 'all') return true;
-      return l.sprintId === parseInt(sprintFilter, 10);
+    // 1. Update Buttons Active States
+    document.querySelectorAll('.sound-tab-btn').forEach(btn => {
+      const match = btn.getAttribute('data-sound') === currentSagittalSound;
+      btn.classList.toggle('active', match);
     });
 
-    filtered.forEach(l => {
-      const session = state.sessions[l.dayNumber];
-      const isCompleted = session?.status === 'Completed';
-      const isCurrent = l.dayNumber === state.currentDay;
-      const rating = session?.selfRating;
-
-      const card = document.createElement('div');
-      card.className = `p-3.5 rounded-xl border cursor-pointer transition flex flex-col justify-between h-36 ${
-        isCurrent
-          ? 'bg-slate-900 border-cyan-500 shadow-lg shadow-cyan-500/10'
-          : isCompleted
-          ? 'bg-slate-900/50 border-emerald-900/60 hover:border-emerald-700'
-          : 'bg-slate-950 border-slate-800 hover:border-slate-700'
-      }`;
-
-      card.innerHTML = `
-        <div>
-          <div class="flex items-center justify-between mb-1.5">
-            <span class="font-mono text-xs font-bold ${isCurrent ? 'text-cyan-400' : 'text-slate-400'}">DAY ${l.dayNumber}</span>
-            ${
-              isCompleted
-                ? `<span class="px-1.5 py-0.5 rounded text-[10px] bg-emerald-950 text-emerald-400 font-mono inline-flex items-center gap-1">✓ Done ${rating ? `<span class="text-amber-400 font-sans">${rating}⭐</span>` : ''}</span>`
-                : isCurrent
-                ? '<span class="px-1.5 py-0.5 rounded text-[10px] bg-cyan-950 text-cyan-400 font-mono">Active</span>'
-                : '<span class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 text-slate-400 font-mono">Pending</span>'
-            }
-          </div>
-          <div class="font-bold text-xs text-slate-200 line-clamp-2 leading-snug">${l.title}</div>
-        </div>
-        <div class="flex items-center justify-between text-[11px] text-slate-400 pt-2 border-t border-slate-800/60 font-mono">
-          <span class="text-cyan-400/80">${l.phonetics.phoneticSymbol}</span>
-          <div class="flex items-center gap-1.5">
-            ${isCompleted && rating ? `<span class="text-amber-400 text-[10px]">${'★'.repeat(rating)}</span>` : ''}
-            <span>S${l.sprintId}</span>
-          </div>
-        </div>
-      `;
-
-      card.addEventListener('click', () => {
-        loadDayLesson(l.dayNumber);
-      });
-
-      el.curriculumGrid.appendChild(card);
-    });
-  }
-
-  // Native Speech Synthesis (Omnipresent Audio)
-  function speakWord(text) {
-    if (!window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'en-US';
-    utterance.rate = 0.85; // Slightly slower for crisp articulation listening
-    window.speechSynthesis.speak(utterance);
-  }
-
-  // Sound Practice Modal Logic (FR-009)
-  function openSoundPracticeModal(targetSound, word, ipa, tip) {
-    state.soundPractice.targetWord = word;
-    state.soundPractice.targetSymbol = targetSound;
-
-    if (el.modalSoundTargetDesc) el.modalSoundTargetDesc.textContent = `Mục tiêu âm: ${targetSound}`;
-    if (el.modalSoundTargetWord) el.modalSoundTargetWord.textContent = `${word} ${ipa}`;
-    if (el.modalSoundTargetTip) el.modalSoundTargetTip.textContent = tip || 'Kiểm soát chặt chẽ điểm tiếp xúc cơ học và luồng khí';
-    if (el.modalSoundBtnListen) el.modalSoundBtnListen.dataset.word = word;
-    if (el.inputSoundTranscript) el.inputSoundTranscript.value = '';
-    if (el.soundGradeResult) el.soundGradeResult.classList.add('hidden');
-    const srsAlert = document.getElementById('sound-grade-srs-alert');
-    if (srsAlert) srsAlert.classList.add('hidden');
-
-    if (el.modalSoundPractice) el.modalSoundPractice.classList.remove('hidden');
-  }
-
-  function closeSoundPracticeModal() {
-    if (el.modalSoundPractice) el.modalSoundPractice.classList.add('hidden');
-    stopAudioVisualizer();
-    if (state.soundPractice.isRecording && state.soundPractice.recognition) {
-      state.soundPractice.recognition.stop();
+    const btnTarget = document.getElementById('btn-sagittal-target');
+    const btnVn = document.getElementById('btn-sagittal-vn');
+    if (btnTarget && btnVn) {
+      if (currentSagittalMode === 'target') {
+        btnTarget.className = 'px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm transition';
+        btnVn.className = 'px-2 py-0.5 rounded text-[10px] font-mono text-slate-400 hover:text-rose-300 transition';
+      } else {
+        btnTarget.className = 'px-2 py-0.5 rounded text-[10px] font-mono text-slate-400 hover:text-emerald-300 transition';
+        btnVn.className = 'px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 shadow-sm transition';
+      }
     }
-  }
 
-  async function submitSoundGrade() {
-    const input = (el.inputSoundTranscript?.value || '').trim() || state.soundPractice.targetWord;
-    if (!el.btnSubmitSoundGrade) return;
+    // 2. Update Tongue & Velum SVG Paths
+    const tongueShape = document.getElementById('svg-tongue-shape');
+    if (tongueShape && modeCfg.tonguePath) {
+      tongueShape.setAttribute('d', modeCfg.tonguePath);
+    }
 
-    el.btnSubmitSoundGrade.disabled = true;
-    el.btnSubmitSoundGrade.textContent = "⏳ AI Coach đang phân tích âm học...";
+    const velum = document.getElementById('svg-part-velum');
+    if (velum && modeCfg.velumPath) {
+      velum.setAttribute('d', modeCfg.velumPath);
+    }
 
-    try {
-      // 1. Call Speech-to-Text Pronunciation Scorer (Feature 002)
-      try {
-        const scoreRes = await fetch('/api/speech/score', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            dayNumber: state.currentDay,
-            targetWordOrSentence: state.soundPractice.targetWord,
-            expectedPhonemes: state.soundPractice.targetSymbol,
-            spokenText: input
-          })
-        });
-        if (scoreRes.ok) {
-          const scoreData = await scoreRes.json();
-          if (el.modalPhonemeBreakdown) {
-            el.modalPhonemeBreakdown.innerHTML = '';
-            (scoreData.phonemeBreakdown || []).forEach(p => {
-              const span = document.createElement('span');
-              span.className = p.isCorrect ? 'px-2 py-0.5 rounded phoneme-tag-correct' : 'px-2 py-0.5 rounded phoneme-tag-incorrect';
-              span.title = p.kinestheticCorrectionTip;
-              span.textContent = `${p.targetPhoneme} ${p.isCorrect ? '✅' : '❌'}`;
-              el.modalPhonemeBreakdown.appendChild(span);
-            });
-          }
+    // 3. Update Tongue Tip Marker
+    const tipMarker = document.getElementById('svg-part-tongue-tip');
+    if (tipMarker && modeCfg.tipPoint) {
+      tipMarker.setAttribute('cx', modeCfg.tipPoint.cx);
+      tipMarker.setAttribute('cy', modeCfg.tipPoint.cy);
+    }
+
+    // 4. Update Contact Glow Point
+    const contactGlow = document.getElementById('svg-contact-glow');
+    if (contactGlow) {
+      if (modeCfg.contactPoint && modeCfg.contactPoint.show) {
+        contactGlow.style.display = 'block';
+        contactGlow.setAttribute('cx', modeCfg.contactPoint.cx);
+        contactGlow.setAttribute('cy', modeCfg.contactPoint.cy);
+        contactGlow.setAttribute('fill', modeCfg.contactPoint.color || '#38bdf8');
+      } else {
+        contactGlow.style.display = 'none';
+      }
+    }
+
+    // 5. Update Burst Ripple
+    const burstRipple = document.getElementById('svg-burst-ripple');
+    if (burstRipple) {
+      if (modeCfg.burstPoint && modeCfg.burstPoint.show) {
+        burstRipple.style.display = 'block';
+        burstRipple.setAttribute('cx', modeCfg.burstPoint.cx);
+        burstRipple.setAttribute('cy', modeCfg.burstPoint.cy);
+      } else {
+        burstRipple.style.display = 'none';
+      }
+    }
+
+    // 6. Update Airstream Path & Pop Arrow
+    const airstream = document.getElementById('svg-airstream-path');
+    if (airstream) {
+      if (modeCfg.airStream && modeCfg.airStream.show) {
+        airstream.style.display = 'block';
+        airstream.setAttribute('d', modeCfg.airStream.d);
+      } else {
+        airstream.style.display = 'none';
+      }
+    }
+
+    const popArrow = document.getElementById('svg-pop-arrow');
+    if (popArrow) {
+      if (modeCfg.popArrow && modeCfg.popArrow.show) {
+        popArrow.style.display = 'block';
+        popArrow.setAttribute('d', modeCfg.popArrow.d);
+      } else {
+        popArrow.style.display = 'none';
+      }
+    }
+
+    // 7. Update Vocal Cords Voicing Class
+    const vocalCords = document.getElementById('svg-part-vocal-cords');
+    if (vocalCords) {
+      const isVoicedSound = currentSagittalSound.includes('/d/') || currentSagittalSound.includes('/ð/') || currentSagittalSound.includes('/z/') || currentSagittalSound.includes('/ɡ/') || currentSagittalSound.includes('/b/');
+      if (isVoicedSound) {
+        vocalCords.classList.add('sagittal-vibrate');
+        vocalCords.setAttribute('fill', '#c084fc');
+        vocalCords.setAttribute('stroke', '#a855f7');
+      } else {
+        vocalCords.classList.remove('sagittal-vibrate');
+        vocalCords.setAttribute('fill', '#ef4444');
+        vocalCords.setAttribute('stroke', '#ef4444');
+      }
+    }
+
+    // 8. Update Motion Direction Vector Arrows and Text
+    const motionArrow = document.getElementById('svg-motion-arrow');
+    const motionLabel = document.getElementById('svg-motion-label');
+    const motionArrowSec = document.getElementById('svg-motion-arrow-sec');
+    const motionLabelSec = document.getElementById('svg-motion-label-sec');
+
+    const motionCfg = soundCfg.motion;
+    if (motionCfg && motionCfg.label && currentSagittalMode === 'target') {
+      if (motionArrow) {
+        motionArrow.style.display = 'block';
+        motionArrow.setAttribute('d', motionCfg.arrowD);
+        motionArrow.setAttribute('marker-end', motionCfg.arrowMarker);
+        motionArrow.setAttribute('stroke', motionCfg.arrowStroke);
+      }
+      if (motionLabel) {
+        motionLabel.style.display = 'block';
+        motionLabel.textContent = motionCfg.label;
+        motionLabel.setAttribute('x', motionCfg.labelX);
+        motionLabel.setAttribute('y', motionCfg.labelY);
+        motionLabel.setAttribute('fill', motionCfg.labelColor);
+      }
+      if (motionCfg.showSec) {
+        if (motionArrowSec) {
+          motionArrowSec.style.display = 'block';
+          motionArrowSec.setAttribute('d', motionCfg.arrowSecD);
+          motionArrowSec.setAttribute('marker-end', motionCfg.arrowSecMarker);
+          motionArrowSec.setAttribute('stroke', motionCfg.arrowSecStroke);
         }
-      } catch (e) {
-        console.warn('Speech scoring endpoint fallback', e);
+        if (motionLabelSec) {
+          motionLabelSec.style.display = 'block';
+          motionLabelSec.textContent = motionCfg.labelSec;
+          motionLabelSec.setAttribute('x', motionCfg.labelSecX);
+          motionLabelSec.setAttribute('y', motionCfg.labelSecY);
+          motionLabelSec.setAttribute('fill', motionCfg.labelSecColor);
+        }
+      } else {
+        if (motionArrowSec) motionArrowSec.style.display = 'none';
+        if (motionLabelSec) motionLabelSec.style.display = 'none';
       }
-
-      const res = await fetch('/api/ai/evaluate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          dayNumber: state.currentDay,
-          inputText: `Pronunciation evaluation for sound ${state.soundPractice.targetSymbol}. Target: ${state.soundPractice.targetWord}. Learner pronounced: "${input}".`
-        })
-      });
-
-      const data = await res.json();
-      const score = data.fluencyScore || 88;
-
-      if (el.soundGradeResult) el.soundGradeResult.classList.remove('hidden');
-      if (el.soundGradeScore) el.soundGradeScore.textContent = `${score}/100`;
-      if (el.soundGradeDiagnostic) {
-        const alerts = data.phoneticMechanicsAlerts?.join(' ') || data.naturalSpeakingTip || 'Cấu âm chuẩn xác, điểm tiếp xúc lưỡi và áp suất đạt yêu cầu.';
-        el.soundGradeDiagnostic.textContent = alerts;
-      }
-
-      if (score < 75) {
-        const srsAlert = document.getElementById('sound-grade-srs-alert');
-        if (srsAlert) srsAlert.classList.remove('hidden');
-        fetch('/api/srs/enroll', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            wordOrPhrase: state.soundPractice.targetWord,
-            targetPhoneme: state.soundPractice.targetSymbol,
-            contextSentence: `Day ${state.currentDay} drill practice`,
-            initialScore: score
-          })
-        }).then(() => refreshSrsStatsOnly()).catch(() => {});
-      }
-    } catch (err) {
-      console.error('Sound evaluation error', err);
-      if (el.soundGradeResult) el.soundGradeResult.classList.remove('hidden');
-      if (el.soundGradeScore) el.soundGradeScore.textContent = '85/100';
-      if (el.soundGradeDiagnostic) el.soundGradeDiagnostic.textContent = `Phát âm tốt từ "${state.soundPractice.targetWord}". Chú ý giữ áp suất âm đuôi sắc nét.`;
-    } finally {
-      el.btnSubmitSoundGrade.disabled = false;
-      el.btnSubmitSoundGrade.textContent = "🚀 Chấm điểm phát âm cùng AI Coach";
-    }
-  }
-
-  // Floating AI Assistant Logic (FR-008)
-  function toggleFloatingAiModal() {
-    if (!el.modalFloatingAi) return;
-    if (el.modalFloatingAi.classList.contains('hidden')) {
-      el.modalFloatingAi.classList.remove('hidden');
-      if (el.floatingAiInput) el.floatingAiInput.focus();
     } else {
-      el.modalFloatingAi.classList.add('hidden');
-    }
-  }
-
-  function closeFloatingAiModal() {
-    if (el.modalFloatingAi) el.modalFloatingAi.classList.add('hidden');
-  }
-
-  async function sendFloatingAiMessage() {
-    const text = (el.floatingAiInput?.value || '').trim();
-    if (!text || !el.floatingChatMessages) return;
-
-    // Append user message
-    const userMsg = document.createElement('div');
-    userMsg.className = 'p-2.5 rounded-lg bg-purple-950/80 border border-purple-800 text-purple-200 ml-6';
-    userMsg.innerHTML = `<span class="font-bold">Bạn:</span> ${text}`;
-    el.floatingChatMessages.appendChild(userMsg);
-    el.floatingAiInput.value = '';
-    el.floatingChatMessages.scrollTop = el.floatingChatMessages.scrollHeight;
-
-    // Append loading placeholder
-    const aiMsg = document.createElement('div');
-    aiMsg.className = 'p-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-300 mr-6';
-    aiMsg.innerHTML = `<span>⏳ AI Coach đang suy nghĩ...</span>`;
-    el.floatingChatMessages.appendChild(aiMsg);
-    el.floatingChatMessages.scrollTop = el.floatingChatMessages.scrollHeight;
-
-    try {
-      const res = await fetch('/api/ai/evaluate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          dayNumber: state.currentDay,
-          inputText: text
-        })
-      });
-
-      const data = await res.json();
-      aiMsg.innerHTML = `
-        <div class="space-y-1.5">
-          <div class="font-bold text-cyan-400">🤖 AI Coach:</div>
-          <div>${data.grammarCorrections || 'Cấu trúc câu tốt.'}</div>
-          ${data.phoneticMechanicsAlerts?.length ? `<div class="text-[11px] text-amber-300">⚠️ Cơ học: ${data.phoneticMechanicsAlerts.join('; ')}</div>` : ''}
-          ${data.seniorDevRefactoring ? `<div class="p-1.5 rounded bg-cyan-950/40 border border-cyan-900/60 font-mono text-[11px] text-cyan-200">⭐ Senior Dev: "${data.seniorDevRefactoring}"</div>` : ''}
-        </div>
-      `;
-    } catch (err) {
-      aiMsg.innerHTML = `<span class="text-amber-400">⚠️ AI Coach tạm thời offline, phản hồi quy tắc cơ học: Nhớ đặt đầu lưỡi đúng gờ lợi và không rụng âm đuôi!</span>`;
-    } finally {
-      el.floatingChatMessages.scrollTop = el.floatingChatMessages.scrollHeight;
-    }
-  }
-
-  // Web Speech Recognition (Mic Input for Workspace, Modal, & Floating AI)
-  function setupSpeechRecognition() {
-    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRec) {
-      if (el.btnSpeechRecord) el.btnSpeechRecord.style.display = 'none';
-      if (el.btnRecordSound) el.btnRecordSound.style.display = 'none';
-      if (el.floatingBtnMic) el.floatingBtnMic.style.display = 'none';
-      return;
+      if (motionArrow) motionArrow.style.display = 'none';
+      if (motionLabel) motionLabel.style.display = 'none';
+      if (motionArrowSec) motionArrowSec.style.display = 'none';
+      if (motionLabelSec) motionLabelSec.style.display = 'none';
     }
 
-    // 1. Workspace Stage 3 Recognition
-    state.recognition = new SpeechRec();
-    state.recognition.continuous = false;
-    state.recognition.interimResults = false;
-    state.recognition.lang = 'en-US';
+    // 9. Update Kinematic Step Guide & VN Mistake Warning Text
+    const stepStart = document.getElementById('kin-step-start');
+    const stepMotion = document.getElementById('kin-step-motion');
+    const stepPressure = document.getElementById('kin-step-pressure');
+    const stepRelease = document.getElementById('kin-step-release');
+    const vnMotionAlert = document.getElementById('sagittal-vn-motion-text');
 
-    state.recognition.onstart = () => {
-      state.isRecording = true;
-      if (el.recordLabel) el.recordLabel.textContent = 'Đang nghe & ghi âm...';
-      if (el.btnSpeechRecord) el.btnSpeechRecord.className = 'text-xs px-2.5 py-1 bg-red-950 text-red-400 border border-red-800 rounded flex items-center gap-1 animate-pulse';
-      startMediaRecording();
-    };
-
-    state.recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
-      if (el.aiInputText) el.aiInputText.value = (el.aiInputText.value ? el.aiInputText.value + ' ' : '') + transcript;
-    };
-
-    state.recognition.onend = () => {
-      state.isRecording = false;
-      if (el.recordLabel) el.recordLabel.textContent = 'Nói vào mic';
-      if (el.btnSpeechRecord) el.btnSpeechRecord.className = 'text-xs px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded border border-slate-700 flex items-center gap-1 transition';
-      stopMediaRecording();
-    };
-
-    if (el.btnSpeechRecord) {
-      el.btnSpeechRecord.addEventListener('click', () => {
-        if (state.isRecording) {
-          state.recognition.stop();
-          stopMediaRecording();
-        } else {
-          state.recognition.start();
-        }
-      });
+    if (soundCfg.kinematicSteps) {
+      if (stepStart) stepStart.textContent = soundCfg.kinematicSteps.start;
+      if (stepMotion) stepMotion.textContent = soundCfg.kinematicSteps.motion;
+      if (stepPressure) stepPressure.textContent = soundCfg.kinematicSteps.pressure;
+      if (stepRelease) stepRelease.textContent = soundCfg.kinematicSteps.release;
+    }
+    if (vnMotionAlert) {
+      vnMotionAlert.textContent = soundCfg.vnMotionText || 'Lỗi người Việt: Đặt sai vị trí cơ quan tiếp xúc.';
     }
 
-    // 2. Sound Practice Modal Recognition
-    state.soundPractice.recognition = new SpeechRec();
-    state.soundPractice.recognition.continuous = false;
-    state.soundPractice.recognition.interimResults = false;
-    state.soundPractice.recognition.lang = 'en-US';
+    // 10. Update Information Panel Text
+    const statusSound = document.getElementById('sagittal-status-sound');
+    const statusBadge = document.getElementById('sagittal-status-badge');
+    const statusDesc = document.getElementById('sagittal-status-desc');
+    const statusOrgan = document.getElementById('sagittal-status-organ');
+    const statusVoicing = document.getElementById('sagittal-status-voicing');
 
-    state.soundPractice.recognition.onstart = () => {
-      state.soundPractice.isRecording = true;
-      if (el.recordSoundLabel) el.recordSoundLabel.textContent = "Đang nghe âm...";
-      if (el.btnRecordSound) el.btnRecordSound.className = "px-4 py-2 bg-red-950 text-red-400 border border-red-800 rounded-lg text-xs font-semibold flex items-center gap-1.5 animate-pulse";
-      const canvas = document.getElementById('canvas-sound-visualizer');
-      const status = document.getElementById('sound-visualizer-status');
-      if (status) status.textContent = "Đang thu âm sóng...";
-      startAudioVisualizer(canvas);
-    };
-
-    state.soundPractice.recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
-      if (el.inputSoundTranscript) el.inputSoundTranscript.value = transcript;
-    };
-
-    state.soundPractice.recognition.onend = () => {
-      state.soundPractice.isRecording = false;
-      if (el.recordSoundLabel) el.recordSoundLabel.textContent = "Bấm để nói";
-      if (el.btnRecordSound) el.btnRecordSound.className = "px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 text-xs font-semibold flex items-center gap-1.5 transition";
-      const status = document.getElementById('sound-visualizer-status');
-      if (status) status.textContent = "Đã thu";
-      stopAudioVisualizer();
-    };
-
-    if (el.btnRecordSound) {
-      el.btnRecordSound.addEventListener('click', () => {
-        if (state.soundPractice.isRecording) state.soundPractice.recognition.stop();
-        else state.soundPractice.recognition.start();
-      });
-    }
-
-    // 3. Floating AI Mic
-    state.floatingAi.recognition = new SpeechRec();
-    state.floatingAi.recognition.continuous = false;
-    state.floatingAi.recognition.interimResults = false;
-    state.floatingAi.recognition.lang = 'en-US';
-
-    state.floatingAi.recognition.onstart = () => {
-      state.floatingAi.isRecording = true;
-      if (el.floatingBtnMic) el.floatingBtnMic.className = 'px-3 py-2 bg-red-950 text-red-400 border border-red-800 rounded-lg text-xs animate-pulse';
-    };
-
-    state.floatingAi.recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
-      if (el.floatingAiInput) el.floatingAiInput.value = (el.floatingAiInput.value ? el.floatingAiInput.value + ' ' : '') + transcript;
-    };
-
-    state.floatingAi.recognition.onend = () => {
-      state.floatingAi.isRecording = false;
-      if (el.floatingBtnMic) el.floatingBtnMic.className = 'px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 text-xs transition';
-    };
-
-    if (el.floatingBtnMic) {
-      el.floatingBtnMic.addEventListener('click', () => {
-        if (state.floatingAi.isRecording) state.floatingAi.recognition.stop();
-        else state.floatingAi.recognition.start();
-      });
-    }
-  }
-
-  // Evaluate with AI Coach
-  async function evaluateWithAi() {
-    const text = el.aiInputText ? el.aiInputText.value.trim() : '';
-    if (!text) {
-      alert('Vui lòng nhập câu hoặc nói vào micro trước khi chấm điểm.');
-      return;
-    }
-
-    if (el.btnEvaluateAi) {
-      el.btnEvaluateAi.disabled = true;
-      el.btnEvaluateAi.innerHTML = '<span>⏳ AI Coach đang phân tích âm & ngữ pháp...</span>';
-    }
-
-    try {
-      const res = await fetch('/api/ai/evaluate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          dayNumber: state.currentDay,
-          inputText: text
-        })
-      });
-
-      const data = await res.json();
-
-      if (el.aiFeedbackBox) el.aiFeedbackBox.classList.remove('hidden');
-      if (el.aiFluencyBadge) el.aiFluencyBadge.textContent = `Score: ${data.fluencyScore}/100`;
-      if (el.aiGrammarFix) el.aiGrammarFix.textContent = data.grammarCorrections || 'Ngữ pháp chuẩn xác.';
-
-      if (el.aiPhoneticAlerts) {
-        el.aiPhoneticAlerts.innerHTML = '';
-        (data.phoneticMechanicsAlerts || []).forEach(alertItem => {
-          const li = document.createElement('li');
-          li.textContent = alertItem;
-          el.aiPhoneticAlerts.appendChild(li);
-        });
-      }
-
-      if (el.aiSeniorRefactor) el.aiSeniorRefactor.textContent = data.seniorDevRefactoring || text;
-
-    } catch (err) {
-      console.error('AI evaluation failed', err);
-      alert('Không thể kết nối với AI Coach. Vui lòng kiểm tra lại server.');
-    } finally {
-      if (el.btnEvaluateAi) {
-        el.btnEvaluateAi.disabled = false;
-        el.btnEvaluateAi.innerHTML = '<span>🚀 Chấm điểm bằng AI Coach</span>';
-      }
-    }
-  }
-
-  // Complete Current Day Session
-  async function completeCurrentSession() {
-    const minutes = parseInt(el.inputActualMinutes?.value || '30', 10) || 30;
-    const notes = document.getElementById('input-learner-notes')?.value.trim() || el.inputLearnerNotes?.value.trim() || '';
-
-    try {
-      const res = await fetch('/api/progress/complete', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          dayNumber: state.currentDay,
-          actualMinutes: minutes,
-          selfRating: state.currentSelfRating || 5,
-          learnerNotes: notes || '',
-          aiFeedbackSnippet: el.aiSeniorRefactor?.textContent || ''
-        })
-      });
-
-      const updatedLog = await res.json();
-      state.sessions[state.currentDay] = updatedLog;
-
-      // Refresh progress summary
-      const progressRes = await fetch('/api/progress');
-      state.summary = await progressRes.json();
-      updateTelemetryUI();
-
-      alert(`🎉 Chúc mừng bạn đã hoàn thành Ngày ${state.currentDay}! Streak hiện tại: ${state.summary.currentStreakDays} ngày.`);
-
-      // Advance to next day if available
-      if (state.currentDay < 90) {
-        loadDayLesson(state.currentDay + 1);
+    if (statusSound) statusSound.textContent = soundCfg.soundName;
+    if (statusBadge) {
+      statusBadge.textContent = modeCfg.badge;
+      if (currentSagittalMode === 'target') {
+        statusBadge.className = 'text-[10px] px-2 py-0.5 rounded font-mono font-bold bg-emerald-950 text-emerald-300 border border-emerald-800';
       } else {
-        loadDayLesson(state.currentDay);
-      }
-    } catch (err) {
-      console.error('Failed to complete session', err);
-    }
-  }
-
-  // 30-Minute Timer Logic
-  function startTimer() {
-    if (state.timer.isRunning) return;
-    state.timer.isRunning = true;
-    state.timer.intervalId = setInterval(() => {
-      if (state.timer.remainingSeconds > 0) {
-        state.timer.remainingSeconds--;
-        updateTimerUI();
-      } else {
-        pauseTimer();
-        alert('⏰ Đã hết 30 phút buổi học! Hãy bấm "Hoàn thành Ngày hôm nay" để ghi nhận streak.');
-      }
-    }, 1000);
-  }
-
-  function pauseTimer() {
-    state.timer.isRunning = false;
-    clearInterval(state.timer.intervalId);
-  }
-
-  function resetTimer() {
-    pauseTimer();
-    state.timer.remainingSeconds = state.timer.totalSeconds;
-    updateTimerUI();
-  }
-
-  function updateTimerUI() {
-    const mins = Math.floor(state.timer.remainingSeconds / 60);
-    const secs = state.timer.remainingSeconds % 60;
-    if (el.timerDisplay) el.timerDisplay.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-
-    const percent = (state.timer.remainingSeconds / state.timer.totalSeconds) * 100;
-    if (el.timerProgress) el.timerProgress.style.width = `${percent}%`;
-
-    syncBlocksWithTimer(state.timer.remainingSeconds);
-    const elapsed = state.timer.totalSeconds - state.timer.remainingSeconds;
-    if (el.timerPhaseHint) {
-      if (elapsed < 10 * 60) {
-        el.timerPhaseHint.textContent = 'Phase 1 (00-10m): Cơ Học Khẩu Hình & Âm Đuôi';
-      } else if (elapsed < 20 * 60) {
-        el.timerPhaseHint.textContent = 'Phase 2 (10-20m): Nạp Khung Câu Đóng Băng';
-      } else {
-        el.timerPhaseHint.textContent = 'Phase 3 (20-30m): Nói & Chấm Điểm Cùng AI Coach';
+        statusBadge.className = 'text-[10px] px-2 py-0.5 rounded font-mono font-bold bg-rose-950 text-rose-300 border border-rose-800';
       }
     }
+    if (statusDesc) statusDesc.textContent = modeCfg.desc;
+    if (statusOrgan) statusOrgan.textContent = soundCfg.organText;
+    if (statusVoicing) statusVoicing.textContent = soundCfg.voicing;
+
+    // 11. Sync with Side-by-Side Mouth-Map card (Feature 006)
+    loadMouthMap(currentSagittalSound);
   }
 
-  // Real Audio Capture via MediaRecorder (Side-by-Side Audio)
-  async function startMediaRecording() {
-    try {
-      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        state.mediaRecorder = new MediaRecorder(stream);
-        state.audioChunks = [];
-        state.mediaRecorder.ondataavailable = (e) => {
-          if (e.data.size > 0) state.audioChunks.push(e.data);
-        };
-        state.mediaRecorder.onstop = () => {
-          const blob = new Blob(state.audioChunks, { type: 'audio/webm' });
-          if (state.recordedAudioUrl) URL.revokeObjectURL(state.recordedAudioUrl);
-          state.recordedAudioUrl = URL.createObjectURL(blob);
-          if (el.audioUserRecorded) el.audioUserRecorded.src = state.recordedAudioUrl;
-          if (el.btnReplayUserVoice) el.btnReplayUserVoice.disabled = false;
-          if (el.audioPlaybackStatus) el.audioPlaybackStatus.textContent = "✓ Thu âm thành công! Bấm '▶ Nghe lại giọng Của Bạn' hoặc '🔊 Nghe giọng Bản Xứ' để so sánh trực diện.";
-          stream.getTracks().forEach(track => track.stop());
-        };
-        state.mediaRecorder.start();
+  function showArticulatorDetails(partKey) {
+    const info = ARTICULATOR_INFO[partKey];
+    if (!info) return;
+
+    // Highlight chip
+    document.querySelectorAll('.articulator-chip').forEach(chip => {
+      chip.classList.toggle('active', chip.getAttribute('data-part') === partKey);
+    });
+
+    const statusSound = document.getElementById('sagittal-status-sound');
+    const statusBadge = document.getElementById('sagittal-status-badge');
+    const statusDesc = document.getElementById('sagittal-status-desc');
+    const statusOrgan = document.getElementById('sagittal-status-organ');
+    const statusVoicing = document.getElementById('sagittal-status-voicing');
+
+    if (statusSound) statusSound.textContent = info.title;
+    if (statusBadge) {
+      statusBadge.textContent = '📍 Cơ quan giải phẫu';
+      statusBadge.className = 'text-[10px] px-2 py-0.5 rounded font-mono font-bold bg-cyan-950 text-cyan-300 border border-cyan-800';
+    }
+    if (statusDesc) statusDesc.textContent = info.desc;
+    if (statusOrgan) statusOrgan.textContent = info.organ;
+    if (statusVoicing) statusVoicing.textContent = info.voicing;
+  }
+
+  function animateMouthMotion() {
+    const soundKey = currentSagittalSound || '/t/';
+    const btn = document.getElementById('btn-animate-mouth');
+    if (btn) btn.textContent = '⏳ Đang phát âm...';
+
+    const burstRipple = document.getElementById('svg-burst-ripple');
+    const popArrow = document.getElementById('svg-pop-arrow');
+    const contactGlow = document.getElementById('svg-contact-glow');
+
+    if (burstRipple) burstRipple.style.display = 'none';
+    if (popArrow) popArrow.style.display = 'none';
+
+    // Step 2: Full Contact (400ms)
+    setTimeout(() => {
+      renderSagittalSound(soundKey, 'target');
+      if (contactGlow) contactGlow.style.display = 'block';
+    }, 400);
+
+    // Step 3: Burst / Explosion (900ms)
+    setTimeout(() => {
+      if (burstRipple) {
+        burstRipple.style.display = 'block';
+        burstRipple.style.stroke = '#38bdf8';
       }
-    } catch (err) {
-      console.warn('Microphone permission or MediaRecorder error:', err);
-    }
+      if (popArrow) popArrow.style.display = 'block';
+      if (soundKey === '/t/' || soundKey === '/d/') speakWord('commit');
+      else if (soundKey === '/θ/') speakWord('auth');
+      else if (soundKey === '/s/') speakWord('response');
+      else if (soundKey === '/k/') speakWord('network');
+      else if (soundKey === '/p/') speakWord('push');
+      else if (soundKey === '/ʃ/') speakWord('crash');
+    }, 900);
+
+    // Step 4: Complete
+    setTimeout(() => {
+      if (btn) btn.textContent = '▶️ Xem chuyển động';
+      renderSagittalSound(soundKey, currentSagittalMode);
+    }, 2000);
   }
 
-  function stopMediaRecording() {
-    if (state.mediaRecorder && state.mediaRecorder.state !== 'inactive') {
-      state.mediaRecorder.stop();
-    }
-  }
+  function setupSagittalVocalTract() {
+    // Sound tabs
+    document.querySelectorAll('.sound-tab-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const sound = btn.getAttribute('data-sound');
+        if (sound) renderSagittalSound(sound, currentSagittalMode);
+      });
+    });
 
-  // Dynamic Vocal Tract SVG Illumination
+    // Target vs VN Error toggle
+    const btnTarget = document.getElementById('btn-sagittal-target');
+    const btnVn = document.getElementById('btn-sagittal-vn');
+
+    if (btnTarget) {
+      btnTarget.addEventListener('click', () => {
+        renderSagittalSound(currentSagittalSound, 'target');
+      });
+    }
+
+    if (btnVn) {
+      btnVn.addEventListener('click', () => {
+        renderSagittalSound(currentSagittalSound, 'vn');
+      });
+    }
+
+    // Articulator chips & svg pins
+    document.querySelectorAll('.articulator-chip, .sagittal-pin').forEach(el => {
+      el.addEventListener('click', (e) => {
+        const part = el.getAttribute('data-part');
+        if (part) showArticulatorDetails(part);
+      });
+    });
+
+    // Animate button
+    const btnAnimate = document.getElementById('btn-animate-mouth');
+    if (btnAnimate) {
+      btnAnimate.addEventListener('click', animateMouthMotion);
+    }
+
+    // Initial render
+    renderSagittalSound('/t/', 'target');
+  }
+  // Dynamic Vocal Tract SVG Illumination & Sagittal Posture Sync
   function updateVocalTractSVG(lesson) {
-    const parts = [
-      'svg-part-lips',
-      'svg-part-teeth',
-      'svg-part-alveolar',
-      'svg-part-hard-palate',
-      'svg-part-velum',
-      'svg-part-tongue-tip',
-      'svg-part-tongue-back',
-      'svg-part-vocal-cords'
-    ];
-
-    parts.forEach(id => {
-      const elem = document.getElementById(id);
-      if (elem) {
-        elem.classList.remove('svg-active-glow', 'svg-active-glow-voiced');
-      }
-    });
-
-    const active = (lesson?.phonetics?.activeArticulator || '').toLowerCase();
-    const passive = (lesson?.phonetics?.passiveArticulator || '').toLowerCase();
     const symbol = (lesson?.phonetics?.phoneticSymbol || '').toLowerCase();
-    const isVoiced = lesson?.phonetics?.isVoiced || false;
+    const passive = (lesson?.phonetics?.passiveArticulator || '').toLowerCase();
 
-    // Alveolar
-    if (passive.includes('alveolar') || passive.includes('gờ lợi') || symbol.includes('/t/') || symbol.includes('/d/') || symbol.includes('/s/') || symbol.includes('/z/')) {
-      document.getElementById('svg-part-alveolar')?.classList.add('svg-active-glow');
-      document.getElementById('svg-part-tongue-tip')?.classList.add('svg-active-glow');
-    }
-    // Dental
-    else if (passive.includes('teeth') || passive.includes('răng') || symbol.includes('/θ/') || symbol.includes('/ð/')) {
-      document.getElementById('svg-part-teeth')?.classList.add('svg-active-glow');
-      document.getElementById('svg-part-tongue-tip')?.classList.add('svg-active-glow');
-    }
-    // Bilabial
-    else if (active.includes('môi') || active.includes('lip') || symbol.includes('/p/') || symbol.includes('/b/') || symbol.includes('/m/')) {
-      document.getElementById('svg-part-lips')?.classList.add('svg-active-glow');
-    }
-    // Velar
-    else if (passive.includes('velum') || passive.includes('ngạc mềm') || symbol.includes('/k/') || symbol.includes('/g/') || symbol.includes('/ŋ/')) {
-      document.getElementById('svg-part-velum')?.classList.add('svg-active-glow');
-      document.getElementById('svg-part-tongue-back')?.classList.add('svg-active-glow');
-    }
-    // Palatal
-    else if (passive.includes('palate') || passive.includes('ngạc cứng') || symbol.includes('/ʃ/') || symbol.includes('/tʃ/')) {
-      document.getElementById('svg-part-hard-palate')?.classList.add('svg-active-glow');
-      document.getElementById('svg-part-tongue-tip')?.classList.add('svg-active-glow');
-    }
+    let targetSound = '/t/';
+    if (symbol.includes('/θ/') || symbol.includes('/ð/') || passive.includes('teeth')) targetSound = '/θ/';
+    else if (symbol.includes('/s/') || symbol.includes('/z/')) targetSound = '/s/';
+    else if (symbol.includes('/ʃ/') || symbol.includes('/ʒ/')) targetSound = '/ʃ/';
+    else if (symbol.includes('/k/') || symbol.includes('/g/') || symbol.includes('/ɡ/')) targetSound = '/k/';
+    else if (symbol.includes('/p/') || symbol.includes('/b/') || symbol.includes('/m/')) targetSound = '/p/';
 
-    // Voicing illumination
-    if (isVoiced) {
-      document.getElementById('svg-part-vocal-cords')?.classList.add('svg-active-glow-voiced');
-    }
+    renderSagittalSound(targetSound, currentSagittalMode || 'target');
   }
-
   // Simulators Tab Switching
   function switchSimulatorTab(tab) {
     const tabs = ['standup', 'demo', 'pingpong'];
@@ -3186,6 +3183,7 @@
     setupMicroLesson();
     setupSrsWarmup();
     setupCheatSheet();
+    setupSagittalVocalTract();
   }, 100);
 
 })();

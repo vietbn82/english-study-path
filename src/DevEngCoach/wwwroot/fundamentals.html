@@ -103,66 +103,159 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
         
         <!-- Interactive Vocal Tract SVG -->
-        <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 flex flex-col items-center">
-          <h3 class="text-sm font-bold text-cyan-400 mb-4 font-mono self-start">Sơ đồ mặt cắt bên (Sagittal Vocal Tract)</h3>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 flex flex-col items-center shadow-xl">
+          <div class="flex items-center justify-between w-full mb-3">
+            <div>
+              <h3 class="text-sm font-bold text-cyan-400 font-mono">Sơ đồ mặt cắt bên (Sagittal Vocal Tract)</h3>
+              <p class="text-[11px] text-slate-400 font-mono">Cắt đứng dọc giải phẫu khoang miệng chuẩn IPA quốc tế</p>
+            </div>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800">
+              Nhấp vào cơ quan để xem
+            </span>
+          </div>
+
+          <!-- Quick Sound Selector for Handbook Readers -->
+          <div class="flex items-center gap-1 w-full overflow-x-auto pb-1.5 mb-3 text-[10px] font-mono scrollbar-thin">
+            <button data-sound="/t/" class="sound-tab-btn px-2 py-1 rounded bg-cyan-950/80 text-cyan-300 border border-cyan-800 whitespace-nowrap active font-bold">
+              /t/, /d/ (Gờ lợi)
+            </button>
+            <button data-sound="/θ/" class="sound-tab-btn px-2 py-1 rounded bg-slate-950 text-slate-300 border border-slate-800 hover:border-slate-700 whitespace-nowrap">
+              /θ/, /ð/ (Kẹp răng)
+            </button>
+            <button data-sound="/s/" class="sound-tab-btn px-2 py-1 rounded bg-slate-950 text-slate-300 border border-slate-800 hover:border-slate-700 whitespace-nowrap">
+              /s/, /z/ (Rãnh xì)
+            </button>
+            <button data-sound="/ʃ/" class="sound-tab-btn px-2 py-1 rounded bg-slate-950 text-slate-300 border border-slate-800 hover:border-slate-700 whitespace-nowrap">
+              /ʃ/, /ʒ/ (Chu vòm)
+            </button>
+            <button data-sound="/k/" class="sound-tab-btn px-2 py-1 rounded bg-slate-950 text-slate-300 border border-slate-800 hover:border-slate-700 whitespace-nowrap">
+              /k/, /ɡ/ (Ngạc mềm)
+            </button>
+            <button data-sound="/p/" class="sound-tab-btn px-2 py-1 rounded bg-slate-950 text-slate-300 border border-slate-800 hover:border-slate-700 whitespace-nowrap">
+              /p/, /b/ (Hai môi)
+            </button>
+          </div>
           
-          <svg viewBox="0 0 500 450" class="w-full max-w-md h-auto bg-slate-950 rounded-lg p-2 border border-slate-800">
-            <!-- Head outline -->
-            <path d="M 120 40 C 250 20, 360 80, 360 220 C 360 320, 300 380, 260 410" fill="none" stroke="#334155" stroke-width="2.5" />
-            
-            <!-- Nasal Cavity -->
-            <path d="M 130 110 C 180 100, 260 110, 280 150" fill="none" stroke="#475569" stroke-width="2" stroke-dasharray="4" />
-            <text x="200" y="95" fill="#64748b" font-size="11" font-family="monospace">Khoang mũi (Nasal cavity)</text>
+          <div class="relative w-full flex justify-center bg-slate-950 rounded-lg p-3 border border-slate-800">
+            <svg id="vocal-tract-svg-fund" viewBox="0 0 650 490" class="w-full max-w-md h-auto">
+              <defs>
+                <linearGradient id="headGradF" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#0f172a" />
+                  <stop offset="100%" stop-color="#020617" />
+                </linearGradient>
+                <linearGradient id="cavityGradF" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#1e293b" stop-opacity="0.9" />
+                  <stop offset="100%" stop-color="#0f172a" stop-opacity="0.9" />
+                </linearGradient>
+                <linearGradient id="tongueGradF" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#f43f5e" />
+                  <stop offset="100%" stop-color="#be123c" />
+                </linearGradient>
+                <filter id="glow-contact-f" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+                <marker id="arrow-motion-f" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8" />
+                </marker>
+                <marker id="arrow-motion-amber-f" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1 L 10 5 L 0 9 z" fill="#f59e0b" />
+                </marker>
+                <marker id="arrow-motion-emerald-f" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1 L 10 5 L 0 9 z" fill="#10b981" />
+                </marker>
+              </defs>
 
-            <!-- Upper Lip & Teeth -->
-            <path d="M 120 180 C 135 190, 145 200, 150 215" fill="none" stroke="#f43f5e" stroke-width="3" />
-            <text x="50" y="195" fill="#f43f5e" font-size="11" font-family="monospace">1. Môi trên (Upper Lip)</text>
+              <!-- 1. Anatomical Head Silhouette (Face Profile + Skull) -->
+              <path d="M 200 45 C 160 70, 140 100, 135 115 L 85 155 L 122 168 C 130 174, 132 180, 124 188 C 122 194, 130 200, 145 200 M 145 235 C 130 235, 120 244, 126 254 C 130 262, 124 272, 120 285 C 116 305, 135 328, 170 340 C 200 350, 215 380, 215 470 L 480 470 C 480 410, 470 330, 485 270 C 515 200, 520 120, 475 65 C 410 20, 280 15, 200 45 Z" fill="url(#headGradF)" stroke="#334155" stroke-width="2.5" />
 
-            <rect x="148" y="215" width="10" height="15" fill="#e2e8f0" rx="2" />
-            <text x="35" y="226" fill="#cbd5e1" font-size="11" font-family="monospace">2. Răng cửa trên (Teeth)</text>
+              <!-- 2. Nasal Cavity (Khoang Mũi) -->
+              <path d="M 130 135 C 180 105, 260 105, 330 135 C 350 155, 360 180, 360 215 L 315 215 C 315 180, 260 165, 150 165 Z" fill="url(#cavityGradF)" stroke="#475569" stroke-width="1.5" stroke-dasharray="3 3" />
+              <text x="210" y="130" fill="#64748b" font-size="11" font-family="monospace">Khoang mũi (Nasal cavity)</text>
 
-            <!-- Alveolar Ridge -->
-            <path d="M 158 220 C 175 220, 195 210, 210 195" fill="none" stroke="#38bdf8" stroke-width="4" />
-            <circle cx="185" cy="212" r="5" fill="#38bdf8" />
-            <text x="75" y="155" fill="#38bdf8" font-size="12" font-weight="bold" font-family="monospace">3. Gờ Lợi (Alveolar Ridge)</text>
-            <line x1="165" y1="160" x2="185" y2="205" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="2" />
+              <!-- 3. Posterior Pharyngeal Wall (Vách Họng Sau) -->
+              <path d="M 360 215 C 362 260, 362 330, 345 425 L 315 425 C 330 340, 330 260, 315 215 Z" fill="#1e293b" stroke="#475569" stroke-width="2" />
 
-            <!-- Hard Palate -->
-            <path d="M 210 195 C 235 180, 265 180, 285 200" fill="none" stroke="#a855f7" stroke-width="4" />
-            <circle cx="245" cy="185" r="5" fill="#a855f7" />
-            <text x="210" y="160" fill="#c084fc" font-size="12" font-weight="bold" font-family="monospace">4. Ngạc Cứng (Hard Palate)</text>
+              <!-- 4. Hard Palate & Alveolar Ridge -->
+              <path id="svg-part-alveolar-fund" d="M 160 202 C 170 202, 185 196, 200 190" fill="none" stroke="#38bdf8" stroke-width="5" stroke-linecap="round" />
+              <path id="svg-part-hard-palate-fund" d="M 200 190 C 235 180, 275 185, 305 202" fill="none" stroke="#a855f7" stroke-width="4.5" stroke-linecap="round" />
 
-            <!-- Soft Palate (Velum) & Uvula -->
-            <path d="M 285 200 C 310 220, 320 240, 315 260" fill="none" stroke="#eab308" stroke-width="4" />
-            <circle cx="305" cy="235" r="5" fill="#eab308" />
-            <text x="325" y="225" fill="#facc15" font-size="12" font-weight="bold" font-family="monospace">5. Ngạc Mềm (Velum)</text>
+              <!-- 5. Soft Palate (Velum) & Uvula (Ngạc Mềm & Lưỡi Gà) -->
+              <path id="svg-part-velum-fund" d="M 305 202 C 322 205, 340 212, 348 215 C 344 225, 330 220, 305 212 Z" fill="#eab308" stroke="#ca8a04" stroke-width="2" />
 
-            <!-- Tongue -->
-            <!-- Tip -->
-            <path d="M 155 265 C 175 240, 205 235, 235 245 C 265 255, 280 290, 270 330 C 260 360, 250 375, 240 380" fill="#0284c7" fill-opacity="0.2" stroke="#0ea5e9" stroke-width="3" />
-            
-            <circle cx="165" cy="255" r="4" fill="#38bdf8" />
-            <text x="80" y="280" fill="#38bdf8" font-size="11" font-weight="bold" font-family="monospace">Đầu lưỡi (Tip)</text>
+              <!-- 6. Teeth (Upper & Lower Incisors) -->
+              <rect x="146" y="196" width="12" height="18" rx="2" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5" />
+              <rect x="146" y="234" width="12" height="18" rx="2" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5" />
 
-            <circle cx="215" cy="240" r="4" fill="#60a5fa" />
-            <text x="180" y="300" fill="#93c5fd" font-size="11" font-family="monospace">Thân lưỡi (Body)</text>
+              <!-- 7. Lips (Môi trên & Môi dưới) -->
+              <path d="M 124 188 C 122 194, 130 200, 146 200" fill="none" stroke="#f43f5e" stroke-width="4" stroke-linecap="round" />
+              <path d="M 146 235 C 130 235, 120 244, 126 254" fill="none" stroke="#f43f5e" stroke-width="4" stroke-linecap="round" />
 
-            <circle cx="265" cy="275" r="4" fill="#fbbf24" />
-            <text x="275" y="310" fill="#fde047" font-size="11" font-family="monospace">Gốc lưỡi (Back)</text>
+              <!-- 8. Complete Dynamic Muscular Tongue Body -->
+              <path id="svg-tongue-shape-fund" d="M 165 265 C 170 240, 175 210, 185 192 C 205 194, 235 220, 265 240 C 290 260, 300 300, 290 355 C 275 385, 245 390, 230 380 C 215 350, 190 310, 165 265 Z" fill="url(#tongueGradF)" stroke="#e11d48" stroke-width="2.5" />
 
-            <!-- Lower Teeth & Lip -->
-            <rect x="146" y="270" width="10" height="15" fill="#e2e8f0" rx="2" />
-            <path d="M 120 290 C 135 285, 145 285, 146 270" fill="none" stroke="#f43f5e" stroke-width="3" />
+              <!-- Tongue Landmark Markers -->
+              <circle id="svg-part-tongue-tip-fund" cx="185" cy="192" r="5" fill="#38bdf8" stroke="#ffffff" stroke-width="1.5" />
+              <circle id="svg-part-tongue-blade-fund" cx="240" cy="225" r="4.5" fill="#a855f7" stroke="#ffffff" stroke-width="1.5" />
+              <circle id="svg-part-tongue-back-fund" cx="280" cy="265" r="4.5" fill="#eab308" stroke="#ffffff" stroke-width="1.5" />
 
-            <!-- Vocal Cords (Larynx) -->
-            <ellipse cx="250" cy="400" rx="14" ry="7" fill="#ef4444" fill-opacity="0.5" stroke="#ef4444" stroke-width="2" />
-            <text x="275" y="405" fill="#f87171" font-size="12" font-weight="bold" font-family="monospace">6. Dây Thanh Âm (Vocal Cords)</text>
-          </svg>
-          <div class="text-[11px] text-slate-400 text-center mt-3 font-mono">
-            Nhấn vào các phần giải thích bên phải để đối chiếu vị trí.
+              <!-- 9. Contact Point Glow & Burst Ripple -->
+              <circle id="svg-contact-glow-fund" cx="185" cy="192" r="8" fill="#38bdf8" fill-opacity="0.5" filter="url(#glow-contact-f)" />
+              <circle id="svg-burst-ripple-fund" class="sagittal-burst" cx="185" cy="192" r="14" fill="none" stroke="#38bdf8" stroke-width="2" />
+
+              <!-- 10. Dynamic Airstream & Burst Arrow -->
+              <path id="svg-airstream-path-fund" class="sagittal-airstream" d="M 270 390 C 270 330, 260 250, 215 220" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" />
+              <path id="svg-pop-arrow-fund" d="M 185 192 L 185 215" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" />
+
+              <!-- 11. Epiglottis & Larynx / Vocal Folds -->
+              <path d="M 285 365 C 295 345, 295 330, 288 325 C 282 325, 280 340, 275 365" fill="#ec4899" stroke="#db2777" stroke-width="1.5" />
+              <ellipse id="svg-part-vocal-cords-fund" cx="295" cy="405" rx="14" ry="7" fill="#ef4444" fill-opacity="0.6" stroke="#ef4444" stroke-width="2.5" />
+              <path d="M 280 415 L 280 465 M 310 415 L 310 465" stroke="#475569" stroke-width="2" stroke-dasharray="4 3" />
+
+              <!-- 12. Clear Text Labels with Leader Lines -->
+              <g font-family="monospace" font-size="11" fill="#94a3b8">
+                <!-- Alveolar Ridge -->
+                <text x="180" y="165" fill="#38bdf8" font-weight="bold">3. Gờ Lợi (Alveolar)</text>
+                <line x1="180" y1="170" x2="185" y2="190" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="2 2" />
+
+                <!-- Hard Palate -->
+                <text x="235" y="148" fill="#a855f7" font-weight="bold">4. Ngạc Cứng</text>
+                <line x1="260" y1="152" x2="260" y2="186" stroke="#a855f7" stroke-width="1.5" stroke-dasharray="2 2" />
+
+                <!-- Velum -->
+                <text x="350" y="240" fill="#eab308" font-weight="bold">5. Ngạc Mềm</text>
+                <line x1="345" y1="240" x2="330" y2="225" stroke="#eab308" stroke-width="1.5" stroke-dasharray="2 2" />
+
+                <!-- Tongue Tip -->
+                <text x="95" y="275" fill="#38bdf8" font-weight="bold">Đầu Lưỡi (Tip)</text>
+                <line x1="150" y1="270" x2="180" y2="200" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="2 2" />
+
+                <!-- Vocal Folds -->
+                <text x="325" y="410" fill="#ef4444" font-weight="bold">6. Dây Thanh Âm</text>
+                <line x1="320" y1="408" x2="310" y2="406" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="2 2" />
+              </g>
+
+              <!-- Baseline Ghost Silhouette -->
+              <path d="M 165 265 C 175 250, 185 240, 205 238 C 240 235, 275 245, 295 275 C 305 295, 300 330, 290 360 C 275 385, 245 390, 230 380 C 215 350, 190 310, 165 265 Z" fill="none" stroke="#475569" stroke-width="1.5" stroke-dasharray="3 3" />
+
+              <!-- Motion Vectors for Fundamentals -->
+              <g id="svg-motion-group-fund">
+                <path id="svg-motion-arrow-fund" class="sagittal-motion-vector" d="M 180 235 C 178 215, 182 205, 185 194" fill="none" stroke="#38bdf8" stroke-width="3" marker-end="url(#arrow-motion-f)" stroke-linecap="round" />
+                <text id="svg-motion-label-fund" x="195" y="218" fill="#38bdf8" font-size="10" font-family="monospace" font-weight="bold">⬆️ Nâng lên gờ lợi</text>
+
+                <path id="svg-motion-arrow-sec-fund" class="sagittal-motion-vector" d="M 185 192 L 185 218" fill="none" stroke="#f59e0b" stroke-width="2.5" marker-end="url(#arrow-motion-amber-f)" stroke-linecap="round" />
+                <text id="svg-motion-label-sec-fund" x="195" y="205" fill="#f59e0b" font-size="9" font-family="monospace">⬇️ Giật nổ</text>
+              </g>
+            </svg>
+          </div>
+
+          <div id="sagittal-fund-desc" class="w-full mt-3 p-3 rounded-lg bg-slate-950 border border-slate-800 text-xs text-slate-300 font-mono">
+            💡 <strong>/t/, /d/ (Gờ Lợi):</strong> Đầu lưỡi ép chặt gờ lợi sau chân răng trên (không chạm răng), nén áp suất rồi giật mạnh nhả tiếng nổ (Pop).
           </div>
         </div>
-
         <!-- Explanations of Core Articulators -->
         <div class="space-y-4 text-xs leading-relaxed">
           
@@ -1492,6 +1585,127 @@
         // Initial Render
         render();
       }
+    });
+  </script>
+
+
+  <script>
+    // Fundamentals Sagittal Interactive Preview Script
+    document.addEventListener('DOMContentLoaded', () => {
+      const fundData = {
+        '/t/': {
+          tongue: "M 165 265 C 170 240, 175 210, 185 192 C 205 194, 235 220, 265 240 C 290 260, 300 300, 290 355 C 275 385, 245 390, 230 380 C 215 350, 190 310, 165 265 Z",
+          velum: "M 305 202 C 322 205, 340 212, 348 215 C 344 225, 330 220, 305 212 Z",
+          arrow: "M 180 235 C 178 215, 182 205, 185 194",
+          label: "⬆️ Nâng lên gờ lợi",
+          lx: 195, ly: 218,
+          arrowSec: "M 185 192 L 185 218",
+          labelSec: "⬇️ Giật nổ pop",
+          lsx: 195, lsy: 205,
+          contact: { cx: 185, cy: 192, color: "#38bdf8" },
+          desc: "💡 <strong>/t/, /d/ (Gờ Lợi):</strong> Đầu lưỡi ép chặt gờ lợi sau chân răng trên (không chạm răng), nén áp suất rồi giật mạnh nhả tiếng nổ (Pop)."
+        },
+        '/θ/': {
+          tongue: "M 165 265 C 150 250, 138 238, 130 224 C 140 216, 160 218, 190 226 C 235 235, 270 250, 290 280 C 300 305, 298 335, 290 355 C 275 385, 245 390, 230 380 C 215 350, 190 310, 165 265 Z",
+          velum: "M 305 202 C 322 205, 340 212, 348 215 C 344 225, 330 220, 305 212 Z",
+          arrow: "M 170 232 C 155 230, 142 228, 126 224",
+          label: "⬅️ Đẩy nhô ra trước 2-3mm",
+          lx: 85, ly: 208,
+          arrowSec: "M 124 224 L 95 224",
+          labelSec: "💨 Xì hơi liên tục",
+          lsx: 60, lsy: 240,
+          contact: { cx: 130, cy: 224, color: "#10b981" },
+          desc: "💡 <strong>/θ/, /ð/ (Kẹp Răng):</strong> Thè đầu lưỡi ra giữa 2 hàm răng 2-3mm, cắn nhẹ và đẩy hơi rít liên tục qua khe răng-lưỡi."
+        },
+        '/s/': {
+          tongue: "M 165 265 C 170 240, 176 215, 182 198 C 195 204, 225 220, 260 240 C 285 265, 298 305, 290 355 C 275 385, 245 390, 230 380 C 215 350, 190 310, 165 265 Z",
+          velum: "M 305 202 C 322 205, 340 212, 348 215 C 344 225, 330 220, 305 212 Z",
+          arrow: "M 180 235 C 178 215, 180 205, 182 198",
+          label: "⬆️ Nâng sát gờ lợi 1mm",
+          lx: 195, ly: 218,
+          arrowSec: "M 182 198 C 170 205, 155 210, 130 215",
+          labelSec: "➡️ Tia khí xì kẽ răng",
+          lsx: 105, lsy: 235,
+          contact: { cx: 182, cy: 198, color: "#06b6d4" },
+          desc: "💡 <strong>/s/, /z/ (Rãnh Xì):</strong> Mép môi cười nhẹ, đầu lưỡi nâng sát gờ lợi 1mm tạo rãnh hẹp, luồng hơi rít mạnh sắc bén qua kẽ răng."
+        },
+        '/ʃ/': {
+          tongue: "M 165 265 C 172 245, 185 225, 215 202 C 240 205, 265 225, 285 255 C 298 285, 300 325, 290 355 C 275 385, 245 390, 230 380 C 215 350, 190 310, 165 265 Z",
+          velum: "M 305 202 C 322 205, 340 212, 348 215 C 344 225, 330 220, 305 212 Z",
+          arrow: "M 230 240 C 225 225, 220 215, 215 202",
+          label: "↗️ Thân lưỡi vồng cao",
+          lx: 225, ly: 220,
+          arrowSec: "M 124 195 L 105 195 M 124 245 L 105 245",
+          labelSec: "⬅️ Môi chu tròn về trước",
+          lsx: 70, lsy: 185,
+          contact: { cx: 215, cy: 202, color: "#a855f7" },
+          desc: "💡 <strong>/ʃ/, /ʒ/ (Chu Vòm):</strong> Môi chu tròn hướng ra trước, thân lưỡi vồng cao về ngạc cứng đẩy luồng gió dày đục (âm suỵt)."
+        },
+        '/k/': {
+          tongue: "M 165 265 C 175 260, 185 255, 205 255 C 235 255, 270 230, 295 205 C 310 225, 310 270, 300 320 C 290 355, 275 385, 245 390 C 230 380, 215 350, 165 265 Z",
+          velum: "M 305 202 C 322 205, 340 212, 348 215 C 344 225, 330 220, 305 212 Z",
+          arrow: "M 260 250 C 275 240, 285 225, 295 205",
+          label: "↗️ Gốc lưỡi ép ngạc mềm",
+          lx: 235, ly: 238,
+          arrowSec: "M 295 205 L 270 230",
+          labelSec: "↙️ Hạ nhanh bung nổ",
+          lsx: 240, lsy: 215,
+          contact: { cx: 295, cy: 205, color: "#eab308" },
+          desc: "💡 <strong>/k/, /ɡ/ (Ngạc Mềm):</strong> Gốc lưỡi nhấc bổng lên dán chặt ngạc mềm chặn hoàn toàn khí, rồi hạ nhanh nổ bật âm cộc sắc nét."
+        },
+        '/p/': {
+          tongue: "M 165 265 C 175 250, 185 240, 205 238 C 240 235, 275 245, 295 275 C 305 295, 300 330, 290 360 C 275 385, 245 390, 230 380 C 215 350, 190 310, 165 265 Z",
+          velum: "M 305 202 C 322 205, 340 212, 348 215 C 344 225, 330 220, 305 212 Z",
+          arrow: "M 124 188 L 132 208 M 126 250 L 132 222",
+          label: "↕️ Hai môi mím chặt",
+          lx: 140, ly: 215,
+          arrowSec: "M 132 215 L 100 215",
+          labelSec: "⬅️ Bung mở nổ áp suất",
+          lsx: 75, lsy: 235,
+          contact: { cx: 132, cy: 215, color: "#f43f5e" },
+          desc: "💡 <strong>/p/, /b/ (Hai Môi):</strong> Mím chặt bờ trong hai môi lại nén áp suất, rồi mở bung giải phóng âm bật /p/ như bật nắp chai."
+        }
+      };
+
+      document.querySelectorAll('#vocal-tract-svg-fund ~ div, .sound-tab-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const sound = btn.getAttribute('data-sound');
+          const data = fundData[sound];
+          if (!data) return;
+
+          document.querySelectorAll('.sound-tab-btn').forEach(b => b.classList.toggle('active', b === btn));
+
+          const tongue = document.getElementById('svg-tongue-shape-fund');
+          const velum = document.getElementById('svg-part-velum-fund');
+          const arrow = document.getElementById('svg-motion-arrow-fund');
+          const label = document.getElementById('svg-motion-label-fund');
+          const arrowSec = document.getElementById('svg-motion-arrow-sec-fund');
+          const labelSec = document.getElementById('svg-motion-label-sec-fund');
+          const contact = document.getElementById('svg-contact-glow-fund');
+          const desc = document.getElementById('sagittal-fund-desc');
+
+          if (tongue) tongue.setAttribute('d', data.tongue);
+          if (velum) velum.setAttribute('d', data.velum);
+          if (arrow) arrow.setAttribute('d', data.arrow);
+          if (label) {
+            label.textContent = data.label;
+            label.setAttribute('x', data.lx);
+            label.setAttribute('y', data.ly);
+          }
+          if (arrowSec) arrowSec.setAttribute('d', data.arrowSec);
+          if (labelSec) {
+            labelSec.textContent = data.labelSec;
+            labelSec.setAttribute('x', data.lsx);
+            labelSec.setAttribute('y', data.lsy);
+          }
+          if (contact) {
+            contact.setAttribute('cx', data.contact.cx);
+            contact.setAttribute('cy', data.contact.cy);
+            contact.setAttribute('fill', data.contact.color);
+          }
+          if (desc) desc.innerHTML = data.desc;
+        });
+      });
     });
   </script>
 
