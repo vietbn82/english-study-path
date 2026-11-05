@@ -1682,10 +1682,20 @@
       }
 
       let currentLookupData = null;
+      let lastDismissedSelection = null; // Explicitly declared to avoid ReferenceError
 
+      // Hide on click outside
       document.addEventListener('mousedown', (e) => {
         if (popup && !popup.contains(e.target)) {
           popup.classList.add('hidden');
+        }
+      });
+
+      // Clear dismissed tracking when selection is empty
+      document.addEventListener('selectionchange', () => {
+        const sel = window.getSelection();
+        if (!sel || sel.isCollapsed) {
+          lastDismissedSelection = null;
         }
       });
 
@@ -1698,122 +1708,128 @@
 
       function handleSelection() {
         setTimeout(async () => {
-          const selection = window.getSelection();
-          if (!selection || selection.isCollapsed) return;
-
-          const text = selection.toString().trim();
-          if (!text || text.length < 2 || text.length > 150) return;
-
-          if (lastDismissedSelection && text === lastDismissedSelection) {
-            return;
-          }
-          if (lastDismissedSelection && text !== lastDismissedSelection) {
-            lastDismissedSelection = null;
-          }
-
-          if (lastDismissedSelection && text === lastDismissedSelection) {
-            return;
-          }
-          if (lastDismissedSelection && text !== lastDismissedSelection) {
-            lastDismissedSelection = null;
-          }
-
-          const anchorNode = selection.anchorNode;
-          if (anchorNode && anchorNode.parentElement && (
-              anchorNode.parentElement.closest('#selection-lookup-popup') ||
-              anchorNode.parentElement.closest('textarea') ||
-              anchorNode.parentElement.closest('input')
-          )) {
-            return;
-          }
-
-          const range = selection.getRangeAt(0);
-          const rect = range.getBoundingClientRect();
-          if (rect.width === 0 && rect.height === 0) return;
-
-          popup.innerHTML = `
-            <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-2">
-              <div class="flex items-center gap-1.5 overflow-hidden">
-                <span class="font-bold text-white text-xs truncate max-w-[170px]" title="${text}">"${text}"</span>
-                <button id="sel-pop-btn-speak" class="px-2 py-0.5 rounded bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-800 text-[11px] font-semibold transition shrink-0 flex items-center gap-1">
-                  🔊 <span>Nghe</span>
-                </button>
-              </div>
-              <button id="sel-pop-btn-close" class="text-slate-400 hover:text-white text-xs font-mono ml-2">✕</button>
-            </div>
-            <div class="space-y-1.5 text-xs">
-              <div class="text-cyan-400 font-mono text-[11px] font-semibold" id="sel-pop-ipa">⏳ Đang tra IPA...</div>
-              <div class="text-slate-200 text-xs" id="sel-pop-meaning">Đang tải nghĩa...</div>
-              <div class="text-slate-400 italic text-[11px]" id="sel-pop-cue"></div>
-            </div>
-            <button id="sel-pop-btn-practice" class="w-full mt-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 text-xs font-semibold flex items-center justify-center gap-1.5 transition">
-              🎤 Luyện phát âm từ này
-            </button>
-          `;
-
-          popup.classList.remove('hidden');
-          const popRect = popup.getBoundingClientRect();
-          let top = window.scrollY + rect.top - popRect.height - 10;
-          if (rect.top - popRect.height - 10 < 10) {
-            top = window.scrollY + rect.bottom + 10;
-          }
-          let left = window.scrollX + rect.left + (rect.width / 2) - (popRect.width / 2);
-          left = Math.max(10, Math.min(left, window.innerWidth - popRect.width - 20));
-
-          popup.style.top = `${top}px`;
-          popup.style.left = `${left}px`;
-
-          document.getElementById('sel-pop-btn-speak')?.addEventListener('click', (e) => {
-            e.stopPropagation();
-            speakWord(text);
-          });
-
-          document.getElementById('sel-pop-btn-close')?.addEventListener('click', (e) => {
-            e.stopPropagation();
-            lastDismissedSelection = text;
-            try { window.getSelection()?.removeAllRanges(); } catch (_) {}
-            popup.classList.add('hidden');
-          });
-
-          document.getElementById('sel-pop-btn-practice')?.addEventListener('click', (e) => {
-            e.stopPropagation();
-            popup.classList.add('hidden');
-            const ipa = currentLookupData?.ipa || `/${text}/`;
-            const cue = currentLookupData?.phoneticCue || 'Kiểm soát chặt chẽ điểm tiếp xúc lưỡi và luồng hơi';
-            targetSoundWord = text;
-            targetSoundSymbol = ipa;
-            document.getElementById('modal-sound-target-desc').textContent = `Mục tiêu: ${targetSoundSymbol}`;
-            document.getElementById('modal-sound-target-word').textContent = `${text} ${ipa}`;
-            document.getElementById('modal-sound-target-tip').textContent = cue;
-            document.getElementById('modal-sound-btn-listen').dataset.word = text;
-            document.getElementById('input-sound-transcript').value = '';
-            document.getElementById('sound-grade-result').classList.add('hidden');
-            document.getElementById('modal-sound-practice').classList.remove('hidden');
-          });
-
           try {
-            const res = await fetch('/api/ai/lookup', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ text })
+            const selection = window.getSelection();
+            if (!selection || selection.isCollapsed) return;
+
+            const text = selection.toString().trim();
+            if (!text || text.length < 2 || text.length > 150) return;
+
+            // If user already dismissed this exact word/phrase, do not pop up again
+            if (lastDismissedSelection && text === lastDismissedSelection) {
+              return;
+            }
+            if (lastDismissedSelection && text !== lastDismissedSelection) {
+              lastDismissedSelection = null;
+            }
+
+            const anchorNode = selection.anchorNode;
+            if (anchorNode && anchorNode.parentElement && (
+                anchorNode.parentElement.closest('#selection-lookup-popup') ||
+                anchorNode.parentElement.closest('textarea') ||
+                anchorNode.parentElement.closest('input') ||
+                anchorNode.parentElement.closest('button')
+            )) {
+              return;
+            }
+
+            const range = selection.getRangeAt(0);
+            const rect = range.getBoundingClientRect();
+            if (rect.width === 0 && rect.height === 0) return;
+
+            popup.innerHTML = `
+              <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-2">
+                <div class="flex items-center gap-1.5 overflow-hidden">
+                  <span class="font-bold text-white text-xs truncate max-w-[170px]" title="${text}">"${text}"</span>
+                  <button id="sel-pop-btn-speak" class="px-2 py-0.5 rounded bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-800 text-[11px] font-semibold transition shrink-0 flex items-center gap-1 cursor-pointer">
+                    🔊 <span>Nghe</span>
+                  </button>
+                </div>
+                <button id="sel-pop-btn-close" class="text-slate-400 hover:text-white text-xs font-mono ml-2 cursor-pointer p-0.5" title="Đóng popup">✕</button>
+              </div>
+              <div class="space-y-1.5 text-xs">
+                <div class="text-cyan-400 font-mono text-[11px] font-semibold" id="sel-pop-ipa">⏳ Đang tra IPA...</div>
+                <div class="text-slate-200 text-xs" id="sel-pop-meaning">Đang tải nghĩa...</div>
+                <div class="text-slate-400 italic text-[11px]" id="sel-pop-cue"></div>
+              </div>
+              <button id="sel-pop-btn-practice" class="w-full mt-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer">
+                🎤 Luyện phát âm từ này
+              </button>
+            `;
+
+            popup.classList.remove('hidden');
+            const popRect = popup.getBoundingClientRect();
+            let top = window.scrollY + rect.top - popRect.height - 10;
+            if (rect.top - popRect.height - 10 < 10) {
+              top = window.scrollY + rect.bottom + 10;
+            }
+            let left = window.scrollX + rect.left + (rect.width / 2) - (popRect.width / 2);
+            left = Math.max(10, Math.min(left, window.innerWidth - popRect.width - 20));
+
+            popup.style.top = `${top}px`;
+            popup.style.left = `${left}px`;
+
+            document.getElementById('sel-pop-btn-speak')?.addEventListener('click', (e) => {
+              e.stopPropagation();
+              speakWord(text);
             });
-            const data = await res.json();
-            currentLookupData = data;
 
-            const ipaEl = document.getElementById('sel-pop-ipa');
-            const meaningEl = document.getElementById('sel-pop-meaning');
-            const cueEl = document.getElementById('sel-pop-cue');
+            document.getElementById('sel-pop-btn-close')?.addEventListener('click', (e) => {
+              e.stopPropagation();
+              lastDismissedSelection = text;
+              try { window.getSelection()?.removeAllRanges(); } catch (_) {}
+              popup.classList.add('hidden');
+            });
 
-            if (ipaEl) ipaEl.textContent = data.ipa || `/${text}/`;
-            if (meaningEl) meaningEl.textContent = data.meaningVi || 'Thuật ngữ kỹ thuật tiếng Anh';
-            if (cueEl && data.phoneticCue) cueEl.textContent = `💡 ${data.phoneticCue}`;
+            document.getElementById('sel-pop-btn-practice')?.addEventListener('click', (e) => {
+              e.stopPropagation();
+              popup.classList.add('hidden');
+              const ipa = currentLookupData?.ipa || `/${text}/`;
+              const cue = currentLookupData?.phoneticCue || 'Kiểm soát chặt chẽ điểm tiếp xúc lưỡi và luồng hơi';
+              targetSoundWord = text;
+              targetSoundSymbol = ipa;
+              const desc = document.getElementById('modal-sound-target-desc');
+              const word = document.getElementById('modal-sound-target-word');
+              const tip = document.getElementById('modal-sound-target-tip');
+              const btn = document.getElementById('modal-sound-btn-listen');
+              const inp = document.getElementById('input-sound-transcript');
+              const resBox = document.getElementById('sound-grade-result');
+              const modal = document.getElementById('modal-sound-practice');
+              if (desc) desc.textContent = `Mục tiêu: ${targetSoundSymbol}`;
+              if (word) word.textContent = `${text} ${ipa}`;
+              if (tip) tip.textContent = cue;
+              if (btn) btn.dataset.word = text;
+              if (inp) inp.value = '';
+              if (resBox) resBox.classList.add('hidden');
+              if (modal) modal.classList.remove('hidden');
+            });
+
+            try {
+              const res = await fetch('/api/ai/lookup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text })
+              });
+              const data = await res.json();
+              currentLookupData = data;
+
+              const ipaEl = document.getElementById('sel-pop-ipa');
+              const meaningEl = document.getElementById('sel-pop-meaning');
+              const cueEl = document.getElementById('sel-pop-cue');
+
+              if (ipaEl) ipaEl.textContent = data.ipa || `/${text}/`;
+              if (meaningEl) meaningEl.textContent = data.meaningVi || 'Thuật ngữ kỹ thuật tiếng Anh';
+              if (cueEl && data.phoneticCue) cueEl.textContent = `💡 ${data.phoneticCue}`;
+            } catch (err) {
+              const ipaEl = document.getElementById('sel-pop-ipa');
+              const meaningEl = document.getElementById('sel-pop-meaning');
+              if (ipaEl) ipaEl.textContent = `/${text}/`;
+              if (meaningEl) meaningEl.textContent = `Bấm 🔊 để nghe phát âm chuẩn`;
+            }
           } catch (err) {
-            const ipaEl = document.getElementById('sel-pop-ipa');
-            const meaningEl = document.getElementById('sel-pop-meaning');
-            if (ipaEl) ipaEl.textContent = `/${text}/`;
-            if (meaningEl) meaningEl.textContent = `Bấm 🔊 để nghe phát âm chuẩn`;
+            console.warn('Selection lookup error:', err);
           }
-        }, 150);
+        }, 120);
       }
 
       // =========================================================
