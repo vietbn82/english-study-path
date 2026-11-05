@@ -3,6 +3,8 @@
 **/obj/
 [Bb]in/
 [Oo]bj/
+*.nupkg
+**/nupkg/
 
 ## Visual Studio / VS Code / IDE
 .vs/

@@ -5,6 +5,13 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>deveng</ToolCommandName>
+    <PackageId>DevEngCoach.Cli</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>DevEngCoach</Authors>
+    <Description>Senior Dev English Coach and PR Review Refactoring Tool</Description>
+    <PackageOutputPath>./nupkg</PackageOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
