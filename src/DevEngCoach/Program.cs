@@ -8,6 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<ICurriculumService, CurriculumService>();
 builder.Services.AddSingleton<IProgressService, ProgressService>();
 builder.Services.AddSingleton<IAiCoachService, AiCoachService>();
+builder.Services.AddSingleton<ISparringService, SparringService>();
+builder.Services.AddSingleton<IPrPolisherService, PrPolisherService>();
+builder.Services.AddSingleton<ISrsService, SrsService>();
 
 // Register Reminder as both IHostedService and IReminderService
 builder.Services.AddSingleton<ReminderService>();
@@ -122,6 +125,64 @@ app.MapPost("/api/ai/lookup", async ([FromBody] QuickLookupRequest request, IAiC
 
     var result = await aiCoach.LookupAsync(request, ct);
     return Results.Ok(result);
+});
+
+// Sparring Endpoints
+var sparringApi = app.MapGroup("/api/sparring");
+sparringApi.MapGet("/scenarios", (ISparringService sparring) =>
+    Results.Ok(sparring.GetScenarios()));
+
+sparringApi.MapPost("/turn", async ([FromBody] SparringTurnRequest request, ISparringService sparring, CancellationToken ct) =>
+{
+    if (string.IsNullOrWhiteSpace(request.UserSpeech))
+    {
+        return Results.BadRequest(new { Message = "UserSpeech is required for sparring turn." });
+    }
+    var response = await sparring.ProcessTurnAsync(request, ct);
+    return Results.Ok(response);
+});
+
+// PR Polisher Endpoints
+var prApi = app.MapGroup("/api/pr");
+prApi.MapPost("/polish", async ([FromBody] PrPolishRequest request, IPrPolisherService polisher, CancellationToken ct) =>
+{
+    if (string.IsNullOrWhiteSpace(request.InputText))
+    {
+        return Results.BadRequest(new { Message = "InputText is required for polishing." });
+    }
+    var response = await polisher.PolishAsync(request, ct);
+    return Results.Ok(response);
+});
+
+// SRS Leitner Endpoints
+var srsApi = app.MapGroup("/api/srs");
+srsApi.MapGet("/queue", (ISrsService srs) =>
+    Results.Ok(srs.GetDueItems()));
+
+srsApi.MapGet("/all", (ISrsService srs) =>
+    Results.Ok(srs.GetAllItems()));
+
+srsApi.MapGet("/stats", (ISrsService srs) =>
+    Results.Ok(srs.GetStats()));
+
+srsApi.MapPost("/review", ([FromBody] SrsReviewRequest request, ISrsService srs) =>
+{
+    if (string.IsNullOrWhiteSpace(request.ItemId))
+    {
+        return Results.BadRequest(new { Message = "ItemId is required." });
+    }
+    var item = srs.RecordReview(request);
+    return Results.Ok(item);
+});
+
+srsApi.MapPost("/enroll", ([FromBody] SrsEnrollRequest request, ISrsService srs) =>
+{
+    if (string.IsNullOrWhiteSpace(request.WordOrPhrase))
+    {
+        return Results.BadRequest(new { Message = "WordOrPhrase is required." });
+    }
+    var item = srs.AutoEnrollWeakSpot(request);
+    return Results.Ok(item);
 });
 
 // Reminder Service Endpoints

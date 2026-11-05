@@ -154,4 +154,92 @@ public class ApiIntegrationTests : IClassFixture<WebApplicationFactory<Program>>
         result.Ipa.Should().Contain("/kəˈmɪt/");
         result.MeaningVi.Should().NotBeNullOrWhiteSpace();
     }
+
+    [Fact]
+    public async Task GetSparringScenarios_ReturnsScenarios()
+    {
+        var response = await _client.GetAsync("/api/sparring/scenarios");
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var scenarios = await response.Content.ReadFromJsonAsync<List<SparringScenario>>();
+        scenarios.Should().NotBeNull();
+        scenarios!.Count.Should().BeGreaterThanOrEqualTo(3);
+        scenarios.Should().Contain(s => s.Id == "arch-debate");
+    }
+
+    [Fact]
+    public async Task PostSparringTurn_ReturnsCoachingResponse()
+    {
+        var request = new SparringTurnRequest(
+            ScenarioId: "arch-debate",
+            UserSpeech: "Uhm, basically we should use microservices because, like, they scale independently."
+        );
+
+        var response = await _client.PostAsJsonAsync("/api/sparring/turn", request);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<SparringResponse>();
+        result.Should().NotBeNull();
+        result!.FillerWordsDetected.Should().Contain("basically");
+        result.DiplomacyScore.Should().BeInRange(1, 100);
+        result.TechnicalClarityScore.Should().BeInRange(1, 100);
+        result.SeniorLeadRefinement.Should().NotBeNullOrWhiteSpace();
+    }
+
+    [Fact]
+    public async Task PostPrPolish_ReturnsPolishedReviewComment()
+    {
+        var request = new PrPolishRequest(
+            InputText: "this code slow fix it",
+            Tone: "ConstructiveReview"
+        );
+
+        var response = await _client.PostAsJsonAsync("/api/pr/polish", request);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<PrPolishResponse>();
+        result.Should().NotBeNull();
+        result!.PolishedText.Should().NotBeNullOrWhiteSpace();
+        result.PolishedText.Should().NotContain("this code slow fix it");
+        result.AvoidedAntiPatterns.Should().NotBeEmpty();
+    }
+
+    [Fact]
+    public async Task GetSrsQueueAndStats_ReturnsValidData()
+    {
+        var statsResponse = await _client.GetAsync("/api/srs/stats");
+        statsResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        var stats = await statsResponse.Content.ReadFromJsonAsync<SrsStats>();
+        stats.Should().NotBeNull();
+        stats!.TotalTracked.Should().BeGreaterThanOrEqualTo(1);
+
+        var queueResponse = await _client.GetAsync("/api/srs/queue");
+        queueResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        var queue = await queueResponse.Content.ReadFromJsonAsync<List<SrsItem>>();
+        queue.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task PostSrsEnrollAndReview_TracksProgress()
+    {
+        var enrollRequest = new SrsEnrollRequest(
+            WordOrPhrase: "distributed",
+            TargetPhoneme: "/d/ + /b/",
+            ContextSentence: "We are designing a distributed transaction coordinator.",
+            InitialScore: 65
+        );
+
+        var enrollResponse = await _client.PostAsJsonAsync("/api/srs/enroll", enrollRequest);
+        enrollResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        var enrolledItem = await enrollResponse.Content.ReadFromJsonAsync<SrsItem>();
+        enrolledItem.Should().NotBeNull();
+        enrolledItem!.WordOrPhrase.Should().Be("distributed");
+
+        var reviewRequest = new SrsReviewRequest(enrolledItem.Id, 85);
+        var reviewResponse = await _client.PostAsJsonAsync("/api/srs/review", reviewRequest);
+        reviewResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        var reviewedItem = await reviewResponse.Content.ReadFromJsonAsync<SrsItem>();
+        reviewedItem.Should().NotBeNull();
+        reviewedItem!.LastScore.Should().Be(85);
+    }
 }

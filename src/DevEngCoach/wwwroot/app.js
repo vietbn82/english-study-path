@@ -144,13 +144,21 @@
     navWorkspace: document.getElementById('nav-workspace'),
     navCurriculum: document.getElementById('nav-curriculum'),
     navSimulators: document.getElementById('nav-simulators'),
+    navSparring: document.getElementById('nav-sparring'),
+    navPrpolish: document.getElementById('nav-prpolish'),
+    navSrs: document.getElementById('nav-srs'),
     viewWorkspace: document.getElementById('view-workspace'),
     viewCurriculum: document.getElementById('view-curriculum'),
     viewSimulators: document.getElementById('view-simulators'),
+    viewSparring: document.getElementById('view-sparring'),
+    viewPrpolish: document.getElementById('view-prpolish'),
+    viewSrs: document.getElementById('view-srs'),
     statStreak: document.getElementById('stat-streak'),
     statVariance: document.getElementById('stat-variance'),
     statProgress: document.getElementById('stat-progress'),
     statReminderTime: document.getElementById('stat-reminder-time'),
+    statSrsBadge: document.getElementById('stat-srs-badge'),
+    statSrsDue: document.getElementById('stat-srs-due'),
     btnTestNotification: document.getElementById('btn-test-notification'),
 
     // Day Hero
@@ -297,6 +305,10 @@
     if (el.navWorkspace) el.navWorkspace.addEventListener('click', () => switchView('workspace'));
     if (el.navCurriculum) el.navCurriculum.addEventListener('click', () => switchView('curriculum'));
     if (el.navSimulators) el.navSimulators.addEventListener('click', () => switchView('simulators'));
+    if (el.navSparring) el.navSparring.addEventListener('click', () => switchView('sparring'));
+    if (el.navPrpolish) el.navPrpolish.addEventListener('click', () => switchView('prpolish'));
+    if (el.navSrs) el.navSrs.addEventListener('click', () => switchView('srs'));
+    if (el.statSrsBadge) el.statSrsBadge.addEventListener('click', () => switchView('srs'));
 
     // Audio Comparison Controls (FR-011)
     if (el.btnPlayNativeVoice) {
@@ -598,33 +610,60 @@
     if (el.viewWorkspace) el.viewWorkspace.classList.add('hidden');
     if (el.viewCurriculum) el.viewCurriculum.classList.add('hidden');
     if (el.viewSimulators) el.viewSimulators.classList.add('hidden');
+    if (el.viewSparring) el.viewSparring.classList.add('hidden');
+    if (el.viewPrpolish) el.viewPrpolish.classList.add('hidden');
+    if (el.viewSrs) el.viewSrs.classList.add('hidden');
 
-    if (el.navWorkspace) el.navWorkspace.className = 'px-3 py-1.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 transition';
-    if (el.navCurriculum) el.navCurriculum.className = 'px-3 py-1.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 transition';
-    if (el.navSimulators) el.navSimulators.className = 'px-3 py-1.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 transition';
+    const defaultNavClass = 'px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 transition';
+    const activeNavClass = 'px-2.5 py-1.5 rounded-lg text-xs font-medium bg-cyan-500 text-slate-950 shadow-sm transition';
+
+    if (el.navWorkspace) el.navWorkspace.className = defaultNavClass;
+    if (el.navCurriculum) el.navCurriculum.className = defaultNavClass;
+    if (el.navSimulators) el.navSimulators.className = defaultNavClass;
+    if (el.navSparring) el.navSparring.className = defaultNavClass;
+    if (el.navPrpolish) el.navPrpolish.className = defaultNavClass;
+    if (el.navSrs) el.navSrs.className = defaultNavClass;
 
     if (view === 'workspace') {
       if (el.viewWorkspace) el.viewWorkspace.classList.remove('hidden');
-      if (el.navWorkspace) el.navWorkspace.className = 'px-3 py-1.5 rounded-lg text-sm font-medium bg-cyan-500 text-slate-950 shadow-sm transition';
+      if (el.navWorkspace) el.navWorkspace.className = activeNavClass;
     } else if (view === 'curriculum') {
       if (el.viewCurriculum) el.viewCurriculum.classList.remove('hidden');
-      if (el.navCurriculum) el.navCurriculum.className = 'px-3 py-1.5 rounded-lg text-sm font-medium bg-cyan-500 text-slate-950 shadow-sm transition';
+      if (el.navCurriculum) el.navCurriculum.className = activeNavClass;
       renderCurriculumGrid('all');
     } else if (view === 'simulators') {
       if (el.viewSimulators) el.viewSimulators.classList.remove('hidden');
-      if (el.navSimulators) el.navSimulators.className = 'px-3 py-1.5 rounded-lg text-sm font-medium bg-cyan-500 text-slate-950 shadow-sm transition';
+      if (el.navSimulators) el.navSimulators.className = activeNavClass;
       switchSimulatorTab('standup');
+    } else if (view === 'sparring') {
+      if (el.viewSparring) el.viewSparring.classList.remove('hidden');
+      if (el.navSparring) el.navSparring.className = activeNavClass;
+      initSparringArena();
+    } else if (view === 'prpolish') {
+      if (el.viewPrpolish) el.viewPrpolish.classList.remove('hidden');
+      if (el.navPrpolish) el.navPrpolish.className = activeNavClass;
+      initPrStudio();
+    } else if (view === 'srs') {
+      if (el.viewSrs) el.viewSrs.classList.remove('hidden');
+      if (el.navSrs) el.navSrs.className = activeNavClass;
+      refreshSrsData();
     }
   }
 
   // Fetch Initial Data with Resilience
   async function fetchInitialData() {
     try {
-      const [curriculumRes, progressRes, sessionsRes] = await Promise.all([
+      const [curriculumRes, progressRes, sessionsRes, srsRes] = await Promise.all([
         fetch('/api/curriculum').catch(() => null),
         fetch('/api/progress').catch(() => null),
-        fetch('/api/progress/sessions').catch(() => null)
+        fetch('/api/progress/sessions').catch(() => null),
+        fetch('/api/srs/stats').catch(() => null)
       ]);
+
+      if (srsRes && srsRes.ok) {
+        const srsStats = await srsRes.json();
+        if (el.statSrsDue) el.statSrsDue.textContent = `${srsStats.dueToday || 0} từ`;
+      }
 
       if (curriculumRes && curriculumRes.ok) {
         state.lessons = await curriculumRes.json();
@@ -947,12 +986,15 @@
     if (el.modalSoundBtnListen) el.modalSoundBtnListen.dataset.word = word;
     if (el.inputSoundTranscript) el.inputSoundTranscript.value = '';
     if (el.soundGradeResult) el.soundGradeResult.classList.add('hidden');
+    const srsAlert = document.getElementById('sound-grade-srs-alert');
+    if (srsAlert) srsAlert.classList.add('hidden');
 
     if (el.modalSoundPractice) el.modalSoundPractice.classList.remove('hidden');
   }
 
   function closeSoundPracticeModal() {
     if (el.modalSoundPractice) el.modalSoundPractice.classList.add('hidden');
+    stopAudioVisualizer();
     if (state.soundPractice.isRecording && state.soundPractice.recognition) {
       state.soundPractice.recognition.stop();
     }
@@ -976,12 +1018,28 @@
       });
 
       const data = await res.json();
+      const score = data.fluencyScore || 88;
 
       if (el.soundGradeResult) el.soundGradeResult.classList.remove('hidden');
-      if (el.soundGradeScore) el.soundGradeScore.textContent = `${data.fluencyScore || 88}/100`;
+      if (el.soundGradeScore) el.soundGradeScore.textContent = `${score}/100`;
       if (el.soundGradeDiagnostic) {
         const alerts = data.phoneticMechanicsAlerts?.join(' ') || data.naturalSpeakingTip || 'Cấu âm chuẩn xác, điểm tiếp xúc lưỡi và áp suất đạt yêu cầu.';
         el.soundGradeDiagnostic.textContent = alerts;
+      }
+
+      if (score < 75) {
+        const srsAlert = document.getElementById('sound-grade-srs-alert');
+        if (srsAlert) srsAlert.classList.remove('hidden');
+        fetch('/api/srs/enroll', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            wordOrPhrase: state.soundPractice.targetWord,
+            targetPhoneme: state.soundPractice.targetSymbol,
+            contextSentence: `Day ${state.currentDay} drill practice`,
+            initialScore: score
+          })
+        }).then(() => refreshSrsStatsOnly()).catch(() => {});
       }
     } catch (err) {
       console.error('Sound evaluation error', err);
@@ -1110,6 +1168,10 @@
       state.soundPractice.isRecording = true;
       if (el.recordSoundLabel) el.recordSoundLabel.textContent = "Đang nghe âm...";
       if (el.btnRecordSound) el.btnRecordSound.className = "px-4 py-2 bg-red-950 text-red-400 border border-red-800 rounded-lg text-xs font-semibold flex items-center gap-1.5 animate-pulse";
+      const canvas = document.getElementById('canvas-sound-visualizer');
+      const status = document.getElementById('sound-visualizer-status');
+      if (status) status.textContent = "Đang thu âm sóng...";
+      startAudioVisualizer(canvas);
     };
 
     state.soundPractice.recognition.onresult = (event) => {
@@ -1121,6 +1183,9 @@
       state.soundPractice.isRecording = false;
       if (el.recordSoundLabel) el.recordSoundLabel.textContent = "Bấm để nói";
       if (el.btnRecordSound) el.btnRecordSound.className = "px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 text-xs font-semibold flex items-center gap-1.5 transition";
+      const status = document.getElementById('sound-visualizer-status');
+      if (status) status.textContent = "Đã thu";
+      stopAudioVisualizer();
     };
 
     if (el.btnRecordSound) {
@@ -1547,6 +1612,703 @@
       alert('Đã gửi thông báo nhắc nhở 22:00 ra màn hình desktop (Windows Toast)!');
     } catch (err) {
       console.error(err);
+    }
+  }
+
+  // ==========================================
+  // REAL-TIME AUDIO WAVEFORM & SPECTROGRAM VISUALIZER
+  // ==========================================
+  let activeAudioCtx = null;
+  let activeAnalyser = null;
+  let activeAnimId = null;
+  let activeMicStream = null;
+
+  function startAudioVisualizer(canvas) {
+    if (!canvas) return;
+    stopAudioVisualizer();
+
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      return;
+    }
+
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+      activeMicStream = stream;
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      activeAudioCtx = new AudioCtx();
+      const source = activeAudioCtx.createMediaStreamSource(stream);
+      activeAnalyser = activeAudioCtx.createAnalyser();
+      activeAnalyser.fftSize = 128;
+      source.connect(activeAnalyser);
+
+      const bufferLength = activeAnalyser.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+      const ctx = canvas.getContext('2d');
+
+      function draw() {
+        activeAnimId = requestAnimationFrame(draw);
+        activeAnalyser.getByteFrequencyData(dataArray);
+
+        ctx.fillStyle = '#020617';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        const barWidth = (canvas.width / bufferLength) * 1.8;
+        let x = 0;
+
+        for (let i = 0; i < bufferLength; i++) {
+          const barHeight = (dataArray[i] / 255) * canvas.height;
+          const r = Math.min(255, 30 + i * 3);
+          const g = Math.max(80, 200 - i * 2);
+          const b = 250;
+          ctx.fillStyle = `rgb(${r},${g},${b})`;
+          ctx.fillRect(x, canvas.height - barHeight, barWidth - 1, barHeight);
+          x += barWidth;
+        }
+      }
+      draw();
+    }).catch(err => {
+      console.warn('Microphone stream error for visualizer:', err);
+    });
+  }
+
+  function stopAudioVisualizer() {
+    if (activeAnimId) {
+      cancelAnimationFrame(activeAnimId);
+      activeAnimId = null;
+    }
+    if (activeMicStream) {
+      activeMicStream.getTracks().forEach(t => t.stop());
+      activeMicStream = null;
+    }
+    if (activeAudioCtx) {
+      activeAudioCtx.close().catch(() => {});
+      activeAudioCtx = null;
+    }
+  }
+
+  // ==========================================
+  // FEATURE 1: AI SPARRING ARENA CONTROLLER
+  // ==========================================
+  const sparringState = {
+    scenarios: [],
+    currentScenario: null,
+    history: [],
+    isRecording: false,
+    recognition: null
+  };
+
+  async function initSparringArena() {
+    if (sparringState.scenarios.length === 0) {
+      await loadSparringScenarios();
+    }
+    setupSparringVoice();
+  }
+
+  async function loadSparringScenarios() {
+    try {
+      const res = await fetch('/api/sparring/scenarios');
+      if (!res.ok) return;
+      sparringState.scenarios = await res.json();
+
+      const select = document.getElementById('select-sparring-scenario');
+      if (select) {
+        select.innerHTML = sparringState.scenarios.map(s => 
+          `<option value="${s.id}">${s.title} (${s.roleDescription.split(' ')[0]})</option>`
+        ).join('');
+
+        select.addEventListener('change', () => {
+          selectSparringScenario(select.value);
+        });
+      }
+
+      if (sparringState.scenarios.length > 0) {
+        selectSparringScenario(sparringState.scenarios[0].id);
+      }
+    } catch (err) {
+      console.error('Failed to load sparring scenarios', err);
+    }
+  }
+
+  function selectSparringScenario(id) {
+    const scenario = sparringState.scenarios.find(s => s.id === id);
+    if (!scenario) return;
+
+    sparringState.currentScenario = scenario;
+    sparringState.history = [];
+
+    const badge = document.getElementById('sparring-role-badge');
+    const title = document.getElementById('sparring-scenario-title');
+    const desc = document.getElementById('sparring-role-desc');
+    const vocab = document.getElementById('sparring-target-vocab');
+
+    if (badge) badge.textContent = scenario.roleDescription.split(' ')[0] || 'Interrogator';
+    if (title) title.textContent = scenario.title;
+    if (desc) desc.textContent = scenario.roleDescription;
+    if (vocab) vocab.textContent = `Target Vocab: ${scenario.keyVocabulary.join(', ')}`;
+
+    // Reset Chat Stream with Opening line
+    const stream = document.getElementById('sparring-chat-stream');
+    if (stream) {
+      stream.innerHTML = `
+        <div class="bg-indigo-950/40 border border-indigo-800/60 p-3 rounded-xl space-y-1.5 text-xs">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-indigo-300 font-mono">🤖 ${scenario.roleDescription.split(' ')[0] || 'Senior Lead'}</span>
+            <button class="speak-btn text-[11px] text-cyan-400 hover:underline" data-word="${scenario.openingLine.replace(/"/g, '&quot;')}">🔊 Nghe</button>
+          </div>
+          <p class="text-slate-100 font-mono leading-relaxed">${scenario.openingLine}</p>
+        </div>
+      `;
+    }
+
+    const feedback = document.getElementById('sparring-feedback-panel');
+    if (feedback) feedback.classList.add('hidden');
+
+    const input = document.getElementById('input-sparring-speech');
+    if (input) input.value = '';
+  }
+
+  function setupSparringVoice() {
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRec) return;
+
+    if (!sparringState.recognition) {
+      sparringState.recognition = new SpeechRec();
+      sparringState.recognition.continuous = false;
+      sparringState.recognition.interimResults = false;
+      sparringState.recognition.lang = 'en-US';
+
+      sparringState.recognition.onstart = () => {
+        sparringState.isRecording = true;
+        const label = document.getElementById('sparring-mic-label');
+        if (label) label.textContent = 'Đang nghe...';
+        const canvas = document.getElementById('canvas-sparring-visualizer');
+        startAudioVisualizer(canvas);
+      };
+
+      sparringState.recognition.onresult = (e) => {
+        const text = e.results[0][0].transcript;
+        const input = document.getElementById('input-sparring-speech');
+        if (input) input.value = text;
+      };
+
+      sparringState.recognition.onend = () => {
+        sparringState.isRecording = false;
+        const label = document.getElementById('sparring-mic-label');
+        if (label) label.textContent = 'Nói trực tiếp';
+        stopAudioVisualizer();
+      };
+    }
+
+    const btnMic = document.getElementById('btn-sparring-mic');
+    if (btnMic && !btnMic.dataset.bound) {
+      btnMic.dataset.bound = 'true';
+      btnMic.addEventListener('click', () => {
+        if (sparringState.isRecording) sparringState.recognition.stop();
+        else sparringState.recognition.start();
+      });
+    }
+
+    const btnSubmit = document.getElementById('btn-sparring-submit');
+    if (btnSubmit && !btnSubmit.dataset.bound) {
+      btnSubmit.dataset.bound = 'true';
+      btnSubmit.addEventListener('click', submitSparringTurn);
+    }
+
+    const btnReset = document.getElementById('btn-sparring-reset');
+    if (btnReset && !btnReset.dataset.bound) {
+      btnReset.dataset.bound = 'true';
+      btnReset.addEventListener('click', () => {
+        if (sparringState.currentScenario) selectSparringScenario(sparringState.currentScenario.id);
+      });
+    }
+  }
+
+  async function submitSparringTurn() {
+    const input = document.getElementById('input-sparring-speech');
+    const userText = input?.value.trim();
+    if (!userText) {
+      alert('Vui lòng nhập hoặc nói câu trả lời của bạn.');
+      return;
+    }
+
+    const btnSubmit = document.getElementById('btn-sparring-submit');
+    if (btnSubmit) {
+      btnSubmit.disabled = true;
+      btnSubmit.textContent = '⏳ Đang phân tích phản biện...';
+    }
+
+    // Append user bubble to chat stream
+    const stream = document.getElementById('sparring-chat-stream');
+    if (stream) {
+      const userBubble = document.createElement('div');
+      userBubble.className = 'bg-slate-950 border border-slate-800 p-3 rounded-xl space-y-1 text-xs text-right';
+      userBubble.innerHTML = `
+        <div class="font-bold text-cyan-400 font-mono">👤 You (Tech Lead)</div>
+        <p class="text-slate-200 font-mono text-left leading-relaxed">${userText}</p>
+      `;
+      stream.appendChild(userBubble);
+      stream.scrollTop = stream.scrollHeight;
+    }
+
+    try {
+      const res = await fetch('/api/sparring/turn', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          scenarioId: sparringState.currentScenario?.id || 'arch-debate',
+          userSpeech: userText,
+          history: sparringState.history
+        })
+      });
+
+      const data = await res.json();
+
+      // Update history
+      sparringState.history.push({ speaker: 'user', content: userText });
+      sparringState.history.push({ speaker: 'ai', content: data.aiResponse });
+
+      // Append AI reply to chat stream
+      if (stream) {
+        const aiBubble = document.createElement('div');
+        aiBubble.className = 'bg-indigo-950/40 border border-indigo-800/60 p-3 rounded-xl space-y-1.5 text-xs';
+        aiBubble.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-indigo-300 font-mono">🤖 ${sparringState.currentScenario?.roleDescription.split(' ')[0] || 'Senior Lead'}</span>
+            <button class="speak-btn text-[11px] text-cyan-400 hover:underline" data-word="${data.aiResponse.replace(/"/g, '&quot;')}">🔊 Nghe</button>
+          </div>
+          <p class="text-slate-100 font-mono leading-relaxed">${data.aiResponse}</p>
+          ${data.nextQuestion ? `<div class="mt-2 text-indigo-200 font-semibold border-t border-indigo-900/60 pt-1.5">❓ Câu hỏi phản biện tiếp theo: ${data.nextQuestion}</div>` : ''}
+        `;
+        stream.appendChild(aiBubble);
+        stream.scrollTop = stream.scrollHeight;
+      }
+
+      // Update Feedback Panel
+      const feedback = document.getElementById('sparring-feedback-panel');
+      if (feedback) feedback.classList.remove('hidden');
+
+      const diplomacy = document.getElementById('sparring-score-diplomacy');
+      const clarity = document.getElementById('sparring-score-clarity');
+      const fillers = document.getElementById('sparring-filler-words');
+      const alerts = document.getElementById('sparring-phonetic-alerts');
+      const refinement = document.getElementById('sparring-refinement-text');
+      const btnRefinementSpeak = document.getElementById('btn-speak-sparring-refinement');
+
+      if (diplomacy) diplomacy.textContent = `${data.diplomacyScore || 85}/100`;
+      if (clarity) clarity.textContent = `${data.technicalClarityScore || 85}/100`;
+
+      if (fillers) {
+        const fillerCount = data.fillerWordsDetected?.length || 0;
+        fillers.textContent = fillerCount > 0 ? `${fillerCount} từ (${data.fillerWordsDetected.join(', ')})` : '0 từ (Tuyệt vời!)';
+        fillers.className = fillerCount > 0 ? 'text-xs font-bold font-mono text-amber-400 mt-1' : 'text-xs font-bold font-mono text-emerald-400 mt-1';
+      }
+
+      if (alerts) {
+        const alertList = data.pronunciationAlerts || [];
+        alerts.textContent = alertList.length > 0 ? alertList.join(' | ') : 'Phát âm âm đuôi chuẩn';
+      }
+
+      if (refinement) refinement.textContent = data.seniorLeadRefinement || userText;
+      if (btnRefinementSpeak) {
+        btnRefinementSpeak.onclick = () => speakWord(data.seniorLeadRefinement || userText);
+      }
+
+      if (input) input.value = '';
+    } catch (err) {
+      console.error('Sparring error', err);
+      alert('Không thể kết nối Sparring Partner API.');
+    } finally {
+      if (btnSubmit) {
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = '⚔️ Gửi câu trả lời & Nhận Phản Biện';
+      }
+    }
+  }
+
+  // ==========================================
+  // FEATURE 2: PR & CODE REVIEW STUDIO CONTROLLER
+  // ==========================================
+  let currentPrTone = 'ConstructiveReview';
+
+  function initPrStudio() {
+    // Tone Selector buttons
+    document.querySelectorAll('.pr-tone-btn').forEach(btn => {
+      if (!btn.dataset.bound) {
+        btn.dataset.bound = 'true';
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.pr-tone-btn').forEach(b => {
+            b.className = 'pr-tone-btn px-2.5 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 transition';
+          });
+          btn.className = 'pr-tone-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950 border border-cyan-400 transition';
+          currentPrTone = btn.dataset.tone;
+        });
+      }
+    });
+
+    // Sample buttons
+    document.querySelectorAll('.pr-sample-btn').forEach(btn => {
+      if (!btn.dataset.bound) {
+        btn.dataset.bound = 'true';
+        btn.addEventListener('click', () => {
+          const rawInput = document.getElementById('pr-raw-input');
+          if (rawInput) rawInput.value = btn.dataset.sample;
+          submitPrPolish();
+        });
+      }
+    });
+
+    const btnSubmit = document.getElementById('btn-pr-polish-submit');
+    if (btnSubmit && !btnSubmit.dataset.bound) {
+      btnSubmit.dataset.bound = 'true';
+      btnSubmit.addEventListener('click', submitPrPolish);
+    }
+
+    const btnCopy = document.getElementById('btn-pr-copy');
+    if (btnCopy && !btnCopy.dataset.bound) {
+      btnCopy.dataset.bound = 'true';
+      btnCopy.addEventListener('click', () => {
+        const text = document.getElementById('pr-polished-text')?.textContent.trim() || '';
+        if (text) {
+          navigator.clipboard.writeText(text);
+          btnCopy.textContent = '✓ Copied!';
+          setTimeout(() => btnCopy.textContent = '📋 Sao chép', 1500);
+        }
+      });
+    }
+
+    const btnSpeak = document.getElementById('btn-speak-pr-result');
+    if (btnSpeak && !btnSpeak.dataset.bound) {
+      btnSpeak.dataset.bound = 'true';
+      btnSpeak.addEventListener('click', () => {
+        const text = document.getElementById('pr-polished-text')?.textContent.trim() || '';
+        if (text) speakWord(text);
+      });
+    }
+  }
+
+  async function submitPrPolish() {
+    const rawInput = document.getElementById('pr-raw-input');
+    const inputText = rawInput?.value.trim();
+    if (!inputText) {
+      alert('Vui lòng nhập nhận xét code hoặc tin nhắn commit.');
+      return;
+    }
+
+    const codeContext = document.getElementById('pr-code-context')?.value.trim() || null;
+    const btnSubmit = document.getElementById('btn-pr-polish-submit');
+    if (btnSubmit) {
+      btnSubmit.disabled = true;
+      btnSubmit.textContent = '⏳ Đang tinh chỉnh giọng văn Senior...';
+    }
+
+    try {
+      const res = await fetch('/api/pr/polish', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          inputText,
+          tone: currentPrTone,
+          codeContext
+        })
+      });
+
+      const data = await res.json();
+
+      const outText = document.getElementById('pr-polished-text');
+      const outAlt = document.getElementById('pr-alternative-text');
+      const outExp = document.getElementById('pr-explanation-text');
+      const outPhrases = document.getElementById('pr-key-phrases');
+      const outAvoided = document.getElementById('pr-avoided-pitfalls');
+
+      if (outText) outText.textContent = data.polishedText || '';
+      if (outAlt) outAlt.textContent = data.alternativeDraft || 'Không có phương án thay thế.';
+      if (outExp) outExp.textContent = `💡 ${data.explanation || ''}`;
+
+      if (outPhrases) {
+        outPhrases.innerHTML = (data.keyPhrasesUsed || []).map(p => 
+          `<span class="px-2 py-0.5 rounded bg-emerald-950/60 border border-emerald-900">${p}</span>`
+        ).join('') || '<span class="text-slate-500">None</span>';
+      }
+
+      if (outAvoided) {
+        outAvoided.innerHTML = (data.avoidedAntiPatterns || []).map(a => 
+          `<span class="px-2 py-0.5 rounded bg-amber-950/60 border border-amber-900">${a}</span>`
+        ).join('') || '<span class="text-slate-500">None</span>';
+      }
+    } catch (err) {
+      console.error('PR Polish error', err);
+      alert('Lỗi kết nối PR Polisher API.');
+    } finally {
+      if (btnSubmit) {
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = '🚀 Refactor to Senior Code Review';
+      }
+    }
+  }
+
+  // ==========================================
+  // FEATURE 3: SRS LEITNER WEAK-SPOT VAULT CONTROLLER
+  // ==========================================
+  const srsState = {
+    stats: null,
+    dueItems: [],
+    allItems: [],
+    activeItem: null,
+    isRecording: false,
+    recognition: null
+  };
+
+  async function refreshSrsData() {
+    await Promise.all([
+      refreshSrsStatsOnly(),
+      fetchSrsQueue(),
+      fetchSrsAllItems()
+    ]);
+    setupSrsEventListeners();
+  }
+
+  async function refreshSrsStatsOnly() {
+    try {
+      const res = await fetch('/api/srs/stats');
+      if (!res.ok) return;
+      srsState.stats = await res.json();
+
+      const totalEl = document.getElementById('srs-stat-total');
+      const dueEl = document.getElementById('srs-stat-due');
+      const masteredEl = document.getElementById('srs-stat-mastered');
+      const avgEl = document.getElementById('srs-stat-avg');
+
+      if (totalEl) totalEl.textContent = srsState.stats.totalTracked;
+      if (dueEl) dueEl.textContent = srsState.stats.dueToday;
+      if (masteredEl) masteredEl.textContent = srsState.stats.mastered;
+      if (avgEl) avgEl.textContent = `${Math.round(srsState.stats.averageScore)}%`;
+
+      if (el.statSrsDue) el.statSrsDue.textContent = `${srsState.stats.dueToday} từ`;
+    } catch (err) {
+      console.warn('Error fetching SRS stats', err);
+    }
+  }
+
+  async function fetchSrsQueue() {
+    try {
+      const res = await fetch('/api/srs/queue');
+      if (!res.ok) return;
+      srsState.dueItems = await res.json();
+
+      if (srsState.dueItems.length > 0) {
+        srsState.activeItem = srsState.dueItems[0];
+        renderSrsActiveCard(srsState.activeItem);
+      } else {
+        srsState.activeItem = null;
+        renderSrsEmptyCard();
+      }
+    } catch (err) {
+      console.warn('Error fetching SRS queue', err);
+    }
+  }
+
+  async function fetchSrsAllItems() {
+    try {
+      const res = await fetch('/api/srs/all');
+      if (!res.ok) return;
+      srsState.allItems = await res.json();
+
+      // Update box count indicators
+      const boxCounts = [0, 0, 0, 0, 0, 0];
+      srsState.allItems.forEach(item => {
+        const box = Math.max(1, Math.min(5, item.box || 1));
+        boxCounts[box]++;
+      });
+
+      for (let i = 1; i <= 5; i++) {
+        const boxEl = document.getElementById(`srs-box-${i}-count`);
+        if (boxEl) boxEl.textContent = `${boxCounts[i]} từ`;
+      }
+
+      // Render all items list
+      const listEl = document.getElementById('srs-all-items-list');
+      if (listEl) {
+        listEl.innerHTML = srsState.allItems.map(item => `
+          <div class="flex items-center justify-between p-2 rounded bg-slate-950/80 border border-slate-800">
+            <div>
+              <span class="font-bold text-cyan-400">${item.wordOrPhrase}</span>
+              <span class="text-[10px] text-amber-300 ml-1.5">${item.targetPhoneme}</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="px-1.5 py-0.5 rounded text-[10px] bg-slate-900 border border-slate-700 font-mono">Hộp ${item.box}</span>
+              <button class="speak-btn text-xs text-cyan-400 hover:text-cyan-300" data-word="${item.wordOrPhrase}">🔊</button>
+            </div>
+          </div>
+        `).join('') || '<div class="text-slate-500 text-xs">Chưa có từ nào trong Vault.</div>';
+      }
+    } catch (err) {
+      console.warn('Error fetching all SRS items', err);
+    }
+  }
+
+  function renderSrsActiveCard(item) {
+    const indicator = document.getElementById('srs-card-box-indicator');
+    const wordEl = document.getElementById('srs-card-word');
+    const phonemeEl = document.getElementById('srs-card-phoneme');
+    const contextEl = document.getElementById('srs-card-context');
+    const listenBtn = document.getElementById('btn-srs-listen');
+
+    if (indicator) indicator.textContent = `Hộp ${item.box} // Ôn cách ${item.intervalDays} ngày (Điểm gần nhất: ${item.lastScore}%)`;
+    if (wordEl) wordEl.textContent = item.wordOrPhrase;
+    if (phonemeEl) phonemeEl.textContent = `Target: ${item.targetPhoneme}`;
+    if (contextEl) contextEl.textContent = `"${item.contextSentence}"`;
+    if (listenBtn) listenBtn.dataset.word = item.wordOrPhrase;
+
+    const transcriptInput = document.getElementById('input-srs-transcript');
+    if (transcriptInput) transcriptInput.value = '';
+  }
+
+  function renderSrsEmptyCard() {
+    const container = document.getElementById('srs-active-card-container');
+    if (container) {
+      container.innerHTML = `
+        <div class="bg-slate-950 border border-emerald-900/60 p-6 rounded-xl text-center space-y-2">
+          <div class="text-3xl">🎉</div>
+          <div class="text-sm font-bold text-emerald-400 font-mono">Hôm nay bạn đã hoàn thành hết thẻ ôn tập!</div>
+          <p class="text-xs text-slate-400">Tất cả các từ vựng và âm kỹ thuật đang được giữ vững trong lịch trình Leitner. Thêm từ mới ở cột bên phải nếu bạn gặp bất kỳ từ khó nào.</p>
+        </div>
+      `;
+    }
+  }
+
+  function setupSrsEventListeners() {
+    const btnPass = document.getElementById('btn-srs-grade-pass');
+    if (btnPass && !btnPass.dataset.bound) {
+      btnPass.dataset.bound = 'true';
+      btnPass.addEventListener('click', () => submitSrsReview(85));
+    }
+
+    const btnFail = document.getElementById('btn-srs-grade-fail');
+    if (btnFail && !btnFail.dataset.bound) {
+      btnFail.dataset.bound = 'true';
+      btnFail.addEventListener('click', () => submitSrsReview(60));
+    }
+
+    const btnEnroll = document.getElementById('btn-enroll-submit');
+    if (btnEnroll && !btnEnroll.dataset.bound) {
+      btnEnroll.dataset.bound = 'true';
+      btnEnroll.addEventListener('click', enrollWeakSpot);
+    }
+
+    const btnRefresh = document.getElementById('btn-srs-refresh');
+    if (btnRefresh && !btnRefresh.dataset.bound) {
+      btnRefresh.dataset.bound = 'true';
+      btnRefresh.addEventListener('click', refreshSrsData);
+    }
+
+    // Modal SRS navigation button
+    const btnViewSrs = document.getElementById('btn-view-srs-from-modal');
+    if (btnViewSrs && !btnViewSrs.dataset.bound) {
+      btnViewSrs.dataset.bound = 'true';
+      btnViewSrs.addEventListener('click', () => {
+        closeSoundPracticeModal();
+        switchView('srs');
+      });
+    }
+
+    // SRS Recording
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRec && !srsState.recognition) {
+      srsState.recognition = new SpeechRec();
+      srsState.recognition.continuous = false;
+      srsState.recognition.interimResults = false;
+      srsState.recognition.lang = 'en-US';
+
+      srsState.recognition.onstart = () => {
+        srsState.isRecording = true;
+        const label = document.getElementById('srs-record-label');
+        if (label) label.textContent = 'Đang nghe...';
+        const canvas = document.getElementById('canvas-srs-visualizer');
+        startAudioVisualizer(canvas);
+      };
+
+      srsState.recognition.onresult = (e) => {
+        const text = e.results[0][0].transcript;
+        const input = document.getElementById('input-srs-transcript');
+        if (input) input.value = text;
+      };
+
+      srsState.recognition.onend = () => {
+        srsState.isRecording = false;
+        const label = document.getElementById('srs-record-label');
+        if (label) label.textContent = 'Bấm để nói';
+        stopAudioVisualizer();
+      };
+
+      const btnRecord = document.getElementById('btn-srs-record');
+      if (btnRecord && !btnRecord.dataset.bound) {
+        btnRecord.dataset.bound = 'true';
+        btnRecord.addEventListener('click', () => {
+          if (srsState.isRecording) srsState.recognition.stop();
+          else srsState.recognition.start();
+        });
+      }
+    }
+  }
+
+  async function submitSrsReview(score) {
+    if (!srsState.activeItem) return;
+
+    try {
+      const res = await fetch('/api/srs/review', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          itemId: srsState.activeItem.id,
+          score: score
+        })
+      });
+
+      const updated = await res.json();
+      const actionText = score >= 75 ? `Lên Hộp ${updated.box}!` : `Về lại Hộp 1 để ôn mỗi ngày.`;
+      alert(`Đã chấm điểm: ${score}% -> ${actionText}`);
+
+      await refreshSrsData();
+    } catch (err) {
+      console.error('Error submitting review', err);
+    }
+  }
+
+  async function enrollWeakSpot() {
+    const wordInput = document.getElementById('input-enroll-word');
+    const phonemeInput = document.getElementById('input-enroll-phoneme');
+    const contextInput = document.getElementById('input-enroll-context');
+
+    const word = wordInput?.value.trim();
+    if (!word) {
+      alert('Vui lòng nhập từ hoặc cụm từ.');
+      return;
+    }
+
+    const phoneme = phonemeInput?.value.trim() || 'General phonetic precision';
+    const context = contextInput?.value.trim() || `Technical context with ${word}`;
+
+    try {
+      const res = await fetch('/api/srs/enroll', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          wordOrPhrase: word,
+          targetPhoneme: phoneme,
+          contextSentence: context,
+          initialScore: 65
+        })
+      });
+
+      if (res.ok) {
+        if (wordInput) wordInput.value = '';
+        if (phonemeInput) phonemeInput.value = '';
+        if (contextInput) contextInput.value = '';
+        alert(`✓ Đã thêm "${word}" vào SRS Weak-Spot Vault!`);
+        await refreshSrsData();
+      }
+    } catch (err) {
+      console.error('Error enrolling weak spot', err);
     }
   }
 

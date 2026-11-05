@@ -43,42 +43,56 @@
       </div>
 
       <!-- Telemetry Stats Bar -->
-      <div class="hidden md:flex items-center space-x-6 text-xs font-mono">
-        <div class="flex items-center gap-2 px-3 py-1.5 rounded-md bg-slate-800/80 border border-slate-700/60">
+      <div class="hidden lg:flex items-center space-x-3 text-xs font-mono">
+        <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-md bg-slate-800/80 border border-slate-700/60">
           <span class="text-amber-400">⏰ Nhắc nhở:</span>
           <span class="font-bold text-slate-200" id="stat-reminder-time">22:00</span>
           <button id="btn-test-notification" title="Test desktop notification" class="text-slate-400 hover:text-cyan-400 transition ml-1">🔔</button>
         </div>
 
-        <div class="flex items-center gap-2 px-3 py-1.5 rounded-md bg-slate-800/80 border border-slate-700/60">
+        <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-md bg-slate-800/80 border border-slate-700/60">
           <span>🔥 Streak:</span>
           <span class="font-bold text-orange-400" id="stat-streak">0 ngày</span>
         </div>
 
-        <div class="flex items-center gap-2 px-3 py-1.5 rounded-md bg-slate-800/80 border border-slate-700/60">
+        <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-md bg-slate-800/80 border border-slate-700/60">
           <span>⏱️ Thực tế vs Plan:</span>
           <span class="font-bold text-slate-200" id="stat-variance">0m / 0m</span>
         </div>
 
-        <div class="flex items-center gap-2 px-3 py-1.5 rounded-md bg-slate-800/80 border border-slate-700/60">
+        <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-md bg-slate-800/80 border border-slate-700/60">
           <span>🎯 Tiến độ:</span>
           <span class="font-bold text-cyan-400" id="stat-progress">0% (0/90)</span>
+        </div>
+
+        <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-md bg-slate-800/80 border border-slate-700/60 cursor-pointer hover:border-amber-500/50 transition" id="stat-srs-badge" title="Bấm để mở SRS Weak-Spot Vault">
+          <span>🧠 Ôn tập:</span>
+          <span class="font-bold text-amber-400" id="stat-srs-due">0 từ</span>
         </div>
       </div>
 
       <!-- Navigation Tabs -->
-      <div class="flex items-center space-x-2">
-        <button id="nav-workspace" class="px-3 py-1.5 rounded-lg text-sm font-medium bg-cyan-500 text-slate-950 shadow-sm transition">
-          💻 Buổi học hôm nay
+      <div class="flex items-center space-x-1.5 flex-wrap">
+        <button id="nav-workspace" class="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-cyan-500 text-slate-950 shadow-sm transition">
+          💻 Buổi học
         </button>
-        <button id="nav-curriculum" class="px-3 py-1.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 transition">
-          🗺️ Ma trận 90 ngày
+        <button id="nav-curriculum" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 transition">
+          🗺️ 90 ngày
         </button>
-        <button id="nav-simulators" class="px-3 py-1.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 transition">
-          🎙️ Thực Chiến (Standup/Demo)
+        <button id="nav-simulators" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 transition">
+          🎙️ Standup/Demo
         </button>
-        <a href="fundamentals.html" target="_blank" class="px-3 py-1.5 rounded-lg text-sm font-medium text-amber-300 bg-amber-950/40 border border-amber-800/60 hover:bg-amber-900/40 transition flex items-center gap-1.5">
-          <span>📖 Cẩm Nang Cấu Âm (Fundamentals)</span>
+        <button id="nav-sparring" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 transition">
+          ⚔️ Sparring Arena
+        </button>
+        <button id="nav-prpolish" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 transition">
+          🛠️ PR Studio
+        </button>
+        <button id="nav-srs" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 transition">
+          🧠 SRS Vault
+        </button>
+        <a href="fundamentals.html" target="_blank" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-amber-300 bg-amber-950/40 border border-amber-800/60 hover:bg-amber-900/40 transition flex items-center gap-1">
+          <span>📖 Fundamentals</span>
         </a>
       </div>
     </div>
@@ -644,6 +658,381 @@
             <div>
               <div class="font-semibold text-pink-400 text-[11px]">⭐ Phiên bản giao tiếp tự nhiên chuẩn bản xứ:</div>
               <p id="sim-pingpong-refactor" class="text-pink-200 font-mono bg-pink-950/30 p-2.5 rounded mt-1 border border-pink-900/60">...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 4: AI SPARRING ARENA (Live Architecture & Incident Debate) -->
+    <section id="view-sparring" class="hidden space-y-6">
+      <div class="bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 rounded-2xl border border-slate-800 p-6 shadow-xl relative overflow-hidden">
+        <div class="absolute -right-16 -top-16 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="text-2xl">⚔️</span>
+              <h2 class="text-xl font-bold text-white tracking-tight">AI Sparring Arena // Tranh Luận Kỹ Thuật Trực Diện</h2>
+            </div>
+            <p class="text-xs text-slate-400">Thực hành phản biện đối kháng với Staff Architect & VP of Engineering. Kiểm tra độ nhạy âm đuôi, loại bỏ từ đệm (filler words) và rèn phong thái ngoại giao kỹ thuật chuẩn Lead.</p>
+          </div>
+          <!-- Scenario Selector -->
+          <div class="flex items-center gap-2">
+            <label class="text-xs font-mono text-slate-400">Kịch bản:</label>
+            <select id="select-sparring-scenario" class="bg-slate-950 border border-slate-700 text-xs text-slate-200 rounded-lg px-3 py-2 font-mono focus:border-indigo-500 focus:outline-none">
+              <option value="arch-debate">Microservices vs Modular Monolith (Staff Architect)</option>
+              <option value="incident-sev1">Production DB Pool Exhaustion (VP of Eng)</option>
+              <option value="scope-pushback">Negotiating 50% Timeline Cut (Product Director)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sparring Scenario Brief Card -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-3">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 rounded text-[11px] font-mono bg-indigo-950 text-indigo-300 border border-indigo-800" id="sparring-role-badge">Staff Architect</span>
+            <span class="text-xs font-semibold text-slate-200" id="sparring-scenario-title">Microservices vs Modular Monolith</span>
+          </div>
+          <div class="text-[11px] font-mono text-slate-400" id="sparring-target-vocab">Target Vocab: latency, throughput, consistency, blast radius</div>
+        </div>
+        <p class="text-xs text-slate-300" id="sparring-role-desc">You are defending architectural boundaries to an aggressive Staff Architect who questions your data consistency and inter-service latency overhead.</p>
+      </div>
+
+      <!-- Dialogue Thread -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-5 space-y-4">
+        <h3 class="text-xs font-mono font-bold text-slate-300 border-b border-slate-800 pb-2">DIỄN BIẾN PHẢN BIỆN (INTERACTIVE DIALOGUE):</h3>
+        <div id="sparring-chat-stream" class="space-y-3 max-h-96 overflow-y-auto pr-1">
+          <!-- Filled dynamically by app.js -->
+        </div>
+
+        <!-- User Speech Input Area -->
+        <div class="space-y-2 pt-2 border-t border-slate-800">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-semibold text-slate-300">Phản hồi của bạn (Lập luận & Bảo vệ quan điểm):</label>
+            <div class="text-[11px] font-mono text-slate-400">Tip: Bật rõ âm đuôi /t/, /d/, /s/, /z/ và tránh từ đệm (uhm, like, actually)</div>
+          </div>
+
+          <div class="flex gap-2">
+            <button id="btn-sparring-mic" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 text-xs font-semibold flex items-center gap-1.5 transition">
+              🎤 <span id="sparring-mic-label">Nói trực tiếp</span>
+            </button>
+            <textarea id="input-sparring-speech" rows="2" class="flex-1 bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-100 font-mono focus:border-indigo-500 focus:outline-none resize-none" placeholder="We decided to start with a modular monolith to keep latency under 10ms and avoid distributed transaction complexity..."></textarea>
+          </div>
+
+          <!-- Waveform Visualizer -->
+          <div class="space-y-1">
+            <canvas id="canvas-sparring-visualizer" width="600" height="40" class="w-full h-10 bg-slate-950 rounded-lg border border-slate-800/80 shadow-inner"></canvas>
+          </div>
+
+          <div class="flex justify-end gap-2">
+            <button id="btn-sparring-reset" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded-lg transition">
+              🔄 Bắt đầu lại kịch bản
+            </button>
+            <button id="btn-sparring-submit" class="px-5 py-2 bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-400 hover:to-blue-500 text-white font-bold rounded-lg text-xs shadow-md transition flex items-center gap-1.5">
+              ⚔️ Gửi câu trả lời & Nhận Phản Biện
+            </button>
+          </div>
+        </div>
+
+        <!-- Feedback & Scoring Panel -->
+        <div id="sparring-feedback-panel" class="hidden bg-slate-950 border border-indigo-900/60 rounded-xl p-4 space-y-3 text-xs">
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
+            <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-lg">
+              <div class="text-[10px] text-slate-400">🛡️ Ngoại giao kỹ thuật</div>
+              <div class="text-lg font-bold font-mono text-cyan-400" id="sparring-score-diplomacy">--/100</div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-lg">
+              <div class="text-[10px] text-slate-400">🎯 Độ rõ ràng & Sắc bén</div>
+              <div class="text-lg font-bold font-mono text-indigo-400" id="sparring-score-clarity">--/100</div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-lg">
+              <div class="text-[10px] text-slate-400">⚠️ Từ đệm (Filler words)</div>
+              <div class="text-xs font-bold font-mono text-amber-400 mt-1" id="sparring-filler-words">0 phát hiện</div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-lg">
+              <div class="text-[10px] text-slate-400">🗣️ Cảnh báo âm cuối</div>
+              <div class="text-xs font-bold font-mono text-emerald-400 mt-1" id="sparring-phonetic-alerts">Chuẩn</div>
+            </div>
+          </div>
+
+          <div class="space-y-1">
+            <div class="font-semibold text-indigo-300 text-[11px] flex items-center gap-1">
+              <span>💎 Staff+ Senior Lead Refinement (Phiên bản diễn đạt chuẩn mực quốc tế):</span>
+              <button class="speak-btn text-[11px] text-cyan-400 hover:underline" id="btn-speak-sparring-refinement">🔊 Nghe</button>
+            </div>
+            <p id="sparring-refinement-text" class="text-slate-200 font-mono bg-indigo-950/30 p-2.5 rounded-lg border border-indigo-900/60 leading-relaxed">...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 5: PR & CODE REVIEW STUDIO -->
+    <section id="view-prpolish" class="hidden space-y-6">
+      <div class="bg-gradient-to-r from-slate-900 via-cyan-950/40 to-slate-900 rounded-2xl border border-slate-800 p-6 shadow-xl relative overflow-hidden">
+        <div class="absolute -right-16 -top-16 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="space-y-1">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">🛠️</span>
+            <h2 class="text-xl font-bold text-white tracking-tight">PR & Code Review Studio // Chuẩn Hóa Phản Hồi Senior</h2>
+          </div>
+          <p class="text-xs text-slate-400">Biến những câu review cộc lốc hoặc dịch thô từ tiếng Việt thành lời nhận xét chuyên nghiệp, ngoại giao và mang tính xây dựng cao trong pull request quốc tế.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Left: Input & Controls -->
+        <div class="lg:col-span-6 bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+          <!-- Tone Selector -->
+          <div class="space-y-1.5">
+            <label class="text-xs font-semibold text-slate-300">Tone giọng mong muốn:</label>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2" id="pr-tone-selector">
+              <button class="pr-tone-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950 border border-cyan-400 transition" data-tone="ConstructiveReview">
+                💡 Constructive
+              </button>
+              <button class="pr-tone-btn px-2.5 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 transition" data-tone="DiplomaticPushback">
+                🛡️ Pushback
+              </button>
+              <button class="pr-tone-btn px-2.5 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 transition" data-tone="TechnicalInquiry">
+                ❓ Inquiry
+              </button>
+              <button class="pr-tone-btn px-2.5 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 transition" data-tone="Compliment">
+                ⭐ Compliment
+              </button>
+              <button class="pr-tone-btn px-2.5 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 transition" data-tone="CommitMessage">
+                📝 Commit Msg
+              </button>
+            </div>
+          </div>
+
+          <!-- Code Context (Optional) -->
+          <div class="space-y-1">
+            <label class="text-xs font-semibold text-slate-300">Vị trí / Ngữ cảnh code (tùy chọn):</label>
+            <input type="text" id="pr-code-context" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs font-mono text-slate-200 focus:border-cyan-500 focus:outline-none" placeholder="e.g., AuthController.cs:42-58 or PaymentWebhookHandler">
+          </div>
+
+          <!-- Quick Samples -->
+          <div class="space-y-1">
+            <label class="text-[11px] text-slate-400 font-mono">Mẫu thử nhanh:</label>
+            <div class="flex flex-wrap gap-1.5">
+              <button class="pr-sample-btn px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono transition" data-sample="this code slow fix it">"this code slow fix it"</button>
+              <button class="pr-sample-btn px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono transition" data-sample="why you do this wrong way">"why you do this wrong"</button>
+              <button class="pr-sample-btn px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono transition" data-sample="not good change, will cause bug">"not good change"</button>
+              <button class="pr-sample-btn px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono transition" data-sample="fix bug token auth null">"fix bug token auth null"</button>
+            </div>
+          </div>
+
+          <!-- Raw Input -->
+          <div class="space-y-1.5">
+            <label class="text-xs font-semibold text-slate-300">Ý định phản hồi thô (Draft / Rough Comment):</label>
+            <textarea id="pr-raw-input" rows="4" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-100 font-mono focus:border-cyan-500 focus:outline-none resize-none" placeholder="Nhập comment thô, ví dụ: Don't put logic in controller, move to service layer..."></textarea>
+          </div>
+
+          <button id="btn-pr-polish-submit" class="w-full py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold rounded-lg text-xs shadow-md transition flex items-center justify-center gap-1.5">
+            🚀 Refactor to Senior Code Review
+          </button>
+        </div>
+
+        <!-- Right: Polished Output -->
+        <div class="lg:col-span-6 bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+              <h3 class="text-xs font-mono font-bold text-cyan-400">PHIÊN BẢN CHUẨN SENIOR (POLISHED REVIEW):</h3>
+              <button id="btn-pr-copy" class="px-2.5 py-1 bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-800 rounded text-xs font-mono flex items-center gap-1 transition">
+                📋 Sao chép
+              </button>
+            </div>
+
+            <!-- Polished Comment Card -->
+            <div class="bg-slate-950 border border-cyan-900/60 rounded-xl p-4 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-mono text-cyan-400">Ready to paste into GitHub / GitLab PR:</span>
+                <button class="speak-btn text-[11px] text-cyan-400 hover:underline" id="btn-speak-pr-result">🔊 Nghe phát âm</button>
+              </div>
+              <div id="pr-polished-text" class="text-xs font-mono text-slate-100 bg-slate-900/80 p-3 rounded-lg border border-slate-800/80 leading-relaxed whitespace-pre-wrap select-all">
+Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bản chuẩn hóa.
+              </div>
+            </div>
+
+            <!-- Alternative Draft -->
+            <div class="space-y-1">
+              <div class="text-[11px] font-semibold text-slate-400 font-mono">Phương án diễn đạt thay thế (Alternative Draft):</div>
+              <div id="pr-alternative-text" class="text-xs text-slate-300 font-mono bg-slate-950/60 p-2.5 rounded-lg border border-slate-800/60 italic">
+                ...
+              </div>
+            </div>
+
+            <!-- Analytics Tags -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+              <div class="bg-slate-950/80 border border-slate-800 p-2.5 rounded-lg space-y-1">
+                <div class="text-[10px] text-emerald-400 font-semibold">✨ Cụm từ kỹ thuật chuẩn (Key Idioms):</div>
+                <div id="pr-key-phrases" class="flex flex-wrap gap-1 text-[11px] font-mono text-emerald-300">
+                  <span class="px-1.5 py-0.5 rounded bg-emerald-950/60 border border-emerald-900">--</span>
+                </div>
+              </div>
+              <div class="bg-slate-950/80 border border-slate-800 p-2.5 rounded-lg space-y-1">
+                <div class="text-[10px] text-amber-400 font-semibold">🛡️ Anti-patterns đã tránh (Avoided Pitfalls):</div>
+                <div id="pr-avoided-pitfalls" class="flex flex-wrap gap-1 text-[11px] font-mono text-amber-300">
+                  <span class="px-1.5 py-0.5 rounded bg-amber-950/60 border border-amber-900">--</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-[11px] text-slate-400 border-t border-slate-800 pt-3" id="pr-explanation-text">
+            💡 Gợi ý: Hãy luôn giải thích lý do (the "why") và đề xuất hướng giải quyết thay vì chỉ chỉ trích code.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 6: SRS LEITNER WEAK-SPOT VAULT -->
+    <section id="view-srs" class="hidden space-y-6">
+      <div class="bg-gradient-to-r from-slate-900 via-amber-950/40 to-slate-900 rounded-2xl border border-slate-800 p-6 shadow-xl relative overflow-hidden">
+        <div class="absolute -right-16 -top-16 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="text-2xl">🧠</span>
+              <h2 class="text-xl font-bold text-white tracking-tight">SRS Leitner Weak-Spot Vault // Ôn Tập Cách Quãng Luyện Âm</h2>
+            </div>
+            <p class="text-xs text-slate-400">Hệ thống Spaced Repetition 5 Hộp giúp khắc phục vĩnh viễn các từ vựng & âm kỹ thuật hay phát âm sai (nuốt âm đuôi, sai trọng âm).</p>
+          </div>
+          <!-- Quick stats -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs font-mono">
+            <div class="bg-slate-950/80 border border-slate-800 px-3 py-1.5 rounded-lg">
+              <div class="text-[10px] text-slate-400">Tổng từ:</div>
+              <div class="font-bold text-slate-200" id="srs-stat-total">0</div>
+            </div>
+            <div class="bg-slate-950/80 border border-amber-800/60 px-3 py-1.5 rounded-lg">
+              <div class="text-[10px] text-amber-400">Cần ôn:</div>
+              <div class="font-bold text-amber-300" id="srs-stat-due">0</div>
+            </div>
+            <div class="bg-slate-950/80 border border-emerald-800/60 px-3 py-1.5 rounded-lg">
+              <div class="text-[10px] text-emerald-400">Thành thạo:</div>
+              <div class="font-bold text-emerald-300" id="srs-stat-mastered">0</div>
+            </div>
+            <div class="bg-slate-950/80 border border-cyan-800/60 px-3 py-1.5 rounded-lg">
+              <div class="text-[10px] text-cyan-400">Độ chính xác:</div>
+              <div class="font-bold text-cyan-300" id="srs-stat-avg">0%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Leitner Boxes Visual Ladder -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-3">
+        <h3 class="text-xs font-mono font-bold text-slate-300">TIẾN TRÌNH 5 HỘP LEITNER (SPACED REPETITION SCHEDULE):</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-5 gap-3 text-xs font-mono">
+          <div class="bg-slate-950 border border-red-900/60 p-3 rounded-lg text-center space-y-1">
+            <div class="text-[10px] text-red-400 font-bold">HỘP 1 (Mỗi ngày)</div>
+            <div class="text-base font-bold text-slate-200" id="srs-box-1-count">0 từ</div>
+            <div class="text-[10px] text-slate-400">Khoảng cách: 1 ngày</div>
+          </div>
+          <div class="bg-slate-950 border border-orange-900/60 p-3 rounded-lg text-center space-y-1">
+            <div class="text-[10px] text-orange-400 font-bold">HỘP 2 (3 ngày)</div>
+            <div class="text-base font-bold text-slate-200" id="srs-box-2-count">0 từ</div>
+            <div class="text-[10px] text-slate-400">Khoảng cách: 3 ngày</div>
+          </div>
+          <div class="bg-slate-950 border border-amber-900/60 p-3 rounded-lg text-center space-y-1">
+            <div class="text-[10px] text-amber-400 font-bold">HỘP 3 (7 ngày)</div>
+            <div class="text-base font-bold text-slate-200" id="srs-box-3-count">0 từ</div>
+            <div class="text-[10px] text-slate-400">Khoảng cách: 7 ngày</div>
+          </div>
+          <div class="bg-slate-950 border border-blue-900/60 p-3 rounded-lg text-center space-y-1">
+            <div class="text-[10px] text-blue-400 font-bold">HỘP 4 (14 ngày)</div>
+            <div class="text-base font-bold text-slate-200" id="srs-box-4-count">0 từ</div>
+            <div class="text-[10px] text-slate-400">Khoảng cách: 14 ngày</div>
+          </div>
+          <div class="bg-slate-950 border border-emerald-900/60 p-3 rounded-lg text-center space-y-1">
+            <div class="text-[10px] text-emerald-400 font-bold">HỘP 5 (Mastered)</div>
+            <div class="text-base font-bold text-emerald-300" id="srs-box-5-count">0 từ</div>
+            <div class="text-[10px] text-slate-400">Khoảng cách: 30 ngày</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Review Drill Studio -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Left: Active Card to Practice -->
+        <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+            <span class="text-xs font-mono font-bold text-amber-400">THẺ ĐẾN HẠN ÔN TẬP HÔM NAY:</span>
+            <span class="text-[11px] font-mono text-slate-400" id="srs-card-box-indicator">Hộp 1 // Ôn mỗi ngày</span>
+          </div>
+
+          <div id="srs-active-card-container" class="space-y-4">
+            <!-- Dynamic card content -->
+            <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-3">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-2xl font-bold font-mono text-cyan-400" id="srs-card-word">throughput</div>
+                  <div class="text-xs font-mono text-amber-300" id="srs-card-phoneme">Target: /θ/ (Dental fricative)</div>
+                </div>
+                <button class="speak-btn px-3 py-1.5 bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-800 rounded-lg text-xs font-semibold flex items-center gap-1 transition" id="btn-srs-listen" data-word="throughput">
+                  🔊 Nghe chuẩn
+                </button>
+              </div>
+
+              <div class="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800/80 text-xs text-slate-200 font-sans" id="srs-card-context">
+                "We need to benchmark maximum throughput under peak load."
+              </div>
+            </div>
+
+            <!-- Speech Recording & Waveform -->
+            <div class="space-y-2">
+              <label class="text-xs font-semibold text-slate-300">Thu âm giọng bạn để chấm điểm:</label>
+              <div class="flex gap-2">
+                <button id="btn-srs-record" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 text-xs font-semibold flex items-center gap-1.5 transition">
+                  🎤 <span id="srs-record-label">Bấm để nói</span>
+                </button>
+                <input type="text" id="input-srs-transcript" class="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-mono text-slate-200 focus:outline-none focus:border-amber-500" placeholder="Từ bạn vừa nói...">
+              </div>
+              <canvas id="canvas-srs-visualizer" width="500" height="40" class="w-full h-10 bg-slate-950 rounded-lg border border-slate-800 shadow-inner"></canvas>
+            </div>
+
+            <!-- Grade Actions -->
+            <div class="flex items-center gap-3 pt-2">
+              <button id="btn-srs-grade-fail" class="flex-1 py-2.5 bg-red-950/60 hover:bg-red-900/60 border border-red-800 text-red-200 font-bold rounded-lg text-xs transition">
+                ❌ Chưa đạt (Về Hộp 1)
+              </button>
+              <button id="btn-srs-grade-pass" class="flex-1 py-2.5 bg-emerald-950/60 hover:bg-emerald-900/60 border border-emerald-800 text-emerald-200 font-bold rounded-lg text-xs transition">
+                ✅ Đã chuẩn (Lên Hộp tiếp theo)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Enroll New Weak Spot -->
+        <div class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+          <h3 class="text-xs font-mono font-bold text-cyan-400 border-b border-slate-800 pb-2">➕ THÊM TỪ/CỤM TỪ YẾU CẦN ÔN TẬP:</h3>
+          <div class="space-y-3">
+            <div class="space-y-1">
+              <label class="text-xs font-semibold text-slate-300">Từ hoặc cụm từ:</label>
+              <input type="text" id="input-enroll-word" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs font-mono text-slate-200 focus:border-cyan-500 focus:outline-none" placeholder="e.g., Kubernetes, idempotency, asynchronous">
+            </div>
+            <div class="space-y-1">
+              <label class="text-xs font-semibold text-slate-300">Âm mục tiêu hoặc lỗi cấu âm:</label>
+              <input type="text" id="input-enroll-phoneme" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs font-mono text-slate-200 focus:border-cyan-500 focus:outline-none" placeholder="e.g., /t/ final, /θ/ dental fricative, /k/ cluster">
+            </div>
+            <div class="space-y-1">
+              <label class="text-xs font-semibold text-slate-300">Câu ví dụ trong ngữ cảnh IT:</label>
+              <textarea id="input-enroll-context" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-200 focus:border-cyan-500 focus:outline-none resize-none" placeholder="e.g., We must ensure the webhook endpoint is idempotent..."></textarea>
+            </div>
+            <button id="btn-enroll-submit" class="w-full py-2 bg-slate-800 hover:bg-slate-750 text-cyan-300 border border-cyan-800/60 font-semibold rounded-lg text-xs transition">
+              💾 Lưu vào SRS Weak-Spot Vault
+            </button>
+          </div>
+
+          <!-- All Tracked Items List -->
+          <div class="space-y-2 pt-2 border-t border-slate-800">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-mono text-slate-400">Danh sách từ trong Vault:</span>
+              <button id="btn-srs-refresh" class="text-cyan-400 text-[11px] hover:underline">Làm mới</button>
+            </div>
+            <div id="srs-all-items-list" class="max-h-48 overflow-y-auto space-y-1.5 text-xs font-mono pr-1">
+              <!-- Rendered items -->
             </div>
           </div>
         </div>

@@ -1,0 +1,110 @@
+[
+  {
+    "Id": "srs-throughput",
+    "WordOrPhrase": "throughput",
+    "TargetPhoneme": "/\u03B8/ - dental fricative",
+    "ContextSentence": "We need to optimize the database query throughput.",
+    "NextReviewDate": "2026-11-05T07:22:06.890718Z",
+    "IntervalDays": 1,
+    "Box": 1,
+    "ConsecutiveCorrect": 0,
+    "LastScore": 0,
+    "ReviewCount": 0
+  },
+  {
+    "Id": "srs-build",
+    "WordOrPhrase": "build",
+    "TargetPhoneme": "/d/ - voiced alveolar stop",
+    "ContextSentence": "The CI/CD build completed without any errors.",
+    "NextReviewDate": "2026-11-05T07:22:06.890718Z",
+    "IntervalDays": 1,
+    "Box": 1,
+    "ConsecutiveCorrect": 0,
+    "LastScore": 0,
+    "ReviewCount": 0
+  },
+  {
+    "Id": "srs-commit",
+    "WordOrPhrase": "commit",
+    "TargetPhoneme": "/t/ - voiceless alveolar stop",
+    "ContextSentence": "Please commit your changes before pushing to main.",
+    "NextReviewDate": "2026-11-05T07:22:06.890718Z",
+    "IntervalDays": 1,
+    "Box": 1,
+    "ConsecutiveCorrect": 0,
+    "LastScore": 0,
+    "ReviewCount": 0
+  },
+  {
+    "Id": "srs-cache",
+    "WordOrPhrase": "cache",
+    "TargetPhoneme": "/\u0283/ - voiceless postalveolar fricative",
+    "ContextSentence": "Invalidate the Redis cache when user data updates.",
+    "NextReviewDate": "2026-11-05T07:22:06.890718Z",
+    "IntervalDays": 1,
+    "Box": 1,
+    "ConsecutiveCorrect": 0,
+    "LastScore": 0,
+    "ReviewCount": 0
+  },
+  {
+    "Id": "srs-architecture",
+    "WordOrPhrase": "architecture",
+    "TargetPhoneme": "/k/ \u002B /t\u0283/ - cluster \u0026 affricate",
+    "ContextSentence": "The clean architecture pattern separates domain logic from infrastructure.",
+    "NextReviewDate": "2026-11-05T07:22:06.890718Z",
+    "IntervalDays": 1,
+    "Box": 1,
+    "ConsecutiveCorrect": 0,
+    "LastScore": 0,
+    "ReviewCount": 0
+  },
+  {
+    "Id": "srs-microservices",
+    "WordOrPhrase": "microservices",
+    "TargetPhoneme": "/s/ vs /z/ - plural sibilants",
+    "ContextSentence": "Deploying microservices across multiple Kubernetes clusters.",
+    "NextReviewDate": "2026-11-05T07:22:06.890718Z",
+    "IntervalDays": 1,
+    "Box": 1,
+    "ConsecutiveCorrect": 0,
+    "LastScore": 0,
+    "ReviewCount": 0
+  },
+  {
+    "Id": "srs-algorithm",
+    "WordOrPhrase": "algorithm",
+    "TargetPhoneme": "/\u00F0/ /m/ - dental \u0026 bilabial coda",
+    "ContextSentence": "The consensus algorithm handles distributed node failures.",
+    "NextReviewDate": "2026-11-05T07:22:06.890718Z",
+    "IntervalDays": 1,
+    "Box": 1,
+    "ConsecutiveCorrect": 0,
+    "LastScore": 0,
+    "ReviewCount": 0
+  },
+  {
+    "Id": "srs-width",
+    "WordOrPhrase": "width",
+    "TargetPhoneme": "/d\u03B8/ - cluster",
+    "ContextSentence": "Adjust the column width in the CSS grid layout.",
+    "NextReviewDate": "2026-11-05T07:22:06.890718Z",
+    "IntervalDays": 1,
+    "Box": 1,
+    "ConsecutiveCorrect": 0,
+    "LastScore": 0,
+    "ReviewCount": 0
+  },
+  {
+    "Id": "5c978057ebe047a395e09cf73191b48f",
+    "WordOrPhrase": "distributed",
+    "TargetPhoneme": "/d/ \u002B /b/",
+    "ContextSentence": "We are designing a distributed transaction coordinator.",
+    "NextReviewDate": "2026-11-08T07:46:05.5715658Z",
+    "IntervalDays": 3,
+    "Box": 2,
+    "ConsecutiveCorrect": 1,
+    "LastScore": 85,
+    "ReviewCount": 3
+  }
+]
