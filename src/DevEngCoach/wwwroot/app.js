@@ -383,10 +383,72 @@
     if (el.tabSimStandup) el.tabSimStandup.addEventListener('click', () => switchSimulatorTab('standup'));
     if (el.tabSimDemo) el.tabSimDemo.addEventListener('click', () => switchSimulatorTab('demo'));
     if (el.tabSimPingpong) el.tabSimPingpong.addEventListener('click', () => switchSimulatorTab('pingpong'));
+    const tabSimOneonone = document.getElementById('tab-sim-oneonone');
+    const tabSimLinklab = document.getElementById('tab-sim-linklab');
+    if (tabSimOneonone) tabSimOneonone.addEventListener('click', () => switchSimulatorTab('oneonone'));
+    if (tabSimLinklab) tabSimLinklab.addEventListener('click', () => switchSimulatorTab('linklab'));
 
     if (el.btnSimStandupSubmit) el.btnSimStandupSubmit.addEventListener('click', submitStandupSimulation);
     if (el.btnSimDemoSubmit) el.btnSimDemoSubmit.addEventListener('click', submitDemoSimulation);
     if (el.btnSimPingpongSubmit) el.btnSimPingpongSubmit.addEventListener('click', submitPingPongSimulation);
+    const btnSimOneononeSubmit = document.getElementById('btn-sim-oneonone-submit');
+    if (btnSimOneononeSubmit) btnSimOneononeSubmit.addEventListener('click', submitOneOnOneSimulation);
+    const btnSimLinklabSubmit = document.getElementById('btn-sim-linklab-submit');
+    if (btnSimLinklabSubmit) btnSimLinklabSubmit.addEventListener('click', submitConnectedSpeechLab);
+
+    // Audio speak buttons for simulator refactors
+    const btnSpeakStandup = document.getElementById('btn-speak-sim-standup');
+    if (btnSpeakStandup) btnSpeakStandup.addEventListener('click', () => {
+      const text = el.simStandupRefactor?.textContent;
+      if (text && text !== '...') speakWord(text);
+    });
+
+    const btnSpeakDemo = document.getElementById('btn-speak-sim-demo');
+    if (btnSpeakDemo) btnSpeakDemo.addEventListener('click', () => {
+      const text = el.simDemoScript?.textContent;
+      if (text && text !== '...') speakWord(text);
+    });
+
+    const btnSpeakPingpong = document.getElementById('btn-speak-sim-pingpong');
+    if (btnSpeakPingpong) btnSpeakPingpong.addEventListener('click', () => {
+      const text = el.simPingpongRefactor?.textContent;
+      if (text && text !== '...') speakWord(text);
+    });
+
+    const btnSpeakOneonone = document.getElementById('btn-speak-sim-oneonone');
+    if (btnSpeakOneonone) btnSpeakOneonone.addEventListener('click', () => {
+      const text = document.getElementById('sim-oneonone-script')?.textContent;
+      if (text && text !== '...') speakWord(text);
+    });
+
+    const btnSpeakLinklab = document.getElementById('btn-speak-sim-linklab');
+    if (btnSpeakLinklab) btnSpeakLinklab.addEventListener('click', () => {
+      const text = document.getElementById('sim-linklab-input')?.value.trim();
+      if (text) speakWord(text);
+    });
+
+    // Sample buttons for linklab
+    document.querySelectorAll('.linklab-sample-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const input = document.getElementById('sim-linklab-input');
+        if (input) {
+          input.value = btn.dataset.text || '';
+          submitConnectedSpeechLab();
+        }
+      });
+    });
+
+    // Speed buttons for linklab
+    document.querySelectorAll('.linklab-speed-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.linklab-speed-btn').forEach(b => b.classList.remove('active', 'bg-cyan-500', 'text-slate-950'));
+        btn.classList.add('active', 'bg-cyan-500', 'text-slate-950');
+        state.linklabSpeed = parseFloat(btn.dataset.speed || '1.0');
+      });
+    });
+
+    // Vocab live filter
+    setupVocabFilter();
 
     if (el.btnTimerStart) el.btnTimerStart.addEventListener('click', startTimer);
     if (el.btnTimerPause) el.btnTimerPause.addEventListener('click', pauseTimer);
@@ -1252,12 +1314,12 @@
   }
 
   // Native Speech Synthesis (Omnipresent Audio)
-  function speakWord(text) {
+  function speakWord(text, rate = null) {
     if (!window.speechSynthesis) return;
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = 'en-US';
-    utterance.rate = 0.85; // Slightly slower for crisp articulation listening
+    utterance.rate = rate || state.linklabSpeed || 0.85; // Crisp articulation listening
     window.speechSynthesis.speak(utterance);
   }
 
@@ -2772,15 +2834,15 @@
 
   // Simulators Tab Switching
   function switchSimulatorTab(tab) {
-    const tabs = ['standup', 'demo', 'pingpong'];
+    const tabs = ['standup', 'demo', 'pingpong', 'oneonone', 'linklab'];
     tabs.forEach(t => {
       const tabBtn = document.getElementById(`tab-sim-${t}`);
       const panel = document.getElementById(`panel-sim-${t}`);
       if (t === tab) {
-        if (tabBtn) tabBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-cyan-500 text-slate-950 shadow transition';
+        if (tabBtn) tabBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-cyan-500 text-slate-950 shadow transition cursor-pointer';
         if (panel) panel.classList.remove('hidden');
       } else {
-        if (tabBtn) tabBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition';
+        if (tabBtn) tabBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition cursor-pointer';
         if (panel) panel.classList.add('hidden');
       }
     });
@@ -2924,6 +2986,147 @@
         el.btnSimPingpongSubmit.textContent = '🚀 Chấm Điểm Độ Tự Nhiên Ping-Pong (A-D-Q)';
       }
     }
+  }
+
+  // 1-on-1 Simulation Submit
+  async function submitOneOnOneSimulation() {
+    const wins = document.getElementById('sim-oneonone-wins')?.value.trim() || '';
+    const bottleneck = document.getElementById('sim-oneonone-bottleneck')?.value.trim() || '';
+    const aspiration = document.getElementById('sim-oneonone-aspiration')?.value.trim() || '';
+
+    if (!wins && !bottleneck) {
+      alert('Vui lòng nhập ít nhất thông tin Progress & Wins hoặc Systemic Bottlenecks.');
+      return;
+    }
+
+    const btnSubmit = document.getElementById('btn-sim-oneonone-submit');
+    if (btnSubmit) {
+      btnSubmit.disabled = true;
+      btnSubmit.textContent = '⏳ AI Coach đang phân tích kịch bản 1-on-1...';
+    }
+
+    try {
+      const res = await fetch('/api/ai/one-on-one-simulate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ progressAndWins: wins, systemBottleneck: bottleneck, careerAspiration: aspiration })
+      });
+      const data = await res.json();
+      const resultPanel = document.getElementById('sim-oneonone-result');
+      if (resultPanel) resultPanel.classList.remove('hidden');
+
+      const score = document.getElementById('sim-oneonone-score');
+      if (score) score.textContent = `Alignment: ${data.alignmentScore}/100`;
+
+      const feedback = document.getElementById('sim-oneonone-feedback');
+      if (feedback) feedback.textContent = data.impactFeedback || '';
+
+      const tips = document.getElementById('sim-oneonone-tips');
+      if (tips) tips.textContent = data.negotiationTips || '';
+
+      const script = document.getElementById('sim-oneonone-script');
+      if (script) script.textContent = data.seniorLeadScript || '';
+
+      const cuesList = document.getElementById('sim-oneonone-cues');
+      if (cuesList) {
+        cuesList.innerHTML = '';
+        (data.recommendedPhoneticCues || []).forEach(cue => {
+          const li = document.createElement('li');
+          li.textContent = cue;
+          cuesList.appendChild(li);
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Lỗi kết nối 1-on-1 Simulation API.');
+    } finally {
+      if (btnSubmit) {
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = '🚀 Chấm Điểm 1-on-1 & Nhận Kịch Bản Đàm Phán Senior Lead';
+      }
+    }
+  }
+
+  // Connected Speech & Linking Lab Submit
+  async function submitConnectedSpeechLab() {
+    const input = document.getElementById('sim-linklab-input');
+    const text = input ? input.value.trim() : '';
+    if (!text) {
+      alert('Vui lòng nhập câu hoặc cụm từ để phân tích nối âm.');
+      return;
+    }
+
+    const btnSubmit = document.getElementById('btn-sim-linklab-submit');
+    if (btnSubmit) {
+      btnSubmit.disabled = true;
+      btnSubmit.textContent = '⏳ Đang phân tích...';
+    }
+
+    try {
+      const res = await fetch('/api/ai/connected-speech-analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text })
+      });
+      const data = await res.json();
+
+      const resultPanel = document.getElementById('sim-linklab-result');
+      if (resultPanel) resultPanel.classList.remove('hidden');
+
+      const linkedDisplay = document.getElementById('sim-linklab-linked');
+      if (linkedDisplay) linkedDisplay.textContent = data.linkedRepresentation || text;
+
+      const occurrencesList = document.getElementById('sim-linklab-occurrences');
+      if (occurrencesList) {
+        occurrencesList.innerHTML = '';
+        if (data.occurrences && data.occurrences.length > 0) {
+          data.occurrences.forEach(occ => {
+            const card = document.createElement('div');
+            card.className = 'bg-slate-900 border border-slate-800 p-2.5 rounded-lg space-y-1';
+            card.innerHTML = `
+              <div class="flex items-center justify-between text-[11px]">
+                <span class="font-bold text-cyan-400 font-mono">${occ.ruleType}</span>
+                <span class="font-mono text-amber-300 font-bold bg-amber-950/60 px-2 py-0.5 rounded border border-amber-800">${occ.transformation}</span>
+              </div>
+              <p class="text-slate-300 text-[11px] leading-relaxed">${occ.mechanicExplanation}</p>
+            `;
+            occurrencesList.appendChild(card);
+          });
+        } else {
+          occurrencesList.innerHTML = '<div class="text-slate-400 italic p-2 bg-slate-900 rounded border border-slate-800">Không phát hiện cụm nối âm bắt buộc trong câu này.</div>';
+        }
+      }
+
+      const pacingTip = document.getElementById('sim-linklab-pacing-tip');
+      if (pacingTip) pacingTip.textContent = data.audioPacingTip || '';
+    } catch (err) {
+      console.error(err);
+      alert('Lỗi kết nối Connected Speech Lab API.');
+    } finally {
+      if (btnSubmit) {
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = '⚡ Phân Tích Nối Âm';
+      }
+    }
+  }
+
+  // Vocab Live Search & Sound Filter
+  function setupVocabFilter() {
+    const searchInput = document.getElementById('input-search-vocab');
+    if (!searchInput) return;
+
+    searchInput.addEventListener('input', () => {
+      const query = searchInput.value.toLowerCase().trim();
+      const drillCards = document.querySelectorAll('#drills-container > div');
+      drillCards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        if (!query || text.includes(query)) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    });
   }
 
   // Desktop Notification Trigger Test

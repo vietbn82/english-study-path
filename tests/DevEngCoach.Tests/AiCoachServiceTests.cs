@@ -56,4 +56,37 @@ public class AiCoachServiceTests
         result.PhoneticMechanicsAlerts.Should().NotBeEmpty();
         result.NaturalSpeakingTip.Should().NotBeNullOrWhiteSpace();
     }
+
+    [Fact]
+    public async Task SimulateOneOnOneAsync_WithMetricsAndBottlenecks_ReturnsHighAlignmentScoreAndStaffScript()
+    {
+        var request = new OneOnOneSimulationRequest(
+            ProgressAndWins: "Shipped auth worker service early, cut latency by 35% with 92% test coverage.",
+            SystemBottleneck: "Our CI/CD pipeline takes 22 minutes, creating a developer feedback loop bottleneck.",
+            CareerAspiration: "I want to take ownership of decoupling the legacy payment domain next quarter."
+        );
+
+        var result = await _aiCoachService.SimulateOneOnOneAsync(request);
+
+        result.Should().NotBeNull();
+        result.Success.Should().BeTrue();
+        result.AlignmentScore.Should().BeGreaterThanOrEqualTo(90);
+        result.ImpactFeedback.Should().Contain("Rất tốt");
+        result.SeniorLeadScript.Should().Contain("Progress & Impact");
+        result.RecommendedPhoneticCues.Should().NotBeEmpty();
+    }
+
+    [Fact]
+    public async Task AnalyzeConnectedSpeechAsync_WithConsonantVowelAndFlapT_DetectsOccurrencesAndLiaisons()
+    {
+        var request = new ConnectedSpeechAnalyzeRequest("We need to check it out and benchmark data latency.");
+
+        var result = await _aiCoachService.AnalyzeConnectedSpeechAsync(request);
+
+        result.Should().NotBeNull();
+        result.Success.Should().BeTrue();
+        result.LinkedRepresentation.Should().Contain("‿");
+        result.Occurrences.Should().Contain(o => o.RuleType.Contains("Consonant-to-Vowel") || o.RuleType.Contains("Flap T"));
+        result.AudioPacingTip.Should().NotBeNullOrWhiteSpace();
+    }
 }

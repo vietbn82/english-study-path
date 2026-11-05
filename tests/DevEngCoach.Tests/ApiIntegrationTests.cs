@@ -283,4 +283,35 @@ public class ApiIntegrationTests : IClassFixture<WebApplicationFactory<Program>>
         result!.PacingDiagnosis.Should().Contain("Optimal");
         result.PacingScore.Should().BeGreaterThanOrEqualTo(80);
     }
+
+    [Fact]
+    public async Task PostOneOnOneSimulate_ReturnsAlignmentFeedback()
+    {
+        var request = new OneOnOneSimulationRequest(
+            ProgressAndWins: "Completed Sprint 12 milestones with 95% test coverage.",
+            SystemBottleneck: "CI/CD execution bottleneck slows down team PR reviews.",
+            CareerAspiration: "Stepping up to drive architecture reviews for cross-squad projects."
+        );
+        var response = await _client.PostAsJsonAsync("/api/ai/one-on-one-simulate", request);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<OneOnOneSimulationResponse>();
+        result.Should().NotBeNull();
+        result!.Success.Should().BeTrue();
+        result.AlignmentScore.Should().BeGreaterThanOrEqualTo(80);
+        result.SeniorLeadScript.Should().NotBeNullOrWhiteSpace();
+    }
+
+    [Fact]
+    public async Task PostConnectedSpeechAnalyze_ReturnsLinkingOccurrences()
+    {
+        var request = new ConnectedSpeechAnalyzeRequest("Please check it out on the staging server.");
+        var response = await _client.PostAsJsonAsync("/api/ai/connected-speech-analyze", request);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ConnectedSpeechAnalyzeResponse>();
+        result.Should().NotBeNull();
+        result!.Success.Should().BeTrue();
+        result.LinkedRepresentation.Should().Contain("‿");
+    }
 }

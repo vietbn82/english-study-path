@@ -12,6 +12,8 @@ public interface IAiCoachService
     Task<DemoSimulationResponse> SimulateDemoAsync(DemoSimulationRequest request, CancellationToken ct = default);
     Task<PingPongSimulationResponse> SimulatePingPongAsync(PingPongSimulationRequest request, CancellationToken ct = default);
     Task<QuickLookupResponse> LookupAsync(QuickLookupRequest request, CancellationToken ct = default);
+    Task<OneOnOneSimulationResponse> SimulateOneOnOneAsync(OneOnOneSimulationRequest request, CancellationToken ct = default);
+    Task<ConnectedSpeechAnalyzeResponse> AnalyzeConnectedSpeechAsync(ConnectedSpeechAnalyzeRequest request, CancellationToken ct = default);
 }
 
 public sealed class AiCoachService(ICurriculumService curriculumService, ILogger<AiCoachService> logger) : IAiCoachService
@@ -119,6 +121,16 @@ public sealed class AiCoachService(ICurriculumService curriculumService, ILogger
         }
 
         return GenerateHeuristicPingPong(request);
+    }
+
+    public Task<OneOnOneSimulationResponse> SimulateOneOnOneAsync(OneOnOneSimulationRequest request, CancellationToken ct = default)
+    {
+        return Task.FromResult(GenerateHeuristicOneOnOne(request));
+    }
+
+    public Task<ConnectedSpeechAnalyzeResponse> AnalyzeConnectedSpeechAsync(ConnectedSpeechAnalyzeRequest request, CancellationToken ct = default)
+    {
+        return Task.FromResult(GenerateHeuristicConnectedSpeech(request));
     }
 
     public async Task<QuickLookupResponse> LookupAsync(QuickLookupRequest request, CancellationToken ct = default)
@@ -815,6 +827,149 @@ Return ONLY a JSON object (no markdown, no backticks) with:
         var cue = "Chú ý phát âm rõ âm đuôi (coda /t/, /d/, /s/, /z/), đặt đầu lưỡi đúng gờ lợi trên.";
 
         return new QuickLookupResponse(true, text, ipa, meaning, cue);
+    }
+
+    private static OneOnOneSimulationResponse GenerateHeuristicOneOnOne(OneOnOneSimulationRequest request)
+    {
+        var wins = request.ProgressAndWins?.Trim() ?? "";
+        var bottleneck = request.SystemBottleneck?.Trim() ?? "";
+        var aspiration = request.CareerAspiration?.Trim() ?? "";
+
+        var hasMetrics = Regex.IsMatch(wins, @"\b(\d+%|\d+ms|\d+\s*hours|\d+x|cut by|reduced by|increased|delivered|shipped|tested)\b", RegexOptions.IgnoreCase);
+        var hasSystemThinking = Regex.IsMatch(bottleneck, @"\b(bottleneck|pipeline|ci/cd|latency|architecture|coupling|dependency|debt|infrastructure|blocker|queue)\b", RegexOptions.IgnoreCase);
+        var hasOwnership = Regex.IsMatch(aspiration, @"\b(ownership|lead|architect|drive|quarter|roadmap|mentor|initiative|responsibility|scale)\b", RegexOptions.IgnoreCase);
+
+        var score = 75;
+        if (hasMetrics) score += 10;
+        if (hasSystemThinking) score += 8;
+        if (hasOwnership) score += 7;
+        score = Math.Min(98, score);
+
+        var feedback = $"""
+        • Wins & Impact: {(hasMetrics ? "Rất tốt! Bạn đã định lượng được kết quả kỹ thuật bằng số liệu rõ ràng." : "Nên bổ sung số liệu định lượng (ví dụ: latency giảm bao nhiêu %, tiết kiệm bao nhiêu giờ build) thay vì chỉ liệt kê task.")}
+        • Systemic Thinking: {(hasSystemThinking ? "Tư duy hệ thống sắc bén. Chỉ ra đúng điểm nghẽn hạ tầng/quy trình ảnh hưởng đến team velocity." : "Nên nâng tầm vấn đề lên cấp độ hệ thống/kiến trúc thay vì chỉ nói về khó khăn cá nhân.")}
+        • Strategic Ownership: {(hasOwnership ? "Thể hiện xuất sắc tinh thần làm chủ (ownership) và nguyện vọng dẫn dắt dài hạn." : "Cần nêu rõ mong muốn nhận thêm trách nhiệm kiến trúc hoặc dẫn dắt sáng kiến mới trong quý tới.")}
+        """;
+
+        var tips = "Khi trao đổi với Engineering Manager, áp dụng công thức: 'Progress (Định lượng kết quả) -> Leverage (Đề xuất giải pháp gỡ nghẽn) -> Forward-Looking (Nhận thêm ownership)'. Tránh đóng vai người than phiền; hãy đóng vai người mang đến giải pháp.";
+
+        var script = $"""
+        1. Progress & Impact: "Overall, things have been progressing solidly. Specifically, {wins.TrimEnd('.')}."
+        2. System Impediments: "Looking at our delivery velocity, I've noticed a bottleneck around {bottleneck.TrimEnd('.')}. I'd like to propose a 2-day spike to optimize this and unlock the team."
+        3. Ownership & Next Steps: "Looking ahead into next quarter, {aspiration.TrimEnd('.')}. I'm keen on stepping up to drive that architectural initiative."
+        """;
+
+        var cues = new List<string>
+        {
+            "Flap T [ɾ] trong 'bottleneck' (/ˈbɑː.ɾəl.nɛk/) và 'initiative' (/ɪˈnɪ.ʃə.ɾɪv/).",
+            "Bật âm đuôi /d/ dứt khoát trong 'progressed' (/prəˈɡrɛst/), 'proposed' (/prəˈpoʊzd/).",
+            "Giảm âm Schwa /ə/ trong 'specifically' (/spəˈsɪ.fɪ.kə.li/) và 'initiative' (/ɪˈnɪ.ʃə.tɪv/)."
+        };
+
+        return new OneOnOneSimulationResponse(
+            Success: true,
+            AlignmentScore: score,
+            ImpactFeedback: feedback,
+            NegotiationTips: tips,
+            SeniorLeadScript: script,
+            RecommendedPhoneticCues: cues
+        );
+    }
+
+    private static ConnectedSpeechAnalyzeResponse GenerateHeuristicConnectedSpeech(ConnectedSpeechAnalyzeRequest request)
+    {
+        var text = request.Text?.Trim() ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return new ConnectedSpeechAnalyzeResponse(
+                Success: false,
+                OriginalText: "",
+                LinkedRepresentation: "",
+                PhoneticIpa: "",
+                Occurrences: [],
+                AudioPacingTip: "Vui lòng nhập câu hoặc cụm từ để phân tích nối âm."
+            );
+        }
+
+        var occurrences = new List<LinkingOccurrence>();
+        var words = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        var vowels = new HashSet<char> { 'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U' };
+
+        for (int i = 0; i < words.Length; i++)
+        {
+            var current = words[i].Trim(',', '.', ';', ':', '!', '?');
+            if (i < words.Length - 1)
+            {
+                var next = words[i + 1].Trim(',', '.', ';', ':', '!', '?');
+                if (current.Length > 0 && next.Length > 0)
+                {
+                    char lastChar = char.ToLowerInvariant(current[^1]);
+                    char firstChar = char.ToLowerInvariant(next[0]);
+
+                    if (!vowels.Contains(lastChar) && vowels.Contains(firstChar) && char.IsLetter(lastChar) && char.IsLetter(firstChar))
+                    {
+                        var segment = $"{current} {next}";
+                        var transformed = $"{current}‿{next}";
+                        occurrences.Add(new LinkingOccurrence(
+                            RuleType: "Consonant-to-Vowel (Nối âm phụ âm - nguyên âm)",
+                            Segment: segment,
+                            Transformation: transformed,
+                            MechanicExplanation: $"Phụ âm cuối /{lastChar}/ của '{current}' được chuyển sang làm âm đầu của '{next}'. Đầu lưỡi không hạ xuống mà lướt thẳng sang nguyên âm kế tiếp."
+                        ));
+                    }
+                    else if (Regex.IsMatch(next, @"^(him|her|his|have|has|had)$", RegexOptions.IgnoreCase) && !vowels.Contains(lastChar) && char.IsLetter(lastChar))
+                    {
+                        var segment = $"{current} {next}";
+                        var transformed = $"{current}‿{next[1..]}";
+                        occurrences.Add(new LinkingOccurrence(
+                            RuleType: "H-Dropping (Nuốt âm /h/ đại từ)",
+                            Segment: segment,
+                            Transformation: transformed,
+                            MechanicExplanation: $"Âm /h/ trong '{next}' bị nuốt đi trong văn cảnh nói nhanh, nối phụ âm cuối của '{current}' trực tiếp vào phần còn lại: /{lastChar}{next[1..]}/."
+                        ));
+                    }
+                }
+            }
+
+            if (Regex.IsMatch(current, @"^(data|router|latency|automatic|automated|critical|iterator|utility|setting|better|written|matter|total)$", RegexOptions.IgnoreCase))
+            {
+                occurrences.Add(new LinkingOccurrence(
+                    RuleType: "Flap T [ɾ] (Vỗ lưỡi giữa 2 nguyên âm)",
+                    Segment: current,
+                    Transformation: current.Replace("t", "ɾ", StringComparison.OrdinalIgnoreCase),
+                    MechanicExplanation: $"Âm /t/ đứng giữa hai nguyên âm biến thành Flap T [ɾ]. Đầu lưỡi vỗ phớt nhẹ vào gờ lợi trên rồi nhả ngay như âm 'đ' lướt nhanh."
+                ));
+            }
+
+            if (Regex.IsMatch(current, @"^(network|fitness|git|commit|statement|endpoint|outbox)$", RegexOptions.IgnoreCase))
+            {
+                occurrences.Add(new LinkingOccurrence(
+                    RuleType: "Glottal Stop [ʔ] (Chặn thanh môn)",
+                    Segment: current,
+                    Transformation: current.Replace("t", "ʔ", StringComparison.OrdinalIgnoreCase),
+                    MechanicExplanation: $"Âm /t/ trước phụ âm tiếp theo được chặn đột ngột tại dây thanh quản (Glottal Stop [ʔ]), không bật gió ra ngoài."
+                ));
+            }
+        }
+
+        var linkedRepr = text;
+        foreach (var occ in occurrences.Where(o => o.Transformation.Contains('‿')))
+        {
+            linkedRepr = Regex.Replace(linkedRepr, Regex.Escape(occ.Segment), occ.Transformation, RegexOptions.IgnoreCase);
+        }
+
+        var pacingTip = occurrences.Count > 0
+            ? $"Phát hiện {occurrences.Count} hiện tượng Connected Speech. Đừng ngắt hơi giữa các từ liên kết, duy trì luồng hơi liên tục (legato flow) để đạt nhịp nói tự nhiên như Senior Tech Lead quốc tế."
+            : "Câu nói có cấu trúc rõ ràng. Hãy chú ý nhấn trọng âm vào các Content Words kỹ thuật chính (động từ hành động & danh từ hệ thống).";
+
+        return new ConnectedSpeechAnalyzeResponse(
+            Success: true,
+            OriginalText: text,
+            LinkedRepresentation: linkedRepr,
+            PhoneticIpa: "/kəˈnɛk.tɪd spiːtʃ/",
+            Occurrences: occurrences,
+            AudioPacingTip: pacingTip
+        );
     }
 
     #endregion

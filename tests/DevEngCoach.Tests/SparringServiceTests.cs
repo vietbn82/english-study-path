@@ -17,13 +17,13 @@ public class SparringServiceTests
     }
 
     [Fact]
-    public void GetScenarios_ReturnsAllThreeScenariosWithValidMetadata()
+    public void GetScenarios_ReturnsAllSevenScenariosWithValidMetadata()
     {
         // Act
         var scenarios = _service.GetScenarios();
 
         // Assert
-        scenarios.Should().HaveCount(3);
+        scenarios.Should().HaveCount(7);
 
         var archDebate = scenarios.FirstOrDefault(s => s.Id == "arch-debate");
         archDebate.Should().NotBeNull();
@@ -48,6 +48,37 @@ public class SparringServiceTests
         scopePushback.RoleDescription.Should().Contain("Product Director");
         scopePushback.OpeningLine.Should().Contain("skip writing unit and integration tests");
         scopePushback.KeyVocabulary.Should().Contain(["technical debt", "regression risk", "fast-follow"]);
+
+        var restVsGrpc = scenarios.FirstOrDefault(s => s.Id == "rest-vs-grpc");
+        restVsGrpc.Should().NotBeNull();
+        restVsGrpc!.KeyVocabulary.Should().Contain("gRPC");
+
+        var sqlVsNosql = scenarios.FirstOrDefault(s => s.Id == "sql-vs-nosql");
+        sqlVsNosql.Should().NotBeNull();
+        sqlVsNosql!.KeyVocabulary.Should().Contain("ACID compliance");
+
+        var k8sVsServerless = scenarios.FirstOrDefault(s => s.Id == "k8s-vs-serverless");
+        k8sVsServerless.Should().NotBeNull();
+        k8sVsServerless!.KeyVocabulary.Should().Contain("cold start");
+
+        var techDebt = scenarios.FirstOrDefault(s => s.Id == "tech-debt-negotiation");
+        techDebt.Should().NotBeNull();
+        techDebt!.KeyVocabulary.Should().Contain("technical debt");
+    }
+
+    [Fact]
+    public async Task ProcessTurnAsync_WithRestVsGrpc_ReturnsProtocolRefinement()
+    {
+        var request = new SparringTurnRequest(
+            ScenarioId: "rest-vs-grpc",
+            UserSpeech: "We should adopt gRPC for internal microservices to utilize Protobuf serialization and multiplexing."
+        );
+
+        var response = await _service.ProcessTurnAsync(request);
+
+        response.Should().NotBeNull();
+        response.SeniorLeadRefinement.Should().Contain("gRPC");
+        response.SeniorLeadRefinement.Should().Contain("Protobuf");
     }
 
     [Fact]

@@ -85,3 +85,41 @@ public sealed record QuickLookupResponse(
     string MeaningVi,
     string PhoneticCue
 );
+
+// 5. 1-on-1 With Tech Lead / Engineering Manager (Wins, Impediments, Ownership Aspirations)
+public sealed record OneOnOneSimulationRequest(
+    string ProgressAndWins,
+    string SystemBottleneck,
+    string CareerAspiration
+);
+
+public sealed record OneOnOneSimulationResponse(
+    bool Success,
+    int AlignmentScore,
+    string ImpactFeedback,
+    string NegotiationTips,
+    string SeniorLeadScript,
+    IReadOnlyList<string> RecommendedPhoneticCues
+);
+
+// 6. Connected Speech & Linking Lab (Consonant-to-Vowel, Flap T, H-Dropping, Glottal Stop)
+public sealed record LinkingOccurrence(
+    string RuleType,
+    string Segment,
+    string Transformation,
+    string MechanicExplanation
+);
+
+public sealed record ConnectedSpeechAnalyzeRequest(
+    string Text
+);
+
+public sealed record ConnectedSpeechAnalyzeResponse(
+    bool Success,
+    string OriginalText,
+    string LinkedRepresentation,
+    string PhoneticIpa,
+    IReadOnlyList<LinkingOccurrence> Occurrences,
+    string AudioPacingTip
+);
+

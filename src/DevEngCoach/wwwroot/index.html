@@ -680,7 +680,11 @@
                   </div>
                   <span class="text-[11px] text-cyan-400 font-mono">🔊 Nghe // 🎤 Luyện</span>
                 </div>
-                <div class="space-y-2 max-h-[460px] overflow-y-auto pr-1.5 scrollbar-thin" id="drills-container">
+                <!-- Quick Vocab Search & Sound Filter -->
+                <div>
+                  <input type="text" id="input-search-vocab" placeholder="🔍 Lọc từ, âm (/t/, /d/, ...) hoặc từ khóa..." class="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500 font-mono transition">
+                </div>
+                <div class="space-y-2 max-h-[440px] overflow-y-auto pr-1.5 scrollbar-thin" id="drills-container">
                   <!-- Drills populated by JS -->
                 </div>
               </div>
@@ -990,18 +994,24 @@
               <span class="text-xl">🎙️</span>
               <h2 class="text-xl font-bold text-white tracking-tight">Chế Độ Thực Chiến Kỹ Sư (Sprint Simulators)</h2>
             </div>
-            <p class="text-xs text-slate-400 mt-1">Luyện tập trực diện 3 tình huống giao tiếp sống còn của Senior Tech Lead trong môi trường Agile quốc tế.</p>
+            <p class="text-xs text-slate-400 mt-1">Luyện tập trực diện các tình huống giao tiếp sống còn của Senior Tech Lead trong môi trường Agile quốc tế.</p>
           </div>
           <!-- Simulator Tabs -->
           <div class="flex items-center gap-2 flex-wrap">
-            <button id="tab-sim-standup" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-cyan-500 text-slate-950 shadow transition">
+            <button id="tab-sim-standup" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-cyan-500 text-slate-950 shadow transition cursor-pointer">
               Sprint 1: Daily Standup
             </button>
-            <button id="tab-sim-demo" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
+            <button id="tab-sim-demo" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition cursor-pointer">
               Sprint 2: Sprint Demo
             </button>
-            <button id="tab-sim-pingpong" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
+            <button id="tab-sim-pingpong" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition cursor-pointer">
               Sprint 3: Small Talk (A-D-Q)
+            </button>
+            <button id="tab-sim-oneonone" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition cursor-pointer">
+              Sprint 3: 1-on-1 Lead Sync
+            </button>
+            <button id="tab-sim-linklab" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition cursor-pointer">
+              Connected Speech Lab
             </button>
           </div>
         </div>
@@ -1049,8 +1059,14 @@
               <ul id="sim-standup-consonants" class="list-disc list-inside text-slate-300 space-y-0.5 mt-1"></ul>
             </div>
             <div>
-              <div class="font-semibold text-cyan-400 text-[11px]">⭐ Phiên bản Senior Tech Lead:</div>
-              <p id="sim-standup-refactor" class="text-cyan-200 font-mono bg-cyan-950/40 p-2.5 rounded mt-1 border border-cyan-900/60">...</p>
+              <div class="flex items-center justify-between">
+                <span class="font-semibold text-cyan-400 text-[11px]">⭐ Phiên bản Senior Tech Lead:</span>
+                <button id="btn-speak-sim-standup" class="text-[11px] text-cyan-400 hover:text-cyan-300 font-mono flex items-center gap-1 cursor-pointer">
+                  <span>🔊</span>
+                  <span>Nghe mẫu</span>
+                </button>
+              </div>
+              <p id="sim-standup-refactor" class="text-cyan-200 font-mono bg-cyan-950/40 p-2.5 rounded mt-1 border border-cyan-900/60 leading-relaxed">...</p>
             </div>
           </div>
         </div>
@@ -1102,8 +1118,14 @@
               <ul id="sim-demo-flapt" class="list-disc list-inside text-slate-300 space-y-0.5 mt-1"></ul>
             </div>
             <div>
-              <div class="font-semibold text-emerald-400 text-[11px]">⭐ Kịch bản Demo mượt mà chuẩn Lead:</div>
-              <p id="sim-demo-script" class="text-emerald-200 font-mono bg-emerald-950/30 p-2.5 rounded mt-1 border border-emerald-900/60">...</p>
+              <div class="flex items-center justify-between">
+                <span class="font-semibold text-emerald-400 text-[11px]">⭐ Kịch bản Demo mượt mà chuẩn Lead:</span>
+                <button id="btn-speak-sim-demo" class="text-[11px] text-emerald-400 hover:text-emerald-300 font-mono flex items-center gap-1 cursor-pointer">
+                  <span>🔊</span>
+                  <span>Nghe kịch bản</span>
+                </button>
+              </div>
+              <p id="sim-demo-script" class="text-emerald-200 font-mono bg-emerald-950/30 p-2.5 rounded mt-1 border border-emerald-900/60 leading-relaxed whitespace-pre-wrap">...</p>
             </div>
           </div>
         </div>
@@ -1156,8 +1178,141 @@
               <p id="sim-pingpong-feedback" class="text-slate-300 p-1">...</p>
             </div>
             <div>
-              <div class="font-semibold text-pink-400 text-[11px]">⭐ Phiên bản giao tiếp tự nhiên chuẩn bản xứ:</div>
-              <p id="sim-pingpong-refactor" class="text-pink-200 font-mono bg-pink-950/30 p-2.5 rounded mt-1 border border-pink-900/60">...</p>
+              <div class="flex items-center justify-between">
+                <span class="font-semibold text-pink-400 text-[11px]">⭐ Phiên bản giao tiếp tự nhiên chuẩn bản xứ:</span>
+                <button id="btn-speak-sim-pingpong" class="text-[11px] text-pink-400 hover:text-pink-300 font-mono flex items-center gap-1 cursor-pointer">
+                  <span>🔊</span>
+                  <span>Nghe đối thoại</span>
+                </button>
+              </div>
+              <p id="sim-pingpong-refactor" class="text-pink-200 font-mono bg-pink-950/30 p-2.5 rounded mt-1 border border-pink-900/60 leading-relaxed whitespace-pre-wrap">...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Content 4: 1-on-1 With Tech Lead / Engineering Manager Simulator -->
+      <div id="panel-sim-oneonone" class="hidden space-y-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <h3 class="font-bold text-sm text-cyan-400 font-mono">4. 1-ON-1 WITH TECH LEAD & MANAGER (Wins, Systemic Bottlenecks & Ownership)</h3>
+            <span class="text-xs font-mono text-slate-400">Tập trung: Thể hiện tư duy Lead, thương lượng gỡ nghẽn CI/CD & mở rộng ownership</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="space-y-1.5">
+              <label class="text-xs font-semibold text-slate-300">1. Progress & Wins (Định lượng kết quả):</label>
+              <textarea id="sim-oneonone-wins" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-100 font-mono focus:border-cyan-500 transition resize-none" placeholder="We shipped the order worker service early. Latency dropped 30% and test coverage reached 92%..."></textarea>
+            </div>
+            <div class="space-y-1.5">
+              <label class="text-xs font-semibold text-slate-300">2. Systemic Bottlenecks (Điểm nghẽn hệ thống):</label>
+              <textarea id="sim-oneonone-bottleneck" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-100 font-mono focus:border-cyan-500 transition resize-none" placeholder="Our CI/CD pipeline takes 22 minutes per commit, creating a developer feedback bottleneck..."></textarea>
+            </div>
+            <div class="space-y-1.5">
+              <label class="text-xs font-semibold text-slate-300">3. Ownership & Growth (Nguyện vọng quý tới):</label>
+              <textarea id="sim-oneonone-aspiration" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-100 font-mono focus:border-cyan-500 transition resize-none" placeholder="I'd like to take ownership of decoupling the legacy payment gateway in Q3..."></textarea>
+            </div>
+          </div>
+
+          <button id="btn-sim-oneonone-submit" class="w-full py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold rounded-lg text-xs shadow-md transition cursor-pointer">
+            🚀 Chấm Điểm 1-on-1 & Nhận Kịch Bản Đàm Phán Senior Lead
+          </button>
+
+          <!-- 1-on-1 Evaluation Result -->
+          <div id="sim-oneonone-result" class="hidden bg-slate-950 border border-emerald-900/60 rounded-xl p-4 space-y-3 text-xs">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+              <span class="font-bold text-slate-200">Đánh giá 1-on-1 Strategic Alignment:</span>
+              <span id="sim-oneonone-score" class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-emerald-950 text-emerald-400 border border-emerald-800">Alignment: 90/100</span>
+            </div>
+            <div>
+              <div class="font-semibold text-emerald-400 text-[11px]">Đánh giá tác động & Tư duy hệ thống:</div>
+              <p id="sim-oneonone-feedback" class="text-slate-200 bg-slate-900 p-2.5 rounded mt-1 border border-slate-800 whitespace-pre-wrap leading-relaxed">...</p>
+            </div>
+            <div>
+              <div class="font-semibold text-amber-400 text-[11px]">Chiến thuật đàm phán cùng Manager:</div>
+              <p id="sim-oneonone-tips" class="text-slate-300 p-1.5">...</p>
+            </div>
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="font-semibold text-teal-400 text-[11px]">⭐ Kịch bản 1-on-1 mẫu chuẩn Staff+:</span>
+                <button id="btn-speak-sim-oneonone" class="text-[11px] text-teal-400 hover:text-teal-300 font-mono flex items-center gap-1 cursor-pointer">
+                  <span>🔊</span>
+                  <span>Nghe kịch bản</span>
+                </button>
+              </div>
+              <p id="sim-oneonone-script" class="text-teal-200 font-mono bg-teal-950/30 p-2.5 rounded mt-1 border border-teal-900/60 whitespace-pre-wrap leading-relaxed">...</p>
+            </div>
+            <div>
+              <div class="font-semibold text-cyan-400 text-[11px]">Cảnh báo cấu âm trọng tâm:</div>
+              <ul id="sim-oneonone-cues" class="list-disc list-inside text-slate-300 space-y-0.5 mt-1"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Content 5: Connected Speech & Linking Lab -->
+      <div id="panel-sim-linklab" class="hidden space-y-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <h3 class="font-bold text-sm text-cyan-400 font-mono">5. CONNECTED SPEECH & LINKING LAB (Thí Nghiệm Nối Âm, Flap T & Nuốt Âm)</h3>
+            <span class="text-xs font-mono text-slate-400">Công cụ soi chiếu các điểm nối âm tự nhiên của bản xứ</span>
+          </div>
+
+          <!-- Quick Samples -->
+          <div class="space-y-1">
+            <label class="text-[11px] text-slate-400 font-mono">Mẫu thử nhanh:</label>
+            <div class="flex flex-wrap gap-1.5">
+              <button class="linklab-sample-btn px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono transition cursor-pointer" data-text="check it out and test data">"check it out and test data"</button>
+              <button class="linklab-sample-btn px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono transition cursor-pointer" data-text="we put it on the server">"we put it on the server"</button>
+              <button class="linklab-sample-btn px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono transition cursor-pointer" data-text="tell him to log in to the network">"tell him to log in to the network"</button>
+              <button class="linklab-sample-btn px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono transition cursor-pointer" data-text="critical latency dropped under 20 milliseconds">"critical latency dropped"</button>
+            </div>
+          </div>
+
+          <!-- Input Text -->
+          <div class="space-y-1.5">
+            <label class="text-xs font-semibold text-slate-300">Nhập câu kỹ thuật cần soi hiện tượng nối âm:</label>
+            <div class="flex gap-2">
+              <input type="text" id="sim-linklab-input" class="flex-1 bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-100 font-mono focus:border-cyan-500 transition" placeholder="e.g., We need to check it out and log in to the server...">
+              <button id="btn-sim-linklab-submit" class="px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold rounded-lg text-xs shadow transition cursor-pointer whitespace-nowrap">
+                ⚡ Phân Tích Nối Âm
+              </button>
+            </div>
+          </div>
+
+          <!-- Result Container -->
+          <div id="sim-linklab-result" class="hidden bg-slate-950 border border-cyan-900/60 rounded-xl p-4 space-y-4 text-xs">
+            <!-- Linked Text Display -->
+            <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-xl space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-mono text-cyan-400 font-bold">DẠNG NỐI ÂM LIÊN HOÀN (CONNECTED SPEECH REPRESENTATION):</span>
+                <div class="flex items-center gap-2">
+                  <span class="text-[11px] text-slate-400 font-mono">Tốc độ:</span>
+                  <button class="linklab-speed-btn px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 text-[11px] active cursor-pointer" data-speed="1.0">1.0x</button>
+                  <button class="linklab-speed-btn px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 text-[11px] cursor-pointer" data-speed="0.85">0.85x</button>
+                  <button class="linklab-speed-btn px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 text-[11px] cursor-pointer" data-speed="0.7">0.7x</button>
+                  <button id="btn-speak-sim-linklab" class="px-3 py-1 bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-800 rounded text-xs font-bold flex items-center gap-1 transition cursor-pointer">
+                    🔊 Nghe phát âm
+                  </button>
+                </div>
+              </div>
+              <div id="sim-linklab-linked" class="text-lg font-mono font-bold text-cyan-300 tracking-wide bg-slate-950 p-3 rounded-lg border border-slate-800 select-all">
+                ...
+              </div>
+            </div>
+
+            <!-- Occurrences Breakdown -->
+            <div class="space-y-2">
+              <span class="font-semibold text-slate-300 text-[11px]">Chi tiết các điểm nối âm phát hiện được:</span>
+              <div id="sim-linklab-occurrences" class="space-y-2">
+                <!-- Occurrences dynamic list -->
+              </div>
+            </div>
+
+            <!-- Pacing Tip -->
+            <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-800 text-[11px] text-slate-300 flex items-start gap-2">
+              <span class="text-cyan-400 font-bold">💡</span>
+              <p id="sim-linklab-pacing-tip">...</p>
             </div>
           </div>
         </div>
@@ -1183,6 +1338,10 @@
               <option value="arch-debate">Microservices vs Modular Monolith (Staff Architect)</option>
               <option value="incident-sev1">Production DB Pool Exhaustion (VP of Eng)</option>
               <option value="scope-pushback">Negotiating 50% Timeline Cut (Product Director)</option>
+              <option value="rest-vs-grpc">REST vs gRPC for Internal Microservices (Principal Infra)</option>
+              <option value="sql-vs-nosql">PostgreSQL vs MongoDB for High-Velocity Events (Staff Data)</option>
+              <option value="k8s-vs-serverless">Kubernetes Cluster vs AWS Lambda / Cloud Run (Head of DevOps)</option>
+              <option value="tech-debt-negotiation">Negotiating Sprint for Architecture Tech Debt (VP of Product)</option>
             </select>
           </div>
         </div>

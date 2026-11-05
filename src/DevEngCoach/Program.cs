@@ -122,6 +122,30 @@ app.MapPost("/api/ai/pingpong-simulate", async ([FromBody] PingPongSimulationReq
     return Results.Ok(result);
 });
 
+// 1-on-1 Career & Progress Sync Simulation Endpoint
+app.MapPost("/api/ai/one-on-one-simulate", async ([FromBody] OneOnOneSimulationRequest request, IAiCoachService aiCoach, CancellationToken ct) =>
+{
+    if (string.IsNullOrWhiteSpace(request.ProgressAndWins) && string.IsNullOrWhiteSpace(request.SystemBottleneck))
+    {
+        return Results.BadRequest(new { Message = "ProgressAndWins or SystemBottleneck must be provided." });
+    }
+
+    var result = await aiCoach.SimulateOneOnOneAsync(request, ct);
+    return Results.Ok(result);
+});
+
+// Connected Speech & Linking Analyzer Endpoint
+app.MapPost("/api/ai/connected-speech-analyze", async ([FromBody] ConnectedSpeechAnalyzeRequest request, IAiCoachService aiCoach, CancellationToken ct) =>
+{
+    if (string.IsNullOrWhiteSpace(request.Text))
+    {
+        return Results.BadRequest(new { Message = "Text is required for connected speech analysis." });
+    }
+
+    var result = await aiCoach.AnalyzeConnectedSpeechAsync(request, ct);
+    return Results.Ok(result);
+});
+
 // Quick Selection Lookup Endpoint (FR-012: Tra cứu tức thì khi bôi đen chữ)
 app.MapPost("/api/ai/lookup", async ([FromBody] QuickLookupRequest request, IAiCoachService aiCoach, CancellationToken ct) =>
 {

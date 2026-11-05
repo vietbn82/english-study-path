@@ -93,6 +93,78 @@ public sealed class SparringService(ILogger<SparringService>? logger = null) : I
                 "blast radius",
                 "fast-follow"
             ]
+        ),
+        new(
+            Id: "rest-vs-grpc",
+            Title: "REST vs gRPC for Internal Microservices",
+            Category: "Protocols & Inter-Service Communication",
+            RoleDescription: "Principal Infrastructure Engineer challenging protocol overhead, streaming, schema enforcement",
+            OpeningLine: "Our internal microservice traffic is growing 300% month-over-month. Why shouldn't we migrate all synchronous inter-service HTTP REST endpoints to gRPC with Protobuf? What are our trade-offs on debugging, load balancing, and backward compatibility?",
+            KeyVocabulary:
+            [
+                "gRPC",
+                "Protobuf",
+                "multiplexing",
+                "HTTP/2",
+                "backward compatibility",
+                "load balancing",
+                "serialization latency",
+                "Envoy proxy"
+            ]
+        ),
+        new(
+            Id: "sql-vs-nosql",
+            Title: "PostgreSQL vs MongoDB for High-Velocity Events",
+            Category: "Database Architecture & Data Modeling",
+            RoleDescription: "Staff Data Architect questioning relational ACID vs document scalability",
+            OpeningLine: "The telemetry and audit logging ingestion pipeline is expecting 50,000 writes per second. Are you confident Postgres with partitioning can handle this write throughput, or should we decouple this ingestion path into a distributed NoSQL store like Mongo or Cassandra?",
+            KeyVocabulary:
+            [
+                "ACID compliance",
+                "write throughput",
+                "table partitioning",
+                "indexing overhead",
+                "horizontal sharding",
+                "eventual consistency",
+                "WAL bottlenecks",
+                "read-after-write"
+            ]
+        ),
+        new(
+            Id: "k8s-vs-serverless",
+            Title: "Kubernetes Cluster vs AWS Lambda / Cloud Run",
+            Category: "Infrastructure & Deployment Topologies",
+            RoleDescription: "Head of DevOps challenging cluster management overhead vs serverless costs",
+            OpeningLine: "Our Kubernetes maintenance overhead and node provisioning costs are eating up 30% of engineering bandwidth. Can you justify keeping dedicated K8s clusters over migrating these background job workers and webhook endpoints to Serverless containers?",
+            KeyVocabulary:
+            [
+                "cold start",
+                "node provisioning",
+                "operational overhead",
+                "cost predictability",
+                "concurrency limits",
+                "vendor lock-in",
+                "cluster maintenance",
+                "ephemeral compute"
+            ]
+        ),
+        new(
+            Id: "tech-debt-negotiation",
+            Title: "Negotiating Dedicated Sprint for Architecture Tech Debt",
+            Category: "Engineering Leadership & Stakeholder Alignment",
+            RoleDescription: "VP of Product demanding new feature velocity over refactoring legacy spaghetti",
+            OpeningLine: "Our investors want the AI recommendation engine launched before the end of this quarter. You are asking to allocate an entire sprint to refactor the payment domain and decouple the legacy spaghetti code. How does this drive immediate business value?",
+            KeyVocabulary:
+            [
+                "technical debt",
+                "blast radius",
+                "deployment risk",
+                "developer velocity",
+                "regression rate",
+                "MTTR",
+                "code maintainability",
+                "feature lead time"
+            ]
         )
     ];
 
@@ -513,6 +585,66 @@ Return ONLY a JSON object (no markdown, no backticks):
                 var q = "If we agree to freeze feature development 48 hours early, which exact automated integration tests will you keep in the CI gate to ensure Friday's launch has zero billing regressions?";
 
                 var refinement = "I understand marketing's commitment for next Friday, and we are committed to helping the launch succeed. However, eliminating unit and integration tests introduces critical regression risk to our core payment flow, which could cause customer-facing downtime on launch day. Instead of skipping quality assurance, I propose we descope secondary UI animations and bulk export features, preserving our automated tests for the critical checkout path. We can deliver the remaining scope as a fast-follow in Sprint 14.";
+
+                return (ai, q, refinement);
+            }
+
+            case "rest-vs-grpc":
+            {
+                var ai = speechLower.Contains("protobuf") || speechLower.Contains("binary") || speechLower.Contains("multiplex")
+                    ? "Binary serialization with Protobuf definitely cuts our network serialization CPU by 40%. However, browser clients cannot natively invoke raw gRPC without gRPC-Web proxies, and debugging HTTP/2 frames requires specialized tooling. How will you safeguard our developer feedback loops?"
+                    : speechLower.Contains("rest") || speechLower.Contains("json")
+                    ? "REST with JSON is universally human-readable, but at 50,000 requests per second, string parsing and headers overhead consume noticeable CPU cycles across our API gateways."
+                    : "The performance argument for gRPC is compelling, but we must establish clear boundary contracts. Where exactly does the protocol boundary lie?";
+
+                var q = "How do you plan to handle schema evolution and backward compatibility in Protobuf when multiple autonomous squads deploy services with differing proto revisions?";
+
+                var refinement = "I recommend adopting gRPC strictly for high-throughput, synchronous East-West traffic between internal microservices. By generating strongly typed C# contracts from Protobuf schemas, we eliminate serialization overhead and contract drift. For public North-South client traffic, we keep RESTful JSON behind our API Gateway with Envoy proxy translation.";
+
+                return (ai, q, refinement);
+            }
+
+            case "sql-vs-nosql":
+            {
+                var ai = speechLower.Contains("partition") || speechLower.Contains("postgres") || speechLower.Contains("acid")
+                    ? "Postgres native declarative partitioning by day or month scales writes cleanly, provided queries include the partition key. But once tables cross 100 million rows, VACUUM maintenance and indexing overhead can choke disk I/O."
+                    : speechLower.Contains("mongo") || speechLower.Contains("cassandra") || speechLower.Contains("sharding")
+                    ? "Distributed NoSQL gives us elastic horizontal write capacity, but giving up ACID constraints forces our application layer to handle reconciliation and duplicate deduplication."
+                    : "At 50,000 writes per second, disk write amplification is our primary constraint. What is our storage retention and indexing strategy?";
+
+                var q = "When write velocity surges during a product drop, how do you handle WAL disk flush saturation without blocking transactional checkout queries sharing the database?";
+
+                var refinement = "I propose a hybrid polyglot persistence architecture. For transactional account data where strict ACID consistency is non-negotiable, we keep PostgreSQL. For high-velocity telemetry and audit logs at 50k writes per second, we decouple writes via an asynchronous Kafka buffer and stream events into partitioned append-only storage, eliminating lock contention on our transactional database.";
+
+                return (ai, q, refinement);
+            }
+
+            case "k8s-vs-serverless":
+            {
+                var ai = speechLower.Contains("cold start") || speechLower.Contains("latency") || speechLower.Contains("vpc")
+                    ? "Cold start penalties on VPC-bound serverless functions can spike p99 latency to 1.5 seconds. For real-time user-facing APIs, that SLA degradation is unacceptable."
+                    : speechLower.Contains("overhead") || speechLower.Contains("cost") || speechLower.Contains("cluster")
+                    ? "True, Kubernetes control plane and node management requires continuous patch management and dedicated SRE cycles that smaller teams struggle to maintain."
+                    : "The trade-off hinges on predictability: serverless minimizes idle costs, while Kubernetes provides deterministic compute pricing at sustained high concurrency.";
+
+                var q = "If we migrate asynchronous worker pipelines to Serverless containers, how do you enforce connection pooling limits when 500 ephemeral instances burst simultaneously against our relational database?";
+
+                var refinement = "I propose a workload-specific deployment strategy. We maintain our core low-latency minimal APIs on Kubernetes where sustained traffic justifies dedicated compute and eliminates cold starts. Meanwhile, we migrate sporadic background batch jobs and event-driven webhook receivers to Serverless containers, reducing idle infrastructure costs without operational cluster overhead.";
+
+                return (ai, q, refinement);
+            }
+
+            case "tech-debt-negotiation":
+            {
+                var ai = speechLower.Contains("regression") || speechLower.Contains("velocity") || speechLower.Contains("lead time")
+                    ? "Demonstrating that refactoring directly lowers our feature lead time and deployment failure rate helps justify the allocation to stakeholders."
+                    : speechLower.Contains("spaghetti") || speechLower.Contains("clean")
+                    ? "Engineering elegance alone will not convince leadership to pause new feature revenue. We need quantifiable metrics tied to customer stability."
+                    : "I need concrete business metrics: how does fixing this tech debt accelerate Q4 delivery rather than delaying our roadmap?";
+
+                var q = "If product leadership grants 20% capacity in the upcoming sprint for architectural refactoring, what measurable metric (such as MTTR, deployment frequency, or crash rate) will you commit to improving?";
+
+                var refinement = "I understand the urgency of launching the AI recommendation engine. However, our payment module currently suffers an elevated regression rate that accounts for 40% of our production hotfixes. Dedicating 20% of engineering bandwidth this sprint to decouple this critical boundary will lower our deployment risk, eliminate emergency patching cycles, and actually accelerate our AI feature delivery in Q4.";
 
                 return (ai, q, refinement);
             }
