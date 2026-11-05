@@ -25,7 +25,8 @@ public sealed record SentenceFrame(
     string TemplatePattern,
     string ExampleUsage,
     string VietnameseTranslation,
-    IReadOnlyList<string> DevVariables
+    IReadOnlyList<string> DevVariables,
+    IReadOnlyList<string>? Examples = null
 );
 
 public sealed record PracticeTask(

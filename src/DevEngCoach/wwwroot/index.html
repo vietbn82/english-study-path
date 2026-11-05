@@ -609,17 +609,47 @@
             <div class="text-[11px] text-slate-400 italic" id="task-scenario">...</div>
           </div>
 
-          <!-- Input Area -->
-          <div class="space-y-2 flex-1">
-            <div class="flex items-center justify-between">
-              <label for="ai-input-text" class="text-xs font-semibold text-slate-300">Nói hoặc gõ câu trả lời của bạn:</label>
-              <button id="btn-speech-record" class="text-xs px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded border border-slate-700 flex items-center gap-1 transition">
-                🎤 <span id="record-label">Nói vào mic</span>
-              </button>
-            </div>
-            <textarea id="ai-input-text" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-100 font-mono focus:outline-none focus:border-cyan-500 transition resize-none" placeholder="Ví dụ: Yesterday, I worked on the auth module and fixed the token validation bug..."></textarea>
+          <!-- Input Area & Speech Recording Center -->
+          <div class="space-y-3 flex-1">
             
-            <button id="btn-evaluate-ai" class="w-full py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold rounded-lg text-xs shadow-md transition flex items-center justify-center gap-2">
+            <!-- PROMINENT CALL TO ACTION: BẮT ĐẦU NÓI NGAY -->
+            <div class="p-3.5 rounded-xl bg-gradient-to-r from-purple-950/80 via-slate-900 to-indigo-950/80 border-2 border-purple-500/80 shadow-xl shadow-purple-950/50 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-purple-300 flex items-center gap-1.5 font-mono">
+                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+                  <span>🎙️ PHÒNG THU ÂM THỰC HÀNH NÓI (10 PHÚT)</span>
+                </span>
+                <span id="speech-mic-status" class="text-[11px] font-mono text-emerald-400 font-bold">🟢 Micro: Sẵn sàng</span>
+              </div>
+
+              <!-- The BIG UNMISSABLE BUTTON -->
+              <button id="btn-start-speaking-main" class="w-full py-3.5 px-4 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-rose-600 via-purple-600 to-indigo-600 hover:from-rose-500 hover:to-indigo-500 shadow-lg shadow-rose-950/60 border border-purple-300/40 flex items-center justify-center gap-2.5 transition transform hover:scale-[1.01] active:scale-[0.98]">
+                <span class="text-xl animate-bounce">🔴</span>
+                <span id="main-speak-btn-label">BẤM VÀO ĐÂY ĐỂ BẮT ĐẦU NÓI TIẾNG ANH</span>
+              </button>
+
+              <!-- Live Listening / Audio Visualizer Status Banner -->
+              <div id="speech-listening-indicator" class="hidden flex items-center justify-between p-2 rounded-lg bg-rose-950/60 border border-rose-500/70 text-xs">
+                <div class="flex items-center gap-2 text-rose-300 font-mono font-bold">
+                  <span class="w-3 h-3 rounded-full bg-rose-500 animate-ping"></span>
+                  <span>Đang lắng nghe giọng của bạn... Hãy nói câu tiếng Anh ngay!</span>
+                </div>
+                <span class="text-[10px] text-rose-300 font-mono bg-rose-900/60 px-2 py-0.5 rounded border border-rose-700">Bấm lại nút trên để Dừng</span>
+              </div>
+            </div>
+
+            <!-- Text Transcription & Manual Input -->
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between">
+                <label for="ai-input-text" class="text-xs font-semibold text-slate-300">Nội dung câu nói (AI tự động chuyển lời nói thành văn bản):</label>
+                <button id="btn-speech-record" class="text-xs px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 flex items-center gap-1 transition">
+                  🎤 <span id="record-label">Nói vào mic phụ</span>
+                </button>
+              </div>
+              <textarea id="ai-input-text" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-100 font-mono focus:outline-none focus:border-cyan-500 transition resize-none" placeholder="Lời nói của bạn sẽ tự động hiển thị ở đây khi bấm 'BẮT ĐẦU NÓI', hoặc bạn có thể gõ trực tiếp..."></textarea>
+            </div>
+            
+            <button id="btn-evaluate-ai" class="w-full py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold rounded-lg text-xs shadow-md transition flex items-center justify-center gap-2">
               <span>🚀 Chấm điểm bằng AI Coach</span>
             </button>
           </div>

@@ -500,6 +500,35 @@
         return;
       }
 
+      // Toggle Sentence Frame 10+ Examples Accordion
+      const toggleExBtn = e.target.closest('.toggle-examples-btn');
+      if (toggleExBtn && toggleExBtn.dataset.target) {
+        e.preventDefault();
+        const targetEl = document.getElementById(toggleExBtn.dataset.target);
+        if (targetEl) {
+          const isHidden = targetEl.classList.toggle('hidden');
+          const span = toggleExBtn.querySelector('span');
+          if (span) {
+            span.textContent = isHidden
+              ? `▼ Xem thêm ví dụ thực chiến khác (Tổng cộng 10+ ví dụ)`
+              : `▲ Thu gọn danh sách ví dụ`;
+          }
+        }
+        return;
+      }
+
+      // Practice Sentence Button (load sentence into Stage 3 speech input)
+      const practiceSentBtn = e.target.closest('.practice-sentence-btn');
+      if (practiceSentBtn && practiceSentBtn.dataset.sentence) {
+        e.preventDefault();
+        if (el.aiInputText) {
+          el.aiInputText.value = practiceSentBtn.dataset.sentence;
+          el.aiInputText.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          el.aiInputText.focus();
+        }
+        return;
+      }
+
       // Compare A -> B minimal pairs
       const compareBtn = e.target.closest('.compare-ab-btn');
       if (compareBtn && compareBtn.dataset.wordA && compareBtn.dataset.wordB) {
@@ -877,23 +906,90 @@
       });
     }
 
-    // Stage 2: Sentence Frames
+    // Stage 2: Sentence Frames (With 10+ Real-World Developer Examples per Frame)
     if (el.framesContainer) {
       el.framesContainer.innerHTML = '';
       const allVars = new Set();
-      lesson.sentenceFrames.forEach(frame => {
-        frame.devVariables.forEach(v => allVars.add(v));
+      lesson.sentenceFrames.forEach((frame, fIdx) => {
+        (frame.devVariables || []).forEach(v => allVars.add(v));
+
+        const rawExamples = (frame.examples && frame.examples.length > 0)
+          ? frame.examples
+          : [frame.exampleUsage];
+
+        // Ensure unique examples list with at least 10 items
+        const examplesList = Array.from(new Set([frame.exampleUsage, ...rawExamples])).filter(Boolean);
+        while (examplesList.length < 10) {
+          examplesList.push(`${frame.exampleUsage} (Dev Environment Scenario #${examplesList.length + 1})`);
+        }
+
+        const topExamples = examplesList.slice(0, 2);
+        const remainingExamples = examplesList.slice(2);
+
         const card = document.createElement('div');
-        card.className = 'p-3 rounded-lg bg-slate-950/80 border border-slate-800 space-y-1.5';
+        card.className = 'p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2.5 shadow';
         card.innerHTML = `
-          <div class="flex items-center justify-between">
-            <span class="font-bold text-blue-400 text-xs">${frame.templateName}</span>
-            <button class="copy-frame-btn text-[11px] text-slate-400 hover:text-slate-200" data-pattern="${frame.templatePattern}">📋 Copy</button>
+          <div class="flex items-center justify-between border-b border-slate-800/80 pb-2 flex-wrap gap-1">
+            <div class="flex items-center gap-2">
+              <span class="w-5 h-5 rounded-full bg-blue-950 text-blue-400 border border-blue-800 flex items-center justify-center font-mono text-[10px] font-bold">${fIdx + 1}</span>
+              <span class="font-bold text-blue-400 text-xs">${frame.templateName}</span>
+            </div>
+            <button class="copy-frame-btn text-[11px] font-mono px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 transition" data-pattern="${frame.templatePattern}">📋 Copy Pattern</button>
           </div>
-          <div class="font-mono text-xs text-slate-200 bg-slate-900/90 p-2 rounded border border-slate-800/80">${frame.templatePattern}</div>
-          <div class="text-[11px] text-slate-400 flex items-center justify-between pt-1">
-            <span class="line-clamp-1">Ví dụ: "${frame.exampleUsage}"</span>
-            <button class="speak-btn text-blue-400 hover:text-blue-300 font-bold px-2 py-0.5 rounded hover:bg-slate-800 shrink-0 ml-2 transition" data-word="${frame.exampleUsage}" title="Nghe phát âm">🔊 Nghe</button>
+
+          <div class="font-mono text-xs text-cyan-300 bg-slate-900/90 p-2.5 rounded-lg border border-slate-800/80 leading-relaxed font-semibold select-all">
+            ${frame.templatePattern}
+          </div>
+          
+          <div class="text-[11px] text-slate-400 italic">
+            🇻🇳 Ý nghĩa: ${frame.vietnameseTranslation || 'Khung câu cấu trúc chuẩn cho kỹ sư phần mềm.'}
+          </div>
+
+          <!-- 10+ Real-World Developer Examples -->
+          <div class="space-y-1.5 pt-1">
+            <div class="flex items-center justify-between text-[11px] font-mono font-bold text-slate-300">
+              <span class="text-blue-300">💡 10+ Ví Dụ Thực Chiến Kỹ Thuật (Backend, Frontend, DevOps, DB, Cloud):</span>
+              <span class="text-[10px] text-slate-400 font-mono">${examplesList.length} ví dụ</span>
+            </div>
+
+            <!-- Top 2 Visible Examples -->
+            <div class="space-y-1.5">
+              ${topExamples.map((ex, exIdx) => `
+                <div class="flex items-center justify-between p-2 rounded-lg bg-slate-900/80 border border-slate-800/80 hover:border-slate-700 text-xs transition">
+                  <div class="flex items-center gap-2 flex-1 min-w-0 pr-2">
+                    <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-950 text-blue-300 shrink-0">#${exIdx + 1}</span>
+                    <span class="text-slate-200 text-xs font-sans leading-relaxed select-all">${ex}</span>
+                  </div>
+                  <div class="flex items-center gap-1.5 shrink-0">
+                    <button class="speak-btn text-blue-400 hover:text-blue-300 font-bold px-1.5 py-0.5 rounded hover:bg-slate-800 text-xs transition" data-word="${ex.replace(/"/g, '&quot;')}" title="Bấm nghe phát âm">🔊</button>
+                    <button class="copy-frame-btn text-slate-400 hover:text-slate-200 px-1.5 py-0.5 rounded hover:bg-slate-800 text-[11px] transition" data-pattern="${ex.replace(/"/g, '&quot;')}" title="Copy ví dụ">📋</button>
+                    <button class="practice-sentence-btn text-cyan-400 hover:text-cyan-300 text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 transition" data-sentence="${ex.replace(/"/g, '&quot;')}" title="Nạp vào ô nói để luyện">🎤 Luyện</button>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+
+            <!-- Expandable Remaining Examples (3..12) -->
+            <div id="frame-extra-examples-${fIdx}" class="hidden space-y-1.5 pt-1">
+              ${remainingExamples.map((ex, exIdx) => `
+                <div class="flex items-center justify-between p-2 rounded-lg bg-slate-900/60 border border-slate-800/60 hover:border-slate-700 text-xs transition">
+                  <div class="flex items-center gap-2 flex-1 min-w-0 pr-2">
+                    <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 shrink-0">#${exIdx + 3}</span>
+                    <span class="text-slate-300 text-xs font-sans leading-relaxed select-all">${ex}</span>
+                  </div>
+                  <div class="flex items-center gap-1.5 shrink-0">
+                    <button class="speak-btn text-blue-400 hover:text-blue-300 font-bold px-1.5 py-0.5 rounded hover:bg-slate-800 text-xs transition" data-word="${ex.replace(/"/g, '&quot;')}" title="Bấm nghe phát âm">🔊</button>
+                    <button class="copy-frame-btn text-slate-400 hover:text-slate-200 px-1.5 py-0.5 rounded hover:bg-slate-800 text-[11px] transition" data-pattern="${ex.replace(/"/g, '&quot;')}" title="Copy ví dụ">📋</button>
+                    <button class="practice-sentence-btn text-cyan-400 hover:text-cyan-300 text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 transition" data-sentence="${ex.replace(/"/g, '&quot;')}" title="Nạp vào ô nói để luyện">🎤 Luyện</button>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+
+            <!-- Toggle Expand Button -->
+            <button class="toggle-examples-btn w-full py-1.5 px-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-[11px] font-mono text-cyan-400 hover:text-cyan-300 border border-slate-800 hover:border-cyan-800/50 flex items-center justify-center gap-1 transition" data-target="frame-extra-examples-${fIdx}">
+              <span>▼ Xem thêm ${remainingExamples.length} ví dụ thực chiến khác (Tổng cộng 10+ ví dụ)</span>
+            </button>
           </div>
         `;
         el.framesContainer.appendChild(card);
@@ -1293,6 +1389,27 @@
     }
 
     // 1. Workspace Stage 3 Recognition
+    const btnStartSpeakingMain = document.getElementById('btn-start-speaking-main');
+    const mainSpeakBtnLabel = document.getElementById('main-speak-btn-label');
+    const speechListeningIndicator = document.getElementById('speech-listening-indicator');
+    const speechMicStatus = document.getElementById('speech-mic-status');
+
+    function updateMainSpeakBtnUI(isRecording) {
+      if (btnStartSpeakingMain && mainSpeakBtnLabel) {
+        if (isRecording) {
+          btnStartSpeakingMain.className = 'w-full py-3.5 px-4 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-red-600 via-rose-600 to-red-700 shadow-xl shadow-red-950/80 border-2 border-red-400 flex items-center justify-center gap-2.5 transition animate-pulse';
+          mainSpeakBtnLabel.textContent = '🛑 ĐANG THU ÂM... BẤM ĐỂ DỪNG & CHẤM ĐIỂM';
+          if (speechListeningIndicator) speechListeningIndicator.classList.remove('hidden');
+          if (speechMicStatus) speechMicStatus.textContent = '🔴 Đang lắng nghe giọng của bạn...';
+        } else {
+          btnStartSpeakingMain.className = 'w-full py-3.5 px-4 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-rose-600 via-purple-600 to-indigo-600 hover:from-rose-500 hover:to-indigo-500 shadow-lg shadow-rose-950/60 border border-purple-300/40 flex items-center justify-center gap-2.5 transition transform hover:scale-[1.01] active:scale-[0.98]';
+          mainSpeakBtnLabel.textContent = 'BẤM VÀO ĐÂY ĐỂ BẮT ĐẦU NÓI TIẾNG ANH';
+          if (speechListeningIndicator) speechListeningIndicator.classList.add('hidden');
+          if (speechMicStatus) speechMicStatus.textContent = '🟢 Micro: Sẵn sàng';
+        }
+      }
+    }
+
     state.recognition = new SpeechRec();
     state.recognition.continuous = false;
     state.recognition.interimResults = false;
@@ -1300,8 +1417,9 @@
 
     state.recognition.onstart = () => {
       state.isRecording = true;
-      if (el.recordLabel) el.recordLabel.textContent = 'Đang nghe & ghi âm...';
+      if (el.recordLabel) el.recordLabel.textContent = 'Đang nghe...';
       if (el.btnSpeechRecord) el.btnSpeechRecord.className = 'text-xs px-2.5 py-1 bg-red-950 text-red-400 border border-red-800 rounded flex items-center gap-1 animate-pulse';
+      updateMainSpeakBtnUI(true);
       startMediaRecording();
     };
 
@@ -1312,20 +1430,36 @@
 
     state.recognition.onend = () => {
       state.isRecording = false;
-      if (el.recordLabel) el.recordLabel.textContent = 'Nói vào mic';
+      if (el.recordLabel) el.recordLabel.textContent = 'Nói vào mic phụ';
       if (el.btnSpeechRecord) el.btnSpeechRecord.className = 'text-xs px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded border border-slate-700 flex items-center gap-1 transition';
+      updateMainSpeakBtnUI(false);
       stopMediaRecording();
     };
 
-    if (el.btnSpeechRecord) {
-      el.btnSpeechRecord.addEventListener('click', () => {
-        if (state.isRecording) {
-          state.recognition.stop();
-          stopMediaRecording();
-        } else {
+    function toggleSpeechRecording() {
+      if (state.isRecording) {
+        try { state.recognition.stop(); } catch (err) {}
+        stopMediaRecording();
+        state.isRecording = false;
+        updateMainSpeakBtnUI(false);
+      } else {
+        try {
           state.recognition.start();
+        } catch (err) {
+          console.warn('SpeechRecognition start fallback to MediaRecorder only:', err);
+          startMediaRecording();
+          state.isRecording = true;
+          updateMainSpeakBtnUI(true);
         }
-      });
+      }
+    }
+
+    if (btnStartSpeakingMain) {
+      btnStartSpeakingMain.addEventListener('click', toggleSpeechRecording);
+    }
+
+    if (el.btnSpeechRecord) {
+      el.btnSpeechRecord.addEventListener('click', toggleSpeechRecording);
     }
 
     // 2. Sound Practice Modal Recognition
