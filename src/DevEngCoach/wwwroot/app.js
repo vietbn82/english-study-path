@@ -102,6 +102,7 @@
   // Application State
   const state = {
     currentDay: 1,
+    currentSelfRating: 5,
     lessons: [FALLBACK_DAY_1],
     sessions: {},
     summary: {
@@ -204,9 +205,15 @@
     audioUserRecorded: document.getElementById('audio-user-recorded'),
     audioPlaybackStatus: document.getElementById('audio-playback-status'),
 
-    // Completion
+    // Completion & Learner Self-Rating
     inputActualMinutes: document.getElementById('input-actual-minutes'),
     btnCompleteSession: document.getElementById('btn-complete-session'),
+    inputLearnerNotes: document.getElementById('input-learner-notes'),
+    starRatingContainer: document.getElementById('star-rating-container'),
+    starRatingLabel: document.getElementById('star-rating-label'),
+    sessionCompletedBanner: document.getElementById('session-completed-banner'),
+    sessionCompletedInfo: document.getElementById('session-completed-info'),
+    sessionCompletedStars: document.getElementById('session-completed-stars'),
 
     // Curriculum Grid
     curriculumGrid: document.getElementById('curriculum-grid'),
@@ -323,6 +330,28 @@
     if (el.btnTestNotification) el.btnTestNotification.addEventListener('click', triggerTestNotification);
     if (el.btnEvaluateAi) el.btnEvaluateAi.addEventListener('click', evaluateWithAi);
     if (el.btnCompleteSession) el.btnCompleteSession.addEventListener('click', completeCurrentSession);
+
+    // Star Rating Control Events
+    document.querySelectorAll('.star-rating-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const rating = parseInt(btn.dataset.rating, 10);
+        if (rating >= 1 && rating <= 5) {
+          setSelfRating(rating);
+        }
+      });
+      btn.addEventListener('mouseenter', () => {
+        const rating = parseInt(btn.dataset.rating, 10);
+        if (rating >= 1 && rating <= 5) {
+          updateStarRatingUI(rating);
+        }
+      });
+    });
+
+    if (el.starRatingContainer) {
+      el.starRatingContainer.addEventListener('mouseleave', () => {
+        updateStarRatingUI(state.currentSelfRating);
+      });
+    }
 
     // Fast-track navigation
     if (el.btnPrevDay) {
@@ -649,6 +678,30 @@
     if (el.statProgress) el.statProgress.textContent = `${state.summary.completionPercentage}% (${state.summary.totalCompletedDays}/90)`;
   }
 
+  // Star Rating UI Helpers
+  function updateStarRatingUI(rating) {
+    const clamped = Math.max(1, Math.min(5, parseInt(rating, 10) || 5));
+    const starBtns = document.querySelectorAll('.star-rating-btn');
+    starBtns.forEach(btn => {
+      const btnRating = parseInt(btn.dataset.rating, 10);
+      if (btnRating <= clamped) {
+        btn.classList.remove('opacity-25', 'grayscale');
+        btn.classList.add('opacity-100');
+      } else {
+        btn.classList.remove('opacity-100');
+        btn.classList.add('opacity-25', 'grayscale');
+      }
+    });
+    if (el.starRatingLabel) {
+      el.starRatingLabel.textContent = `${'⭐'.repeat(clamped)} (${clamped}/5)`;
+    }
+  }
+
+  function setSelfRating(rating) {
+    state.currentSelfRating = Math.max(1, Math.min(5, parseInt(rating, 10) || 5));
+    updateStarRatingUI(state.currentSelfRating);
+  }
+
   // Load Day Lesson into Workspace
   function loadDayLesson(dayNumber) {
     const lesson = state.lessons.find(l => l.dayNumber === dayNumber) || FALLBACK_DAY_1;
@@ -738,7 +791,29 @@
     if (el.aiInputText) el.aiInputText.value = '';
     if (el.aiFeedbackBox) el.aiFeedbackBox.classList.add('hidden');
 
-    if (el.inputActualMinutes) el.inputActualMinutes.value = "30";
+    // Completion / Self-Rating & Personal Notes state
+    const session = state.sessions[lesson.dayNumber];
+    const isCompleted = session?.status === 'Completed';
+
+    if (isCompleted) {
+      const rating = session.selfRating || 5;
+      const minutes = session.actualMinutes || 30;
+      const notes = session.learnerNotes || '';
+
+      setSelfRating(rating);
+      if (el.inputLearnerNotes) el.inputLearnerNotes.value = notes;
+      if (el.inputActualMinutes) el.inputActualMinutes.value = minutes;
+
+      if (el.sessionCompletedBanner) el.sessionCompletedBanner.classList.remove('hidden');
+      if (el.sessionCompletedInfo) el.sessionCompletedInfo.textContent = `Đã hoàn thành: ${minutes} phút - ${rating} sao`;
+      if (el.sessionCompletedStars) el.sessionCompletedStars.textContent = '⭐'.repeat(rating);
+    } else {
+      setSelfRating(5);
+      if (el.inputLearnerNotes) el.inputLearnerNotes.value = '';
+      if (el.inputActualMinutes) el.inputActualMinutes.value = "30";
+
+      if (el.sessionCompletedBanner) el.sessionCompletedBanner.classList.add('hidden');
+    }
 
     switchView('workspace');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -806,8 +881,10 @@
     });
 
     filtered.forEach(l => {
-      const isCompleted = state.sessions[l.dayNumber]?.status === 'Completed';
+      const session = state.sessions[l.dayNumber];
+      const isCompleted = session?.status === 'Completed';
       const isCurrent = l.dayNumber === state.currentDay;
+      const rating = session?.selfRating;
 
       const card = document.createElement('div');
       card.className = `p-3.5 rounded-xl border cursor-pointer transition flex flex-col justify-between h-36 ${
@@ -824,7 +901,7 @@
             <span class="font-mono text-xs font-bold ${isCurrent ? 'text-cyan-400' : 'text-slate-400'}">DAY ${l.dayNumber}</span>
             ${
               isCompleted
-                ? '<span class="px-1.5 py-0.5 rounded text-[10px] bg-emerald-950 text-emerald-400 font-mono">✓ Done</span>'
+                ? `<span class="px-1.5 py-0.5 rounded text-[10px] bg-emerald-950 text-emerald-400 font-mono inline-flex items-center gap-1">✓ Done ${rating ? `<span class="text-amber-400 font-sans">${rating}⭐</span>` : ''}</span>`
                 : isCurrent
                 ? '<span class="px-1.5 py-0.5 rounded text-[10px] bg-cyan-950 text-cyan-400 font-mono">Active</span>'
                 : '<span class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 text-slate-400 font-mono">Pending</span>'
@@ -834,7 +911,10 @@
         </div>
         <div class="flex items-center justify-between text-[11px] text-slate-400 pt-2 border-t border-slate-800/60 font-mono">
           <span class="text-cyan-400/80">${l.phonetics.phoneticSymbol}</span>
-          <span>S${l.sprintId}</span>
+          <div class="flex items-center gap-1.5">
+            ${isCompleted && rating ? `<span class="text-amber-400 text-[10px]">${'★'.repeat(rating)}</span>` : ''}
+            <span>S${l.sprintId}</span>
+          </div>
         </div>
       `;
 
@@ -1133,6 +1213,7 @@
   // Complete Current Day Session
   async function completeCurrentSession() {
     const minutes = parseInt(el.inputActualMinutes?.value || '30', 10) || 30;
+    const notes = document.getElementById('input-learner-notes')?.value.trim() || el.inputLearnerNotes?.value.trim() || '';
 
     try {
       const res = await fetch('/api/progress/complete', {
@@ -1141,8 +1222,8 @@
         body: JSON.stringify({
           dayNumber: state.currentDay,
           actualMinutes: minutes,
-          selfRating: 5,
-          learnerNotes: el.aiInputText?.value.trim() || 'Completed daily routine.',
+          selfRating: state.currentSelfRating || 5,
+          learnerNotes: notes || '',
           aiFeedbackSnippet: el.aiSeniorRefactor?.textContent || ''
         })
       });
@@ -1160,6 +1241,8 @@
       // Advance to next day if available
       if (state.currentDay < 90) {
         loadDayLesson(state.currentDay + 1);
+      } else {
+        loadDayLesson(state.currentDay);
       }
     } catch (err) {
       console.error('Failed to complete session', err);

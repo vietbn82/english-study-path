@@ -60,7 +60,7 @@ As a developer, I want to submit my daily speech transcript or practice sentence
   - Planned: 30 minutes at 22:00.
   - Actual: Start time, finish time, duration (minutes), completion status (`Pending`, `Completed`, `Skipped`).
   - Progress metrics: Current Streak, Total Completed Days, Overall Completion Percentage.
-- **FR-004 (22:00 Reminder Hook)**: The system MUST support an automated 22:00 reminder (Windows desktop notification via PowerShell/toast or in-browser sound/notification).
+- **FR-004 (22:00 Reminder Hook - DROPPED FROM SCOPE)**: [Removed from backlog per user request]. Daily habit tracking relies on the in-dashboard Pomodoro timer and plan vs. actual telemetry.
 - **FR-005 (AGY CLI Integration)**: The backend MUST expose an API endpoint (`/api/ai/evaluate`) that invokes the local Antigravity CLI / Gemini AI to evaluate learner input against the day's phonetic targets and sentence frames.
 - **FR-006 (Zero External Dependency for Core Curriculum)**: The entire 90-day curriculum and dashboard MUST function completely offline on `localhost`.
 - **FR-007 (Omnipresent Audio Playback)**: Every IPA symbol, vocabulary word, example sentence, and minimal pair comparison across all pages (Dashboard & Fundamentals) MUST provide a 1-click audio playback button (`🔊`).

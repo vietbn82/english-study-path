@@ -20,6 +20,28 @@
     };
   </script>
   <link rel="stylesheet" href="styles.css">
+  <script src="resources-data.js"></script>
+  <style>
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .line-clamp-3 {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -643,7 +665,122 @@
       </div>
     </section>
 
-    <!-- SECTION 6: READY TO PRACTICE -->
+    <!-- SECTION 6: 100 CURATED PHONETICS & TECH RESOURCES -->
+    <section id="resource-library-section" class="space-y-6 pt-4 border-t border-slate-800">
+      <div class="space-y-2">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono bg-indigo-950 text-indigo-300 border border-indigo-800/70">
+          📚 KHO TƯ LIỆU CHUYÊN SÂU // CHƯƠNG 9 & 10
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-3">
+          <span class="w-8 h-8 rounded-lg bg-indigo-950 text-indigo-400 border border-indigo-800 flex items-center justify-center font-mono text-sm shrink-0">6</span>
+          Thư Viện 100 Tài Nguyên: 50 Video YouTube & 50 Bài Báo / Giáo Trình Kinh Điển
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-300 max-w-4xl leading-relaxed">
+          Tổng hợp 50 video trực quan mô phỏng giải phẫu 3D, chụp MRI thời gian thực, bài tập cơ học của các chuyên gia ngôn ngữ học hàng đầu (Rachel, Hadar, Geoff Lindsey, Sounds American) cùng 50 bài báo khoa học, giáo trình kinh điển thế giới và nghiên cứu đối chiếu lỗi phát âm người Việt.
+        </p>
+      </div>
+
+      <!-- Controls: Search, Filter Chips & Stats -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
+        
+        <!-- Search Bar & View Options -->
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          <div class="relative flex-1">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+              🔍
+            </span>
+            <input
+              type="text"
+              id="res-search-input"
+              class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-9 py-2.5 text-xs sm:text-sm font-sans text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition"
+              placeholder="Tìm kiếm tài nguyên (tiêu đề, tác giả, mô tả, ví dụ: 'Rachel', 'MRI', 'Flap T', 'Vietnamese', 'Lead Lid')..."
+            />
+            <button
+              id="res-search-clear"
+              class="hidden absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-white text-xs font-mono transition"
+              title="Xóa tìm kiếm"
+            >
+              ✕
+            </button>
+          </div>
+
+          <!-- Items per page selector & Counter -->
+          <div class="flex items-center justify-between sm:justify-end gap-3 shrink-0 text-xs text-slate-400">
+            <div class="font-mono bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800">
+              Hiển thị: <span id="res-count-visible" class="text-cyan-400 font-bold">100</span> / <span id="res-count-total">100</span>
+            </div>
+            <select
+              id="res-page-size"
+              class="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-300 font-mono focus:outline-none focus:border-cyan-500"
+            >
+              <option value="12">12 / trang</option>
+              <option value="24" selected>24 / trang</option>
+              <option value="48">48 / trang</option>
+              <option value="100">Tất cả (100)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Filter Chips Row -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs no-scrollbar" id="res-filter-chips">
+          <button data-filter="all" class="res-chip active px-3.5 py-1.5 rounded-full font-medium transition border flex items-center gap-1.5 whitespace-nowrap bg-cyan-500 text-slate-950 border-cyan-400 shadow-sm font-semibold">
+            <span>Tất cả</span>
+            <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-950 text-cyan-300 font-mono">100</span>
+          </button>
+          <button data-filter="youtube" class="res-chip px-3.5 py-1.5 rounded-full font-medium transition border flex items-center gap-1.5 whitespace-nowrap bg-slate-950/80 hover:bg-slate-800 text-slate-300 border-slate-800">
+            <span>🎬 YouTube</span>
+            <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-900 text-rose-300 font-mono border border-slate-800">50</span>
+          </button>
+          <button data-filter="article" class="res-chip px-3.5 py-1.5 rounded-full font-medium transition border flex items-center gap-1.5 whitespace-nowrap bg-slate-950/80 hover:bg-slate-800 text-slate-300 border-slate-800">
+            <span>📚 Bài báo & Giáo trình</span>
+            <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-900 text-indigo-300 font-mono border border-slate-800">50</span>
+          </button>
+          <button data-filter="tech" class="res-chip px-3.5 py-1.5 rounded-full font-medium transition border flex items-center gap-1.5 whitespace-nowrap bg-slate-950/80 hover:bg-slate-800 text-slate-300 border-slate-800">
+            <span>💻 IT & Tech English</span>
+            <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-900 text-cyan-300 font-mono border border-slate-800">28</span>
+          </button>
+          <button data-filter="mri" class="res-chip px-3.5 py-1.5 rounded-full font-medium transition border flex items-center gap-1.5 whitespace-nowrap bg-slate-950/80 hover:bg-slate-800 text-slate-300 border-slate-800">
+            <span>🔬 Giải phẫu & MRI</span>
+            <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-900 text-amber-300 font-mono border border-slate-800">41</span>
+          </button>
+          <button data-filter="vietnamese" class="res-chip px-3.5 py-1.5 rounded-full font-medium transition border flex items-center gap-1.5 whitespace-nowrap bg-slate-950/80 hover:bg-slate-800 text-slate-300 border-slate-800">
+            <span>🇻🇳 Lỗi người Việt</span>
+            <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-900 text-emerald-300 font-mono border border-slate-800">17</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Resource Grid -->
+      <div id="res-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Dynamically injected cards -->
+      </div>
+
+      <!-- Empty State -->
+      <div id="res-empty-state" class="hidden text-center py-16 px-4 bg-slate-900/40 rounded-2xl border border-dashed border-slate-800 space-y-3">
+        <div class="text-4xl">🔍</div>
+        <h4 class="text-base font-bold text-slate-200">Không tìm thấy tài nguyên phù hợp</h4>
+        <p class="text-xs text-slate-400 max-w-md mx-auto" id="res-empty-msg">
+          Thử tìm bằng các từ khóa khác như "Rachel", "Flap T", "MRI", "Vietnamese", "Stop T" hoặc chọn bộ lọc "Tất cả".
+        </p>
+        <button id="res-btn-reset-filters" class="px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-slate-950 text-xs font-bold transition">
+          Đặt lại bộ lọc & tìm kiếm
+        </button>
+      </div>
+
+      <!-- Pagination Navigation -->
+      <div id="res-pagination" class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-800/80">
+        <div class="text-xs text-slate-400 font-mono" id="res-pagination-info">
+          Trang 1 / 5
+        </div>
+        <div class="flex items-center gap-1.5" id="res-pagination-buttons">
+          <!-- Dynamic pagination buttons -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- SECTION 7: READY TO PRACTICE -->
     <div class="p-8 rounded-2xl bg-gradient-to-r from-cyan-950/60 to-blue-950/60 border border-cyan-800/60 text-center space-y-4">
       <h3 class="text-2xl font-extrabold text-white">Bạn Đã Nắm Trọn Bản Đồ Cơ Học Khoang Miệng!</h3>
       <p class="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto leading-relaxed">
@@ -1039,6 +1176,321 @@
             if (meaningEl) meaningEl.textContent = `Bấm 🔊 để nghe phát âm chuẩn`;
           }
         }, 150);
+      }
+
+      // =========================================================
+      // 100 Resources Library Interactive Engine (50 YT + 50 Arts)
+      // =========================================================
+      initResourceLibrary();
+
+      function initResourceLibrary() {
+        const grid = document.getElementById('res-grid');
+        const searchInput = document.getElementById('res-search-input');
+        const clearBtn = document.getElementById('res-search-clear');
+        const filterChips = document.getElementById('res-filter-chips');
+        const pageSizeSelect = document.getElementById('res-page-size');
+        const countVisible = document.getElementById('res-count-visible');
+        const countTotal = document.getElementById('res-count-total');
+        const emptyState = document.getElementById('res-empty-state');
+        const emptyMsg = document.getElementById('res-empty-msg');
+        const resetBtn = document.getElementById('res-btn-reset-filters');
+        const pagination = document.getElementById('res-pagination');
+        const paginationInfo = document.getElementById('res-pagination-info');
+        const paginationButtons = document.getElementById('res-pagination-buttons');
+
+        if (!grid || !window.RESOURCES_DATA) return;
+
+        let activeFilter = 'all';
+        let searchQuery = '';
+        let currentPage = 1;
+        let pageSize = parseInt(pageSizeSelect?.value || '24', 10);
+
+        if (countTotal) countTotal.textContent = window.RESOURCES_DATA.length;
+
+        function getFilteredResources() {
+          const q = searchQuery.trim().toLowerCase();
+          return window.RESOURCES_DATA.filter(item => {
+            // Category / Type match
+            let matchFilter = false;
+            if (activeFilter === 'all') {
+              matchFilter = true;
+            } else if (activeFilter === 'youtube') {
+              matchFilter = item.type === 'youtube';
+            } else if (activeFilter === 'article') {
+              matchFilter = item.type === 'article';
+            } else if (item.filterGroups && item.filterGroups.includes(activeFilter)) {
+              matchFilter = true;
+            }
+
+            if (!matchFilter) return false;
+
+            // Search query match
+            if (!q) return true;
+
+            const inTitle = item.title && item.title.toLowerCase().includes(q);
+            const inAuthor = item.author && item.author.toLowerCase().includes(q);
+            const inDesc = item.description && item.description.toLowerCase().includes(q);
+            const inCat = item.category && item.category.toLowerCase().includes(q);
+            const inTags = item.tags && item.tags.some(t => t.toLowerCase().includes(q));
+
+            return inTitle || inAuthor || inDesc || inCat || inTags;
+          });
+        }
+
+        function escapeHtml(str) {
+          if (!str) return '';
+          return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+        }
+
+        function renderCard(item) {
+          const isYt = item.type === 'youtube';
+          const typeBadge = isYt
+            ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-rose-950 text-rose-300 border border-rose-800/70">🎬 YouTube</span>`
+            : `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-indigo-950 text-indigo-300 border border-indigo-800/70">📚 Bài báo / Sách</span>`;
+
+          const actionLabel = isYt ? '▶ Xem trên YouTube ↗' : '📖 Đọc trên Google Scholar ↗';
+          const actionClasses = isYt
+            ? 'bg-rose-950/40 hover:bg-rose-600 hover:text-white text-rose-300 border-rose-800/60'
+            : 'bg-indigo-950/40 hover:bg-indigo-600 hover:text-white text-indigo-300 border-indigo-800/60';
+
+          return `
+            <div class="bg-slate-900/90 border border-slate-800 hover:border-slate-700 hover:bg-slate-850 rounded-xl p-4 flex flex-col justify-between transition-all duration-200 group shadow-md hover:shadow-cyan-950/20">
+              <div class="space-y-2.5">
+                <div class="flex items-center justify-between gap-2">
+                  ${typeBadge}
+                  <span class="text-[10px] font-mono text-slate-400 px-2 py-0.5 rounded bg-slate-950 border border-slate-800 truncate max-w-[170px]" title="${escapeHtml(item.category)}">
+                    ${escapeHtml(item.category)}
+                  </span>
+                </div>
+
+                <h3 class="text-sm font-bold text-white group-hover:text-cyan-400 transition-colors line-clamp-2 leading-snug">
+                  ${escapeHtml(item.title)}
+                </h3>
+
+                <div class="text-[11px] font-mono text-cyan-400/90 flex items-center gap-1">
+                  <span>👤</span>
+                  <span class="truncate">${escapeHtml(item.author)}</span>
+                </div>
+
+                <p class="text-xs text-slate-300/90 leading-relaxed line-clamp-3">
+                  ${escapeHtml(item.description)}
+                </p>
+              </div>
+
+              <div class="pt-3.5 mt-3 border-t border-slate-800/80">
+                <a
+                  href="${escapeHtml(item.url)}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="w-full py-2 px-3 rounded-lg border text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors ${actionClasses}"
+                >
+                  <span>${actionLabel}</span>
+                </a>
+              </div>
+            </div>
+          `;
+        }
+
+        function render() {
+          const filtered = getFilteredResources();
+          const total = filtered.length;
+
+          if (countVisible) countVisible.textContent = total;
+
+          if (total === 0) {
+            grid.innerHTML = '';
+            grid.classList.add('hidden');
+            if (pagination) pagination.classList.add('hidden');
+            if (emptyState) {
+              emptyState.classList.remove('hidden');
+              if (emptyMsg) {
+                emptyMsg.textContent = searchQuery
+                  ? `Không tìm thấy tài nguyên nào phù hợp với từ khóa "${searchQuery}".`
+                  : 'Không có tài nguyên nào trong bộ lọc này.';
+              }
+            }
+            return;
+          }
+
+          if (emptyState) emptyState.classList.add('hidden');
+          grid.classList.remove('hidden');
+
+          const effectivePageSize = isNaN(pageSize) || pageSize <= 0 ? total : pageSize;
+          const totalPages = Math.max(1, Math.ceil(total / effectivePageSize));
+
+          if (currentPage > totalPages) currentPage = totalPages;
+          if (currentPage < 1) currentPage = 1;
+
+          const startIdx = (currentPage - 1) * effectivePageSize;
+          const endIdx = Math.min(startIdx + effectivePageSize, total);
+          const pageItems = filtered.slice(startIdx, endIdx);
+
+          grid.innerHTML = pageItems.map(renderCard).join('');
+
+          // Render Pagination
+          if (pagination) {
+            if (totalPages <= 1) {
+              pagination.classList.add('hidden');
+            } else {
+              pagination.classList.remove('hidden');
+              if (paginationInfo) {
+                paginationInfo.textContent = `Trang ${currentPage} / ${totalPages} (Mục ${startIdx + 1} - ${endIdx} trong ${total})`;
+              }
+
+              let btnsHtml = '';
+              // Prev button
+              const prevDisabled = currentPage === 1;
+              btnsHtml += `
+                <button
+                  class="res-page-btn px-2.5 py-1.5 rounded-lg border text-xs font-mono font-medium transition ${prevDisabled ? 'opacity-40 cursor-not-allowed border-slate-800 text-slate-500' : 'bg-slate-900 hover:bg-slate-800 border-slate-700 text-slate-200'}"
+                  data-page="${currentPage - 1}"
+                  ${prevDisabled ? 'disabled' : ''}
+                >
+                  ◀ Trước
+                </button>
+              `;
+
+              // Page numbers (smart windowing)
+              let startP = Math.max(1, currentPage - 2);
+              let endP = Math.min(totalPages, currentPage + 2);
+              if (startP > 1) {
+                btnsHtml += `<button class="res-page-btn px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-900 text-xs font-mono text-slate-200 hover:bg-slate-800" data-page="1">1</button>`;
+                if (startP > 2) btnsHtml += `<span class="px-1 text-slate-500 font-mono">...</span>`;
+              }
+              for (let p = startP; p <= endP; p++) {
+                const isActive = p === currentPage;
+                btnsHtml += `
+                  <button
+                    class="res-page-btn px-2.5 py-1.5 rounded-lg border text-xs font-mono font-semibold transition ${isActive ? 'bg-cyan-500 text-slate-950 border-cyan-400' : 'bg-slate-900 hover:bg-slate-800 border-slate-700 text-slate-200'}"
+                    data-page="${p}"
+                  >
+                    ${p}
+                  </button>
+                `;
+              }
+              if (endP < totalPages) {
+                if (endP < totalPages - 1) btnsHtml += `<span class="px-1 text-slate-500 font-mono">...</span>`;
+                btnsHtml += `<button class="res-page-btn px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-900 text-xs font-mono text-slate-200 hover:bg-slate-800" data-page="${totalPages}">${totalPages}</button>`;
+              }
+
+              // Next button
+              const nextDisabled = currentPage === totalPages;
+              btnsHtml += `
+                <button
+                  class="res-page-btn px-2.5 py-1.5 rounded-lg border text-xs font-mono font-medium transition ${nextDisabled ? 'opacity-40 cursor-not-allowed border-slate-800 text-slate-500' : 'bg-slate-900 hover:bg-slate-800 border-slate-700 text-slate-200'}"
+                  data-page="${currentPage + 1}"
+                  ${nextDisabled ? 'disabled' : ''}
+                >
+                  Sau ▶
+                </button>
+              `;
+
+              paginationButtons.innerHTML = btnsHtml;
+            }
+          }
+        }
+
+        // Chip Clicks
+        if (filterChips) {
+          filterChips.addEventListener('click', (e) => {
+            const btn = e.target.closest('.res-chip');
+            if (!btn) return;
+            const filter = btn.dataset.filter;
+            if (!filter) return;
+
+            activeFilter = filter;
+            currentPage = 1;
+
+            filterChips.querySelectorAll('.res-chip').forEach(chip => {
+              chip.className = 'res-chip px-3.5 py-1.5 rounded-full font-medium transition border flex items-center gap-1.5 whitespace-nowrap bg-slate-950/80 hover:bg-slate-800 text-slate-300 border-slate-800';
+            });
+            btn.className = 'res-chip active px-3.5 py-1.5 rounded-full font-medium transition border flex items-center gap-1.5 whitespace-nowrap bg-cyan-500 text-slate-950 border-cyan-400 shadow-sm font-semibold';
+
+            render();
+          });
+        }
+
+        // Search Input
+        if (searchInput) {
+          searchInput.addEventListener('input', () => {
+            searchQuery = searchInput.value;
+            currentPage = 1;
+            if (clearBtn) {
+              if (searchQuery.length > 0) clearBtn.classList.remove('hidden');
+              else clearBtn.classList.add('hidden');
+            }
+            render();
+          });
+        }
+
+        // Search Clear
+        if (clearBtn) {
+          clearBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            searchQuery = '';
+            clearBtn.classList.add('hidden');
+            currentPage = 1;
+            searchInput.focus();
+            render();
+          });
+        }
+
+        // Reset All Filters
+        if (resetBtn) {
+          resetBtn.addEventListener('click', () => {
+            if (searchInput) {
+              searchInput.value = '';
+              searchQuery = '';
+            }
+            if (clearBtn) clearBtn.classList.add('hidden');
+            activeFilter = 'all';
+            currentPage = 1;
+
+            if (filterChips) {
+              filterChips.querySelectorAll('.res-chip').forEach(chip => {
+                const isAll = chip.dataset.filter === 'all';
+                chip.className = isAll
+                  ? 'res-chip active px-3.5 py-1.5 rounded-full font-medium transition border flex items-center gap-1.5 whitespace-nowrap bg-cyan-500 text-slate-950 border-cyan-400 shadow-sm font-semibold'
+                  : 'res-chip px-3.5 py-1.5 rounded-full font-medium transition border flex items-center gap-1.5 whitespace-nowrap bg-slate-950/80 hover:bg-slate-800 text-slate-300 border-slate-800';
+              });
+            }
+            render();
+          });
+        }
+
+        // Page Size
+        if (pageSizeSelect) {
+          pageSizeSelect.addEventListener('change', () => {
+            pageSize = parseInt(pageSizeSelect.value, 10);
+            currentPage = 1;
+            render();
+          });
+        }
+
+        // Pagination Buttons
+        if (paginationButtons) {
+          paginationButtons.addEventListener('click', (e) => {
+            const btn = e.target.closest('.res-page-btn');
+            if (!btn || btn.disabled) return;
+            const targetPage = parseInt(btn.dataset.page, 10);
+            if (!isNaN(targetPage)) {
+              currentPage = targetPage;
+              render();
+              const section = document.getElementById('resource-library-section');
+              if (section) {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }
+            }
+          });
+        }
+
+        // Initial Render
+        render();
       }
     });
   </script>

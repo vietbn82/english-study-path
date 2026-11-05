@@ -27,15 +27,14 @@
 
 ---
 
-## Phase 3: Telemetry, Habit Tracker & 22:00 Reminder Service
+## Phase 3: Telemetry & Habit Tracker
+*(Note: 22:00 Reminder Task removed from backlog per user request)*
 
 - [x] **Task 3.1**: Implement `ProgressService`:
   - Persistent JSON storage in `Data/progress.json`.
   - Streak calculation (consecutive days completed).
-  - Plan vs. Actual variance analytics (30 planned mins at 22:00 vs. actual minutes logged).
-- [x] **Task 3.2**: Implement `ReminderService`:
-  - Background service / scheduling checking for 22:00 daily reminder.
-  - Windows Toast / PowerShell notification integration with fallback to browser notifications.
+  - Plan vs. Actual variance analytics (30 planned mins vs. actual minutes logged).
+- [-] **Task 3.2**: `ReminderService` [REMOVED from backlog per user directive].
 
 ---
 
@@ -81,3 +80,11 @@
 - [x] **Task 7.5**: Add omnipresent 1-click audio playback (`🔊`) to every single IPA symbol, example word, and phrase.
 - [x] **Task 7.6**: Add persistent Global Floating AGY AI Assistant widget (FAB) across all pages.
 - [x] **Task 7.7**: End-to-End browser verification and automated test suite execution.
+
+---
+
+## Phase 8: Resource Library UI & Learner Self-Rating Telemetry
+
+- [x] **Task 8.1**: Implement interactive 50 YouTube Videos + 50 Articles Resource Library on `fundamentals.html` with real-time search, category filters, and direct links.
+- [x] **Task 8.2**: Implement 1-5 Star Self-Rating & Personal Notes inputs on `index.html` and wire up persistence to `/api/progress/complete` in `app.js`.
+- [x] **Task 8.3**: Verification and full test pass.

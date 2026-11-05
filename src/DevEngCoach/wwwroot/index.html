@@ -390,16 +390,52 @@
             </div>
           </div>
 
-          <!-- Mark Session Complete Button -->
-          <div class="pt-2 border-t border-slate-800 flex items-center gap-3">
-            <div class="flex items-center gap-1.5 text-xs font-mono text-slate-400">
-              <span>Thời gian:</span>
-              <input type="number" id="input-actual-minutes" value="30" min="5" max="180" class="w-14 bg-slate-950 border border-slate-800 rounded px-1.5 py-1 text-center text-slate-200">
-              <span>phút</span>
+          <!-- Mark Session Complete Container -->
+          <div class="pt-3 border-t border-slate-800 space-y-3">
+            <!-- Completed Session Banner (visible when day is already completed) -->
+            <div id="session-completed-banner" class="hidden p-2.5 rounded-lg bg-emerald-950/60 border border-emerald-800/80 text-emerald-300 text-xs flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="text-base">✅</span>
+                <span id="session-completed-info" class="font-semibold">Đã hoàn thành: 30 phút - 5 sao</span>
+              </div>
+              <span id="session-completed-stars" class="font-mono text-amber-400 tracking-wider">⭐⭐⭐⭐⭐</span>
             </div>
-            <button id="btn-complete-session" class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold rounded-lg text-xs shadow-md transition">
-              ✓ Hoàn thành Ngày hôm nay
-            </button>
+
+            <!-- Learner 1-5 Star Rating Control -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-slate-950/80 p-2.5 rounded-lg border border-slate-800/80">
+              <div class="flex items-center gap-2.5">
+                <span class="text-xs font-semibold text-slate-300">Tự đánh giá buổi học:</span>
+                <div class="flex items-center gap-1" id="star-rating-container" role="radiogroup" aria-label="Tự đánh giá buổi học">
+                  <button type="button" class="star-rating-btn text-lg leading-none cursor-pointer transition-transform hover:scale-125 focus:outline-none" data-rating="1" title="1 sao - Cần luyện thêm">⭐</button>
+                  <button type="button" class="star-rating-btn text-lg leading-none cursor-pointer transition-transform hover:scale-125 focus:outline-none" data-rating="2" title="2 sao - Tạm được">⭐</button>
+                  <button type="button" class="star-rating-btn text-lg leading-none cursor-pointer transition-transform hover:scale-125 focus:outline-none" data-rating="3" title="3 sao - Đạt yêu cầu">⭐</button>
+                  <button type="button" class="star-rating-btn text-lg leading-none cursor-pointer transition-transform hover:scale-125 focus:outline-none" data-rating="4" title="4 sao - Khá tốt">⭐</button>
+                  <button type="button" class="star-rating-btn text-lg leading-none cursor-pointer transition-transform hover:scale-125 focus:outline-none" data-rating="5" title="5 sao - Xuất sắc">⭐</button>
+                </div>
+              </div>
+              <span id="star-rating-label" class="text-xs font-mono font-medium text-amber-400">⭐⭐⭐⭐⭐ (5/5)</span>
+            </div>
+
+            <!-- Personal Notes Textarea -->
+            <div class="space-y-1">
+              <label for="input-learner-notes" class="text-[11px] font-semibold text-slate-400 flex items-center justify-between">
+                <span>📝 Ghi chú cá nhân:</span>
+                <span class="text-[10px] text-slate-500 font-mono">Nhật ký phát âm</span>
+              </label>
+              <textarea id="input-learner-notes" rows="2" placeholder="Ghi chú buổi học: cảm nhận cơ miệng, từ vựng khó, lưu ý cho ngày mai..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition resize-none"></textarea>
+            </div>
+
+            <!-- Time Input and Complete Button -->
+            <div class="flex items-center gap-3">
+              <div class="flex items-center gap-1.5 text-xs font-mono text-slate-400">
+                <span>Thời gian:</span>
+                <input type="number" id="input-actual-minutes" value="30" min="5" max="180" class="w-14 bg-slate-950 border border-slate-800 rounded px-1.5 py-1 text-center text-slate-200">
+                <span>phút</span>
+              </div>
+              <button id="btn-complete-session" class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold rounded-lg text-xs shadow-md transition">
+                ✓ Hoàn thành Ngày hôm nay
+              </button>
+            </div>
           </div>
         </div>
 
