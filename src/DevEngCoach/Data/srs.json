@@ -100,11 +100,11 @@
     "WordOrPhrase": "distributed",
     "TargetPhoneme": "/d/ \u002B /b/",
     "ContextSentence": "We are designing a distributed transaction coordinator.",
-    "NextReviewDate": "2026-11-08T15:04:11.1129107Z",
+    "NextReviewDate": "2026-11-08T15:43:34.9910872Z",
     "IntervalDays": 3,
     "Box": 2,
     "ConsecutiveCorrect": 1,
     "LastScore": 85,
-    "ReviewCount": 6
+    "ReviewCount": 7
   }
 ]

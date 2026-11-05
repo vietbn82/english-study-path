@@ -27,100 +27,158 @@
 <body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased selection:bg-cyan-500 selection:text-slate-950">
 
   <!-- Top Sticky Navigation -->
-  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <!-- Brand Logo / Home link -->
-      <div class="flex items-center gap-4">
-        <a href="/" id="brand-logo-home" class="flex items-center space-x-3 cursor-pointer group" title="Quay về trang chủ">
-          <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-mono font-bold text-slate-950 shadow-lg shadow-cyan-500/20 group-hover:scale-105 transition-transform">
-            DE
-          </div>
-          <div>
-            <div class="font-bold text-base tracking-tight text-white group-hover:text-cyan-400 transition-colors">
-              DevEng Coach
+    <!-- ========================================================================= -->
+  <!-- MODERN 2-TIER ARCHITECTURAL HEADER                                        -->
+  <!-- ========================================================================= -->
+  <header class="border-b border-slate-800/90 bg-slate-950/90 backdrop-blur-md sticky top-0 z-50 shadow-2xl">
+    
+    <!-- Tier 1: Brand, Core Navigation, Sticky Session Timer, Telemetry Badges -->
+    <div class="border-b border-slate-800/60">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-4">
+        
+        <!-- Left: Brand + Primary Tabs -->
+        <div class="flex items-center gap-5">
+          <a href="/" id="brand-logo-home" class="flex items-center gap-2.5 group cursor-pointer" title="Quay về trang chủ">
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-400 via-cyan-500 to-blue-600 flex items-center justify-center font-mono font-black text-slate-950 text-xs shadow-md shadow-cyan-500/25 group-hover:scale-105 transition-transform">
+              DE
+            </div>
+            <div class="flex items-baseline gap-1.5">
+              <span class="font-extrabold text-sm tracking-tight text-white group-hover:text-cyan-400 transition-colors">
+                DevEng<span class="text-cyan-400 font-normal ml-0.5">Coach</span>
+              </span>
+              <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-cyan-950/80 text-cyan-400 border border-cyan-800/50 uppercase tracking-wider font-semibold">Pro</span>
+            </div>
+          </a>
+
+          <div class="h-4 w-px bg-slate-800 hidden sm:block"></div>
+
+          <!-- Primary View Links -->
+          <nav class="flex items-center gap-1">
+            <button id="nav-workspace" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950 shadow-sm transition flex items-center gap-1.5 cursor-pointer">
+              <span>💻</span>
+              <span>Buổi học</span>
+            </button>
+            <button id="nav-curriculum" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 cursor-pointer">
+              <span>🗺️</span>
+              <span>90 ngày</span>
+            </button>
+            <a href="fundamentals.html" target="_blank" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-cyan-300 hover:bg-cyan-950/40 border border-transparent hover:border-cyan-800/40 transition flex items-center gap-1.5">
+              <span>📖</span>
+              <span>Cẩm nang</span>
+              <span class="text-[10px] text-slate-500">↗</span>
+            </a>
+          </nav>
+        </div>
+
+        <!-- Center: Sleek Glow Session Timer Widget -->
+        <div class="flex items-center">
+          <div id="sticky-header-timer" class="flex items-center gap-2.5 px-3 py-1 rounded-full bg-slate-900/90 border border-cyan-500/30 hover:border-cyan-500/60 shadow-lg shadow-cyan-950/40 font-mono text-xs transition">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+              <span class="text-slate-400 text-[10px] uppercase font-bold tracking-wider">Session</span>
+            </div>
+            <span id="header-timer-display" class="font-bold text-cyan-300 text-sm tracking-wider">30:00</span>
+            <span class="text-slate-700">|</span>
+            <span id="header-timer-phase" class="hidden md:inline text-[10px] text-slate-400 max-w-[100px] truncate">1. Khẩu Hình</span>
+            <div class="flex items-center gap-1 ml-0.5">
+              <button id="btn-header-timer-toggle" class="px-2.5 py-0.5 rounded-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-[10px] transition cursor-pointer shadow-sm" title="Bắt đầu / Tạm dừng">Start</button>
+              <button id="btn-header-timer-reset" class="w-5 h-5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white text-[10px] flex items-center justify-center transition cursor-pointer" title="Đặt lại 30 phút">↺</button>
             </div>
           </div>
-        </a>
-
-        <!-- Compact Sticky Header Session Timer (Always visible when scrolling) -->
-        <div id="sticky-header-timer" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-950/90 border border-cyan-800/70 shadow font-mono text-xs">
-          <span class="text-cyan-400 animate-pulse text-xs">⏱️</span>
-          <span id="header-timer-display" class="font-bold text-cyan-300">30:00</span>
-          <span id="header-timer-phase" class="hidden sm:inline text-[10px] text-slate-400 max-w-[120px] truncate">Phonetics</span>
-          <button id="btn-header-timer-toggle" class="px-2 py-0.5 rounded bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold text-[10px] transition cursor-pointer">Start</button>
-          <button id="btn-header-timer-reset" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-400 text-[10px] transition cursor-pointer" title="Reset">↺</button>
-        </div>
-      </div>
-
-      <!-- Telemetry Stats Bar -->
-      <div class="hidden lg:flex items-center space-x-3 text-xs font-mono">
-        <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-md bg-slate-800/80 border border-slate-700/60">
-          <span class="text-amber-400">⏰ Nhắc nhở:</span>
-          <span class="font-bold text-slate-200" id="stat-reminder-time">22:00</span>
-          <button id="btn-test-notification" title="Test desktop notification" class="text-slate-400 hover:text-cyan-400 transition ml-1">🔔</button>
         </div>
 
-        <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-md bg-slate-800/80 border border-slate-700/60">
-          <span>🔥 Streak:</span>
-          <span class="font-bold text-orange-400" id="stat-streak">0 ngày</span>
+        <!-- Right: Modern Telemetry Capsule Cluster -->
+        <div class="hidden lg:flex items-center gap-2 text-xs font-mono">
+          <!-- Unified Stats Capsule -->
+          <div class="flex items-center rounded-lg bg-slate-900/80 border border-slate-800 p-0.5 text-[11px]">
+            <!-- Streak -->
+            <div class="flex items-center gap-1.5 px-2.5 py-1 text-slate-300 border-r border-slate-800/80" title="Chuỗi ngày học liên tục">
+              <span class="text-orange-400">🔥</span>
+              <span class="font-bold text-orange-400" id="stat-streak">0d</span>
+            </div>
+
+            <!-- Variance Plan -->
+            <div class="flex items-center gap-1.5 px-2.5 py-1 text-slate-300 border-r border-slate-800/80" title="Thời gian học thực tế / kế hoạch">
+              <span class="text-blue-400">⏱️</span>
+              <span class="font-semibold text-slate-200" id="stat-variance">0m/0m</span>
+            </div>
+
+            <!-- Progress -->
+            <div class="flex items-center gap-1.5 px-2.5 py-1 text-slate-300 border-r border-slate-800/80" title="Tiến độ hoàn thành 90 ngày">
+              <span class="text-cyan-400">🎯</span>
+              <span class="font-bold text-cyan-400" id="stat-progress">0%</span>
+            </div>
+
+            <!-- SRS Due -->
+            <div class="flex items-center gap-1.5 px-2.5 py-1 text-slate-300 cursor-pointer hover:bg-slate-800/60 rounded transition" id="stat-srs-badge" title="Từ vựng cần ôn tập hôm nay (Click để mở SRS Vault)">
+              <span class="text-amber-400">🧠</span>
+              <span class="font-bold text-amber-400" id="stat-srs-due">0</span>
+            </div>
+          </div>
+
+          <!-- Notification Reminder Icon Pill -->
+          <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900/80 border border-slate-800 text-[11px] text-slate-400">
+            <span class="text-amber-400">⏰</span>
+            <span class="font-semibold text-slate-300" id="stat-reminder-time">22:00</span>
+            <button id="btn-test-notification" title="Test thông báo màn hình" class="hover:text-cyan-400 transition cursor-pointer ml-0.5">🔔</button>
+          </div>
         </div>
 
-        <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-md bg-slate-800/80 border border-slate-700/60">
-          <span>⏱️ Thực tế vs Plan:</span>
-          <span class="font-bold text-slate-200" id="stat-variance">0m / 0m</span>
-        </div>
-
-        <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-md bg-slate-800/80 border border-slate-700/60">
-          <span>🎯 Tiến độ:</span>
-          <span class="font-bold text-cyan-400" id="stat-progress">0% (0/90)</span>
-        </div>
-
-        <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-md bg-slate-800/80 border border-slate-700/60 cursor-pointer hover:border-amber-500/50 transition" id="stat-srs-badge" title="Bấm để mở SRS Weak-Spot Vault">
-          <span>🧠 Ôn tập:</span>
-          <span class="font-bold text-amber-400" id="stat-srs-due">0 từ</span>
-        </div>
-      </div>
-
-      <!-- Navigation Tabs -->
-      <div class="flex items-center space-x-1.5 flex-wrap">
-        <button id="nav-workspace" class="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-cyan-500 text-slate-950 shadow-sm transition">
-          💻 Buổi học
-        </button>
-        <button id="nav-curriculum" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 transition">
-          🗺️ 90 ngày
-        </button>
-        <button id="nav-simulators" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 transition">
-          🎙️ Standup/Demo
-        </button>
-        <button id="nav-sparring" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 transition">
-          ⚔️ Sparring Arena
-        </button>
-        <button id="nav-prpolish" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 transition">
-          🛠️ PR Studio
-        </button>
-        <button id="nav-srs" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 transition">
-          🧠 SRS Vault
-        </button>
-        <button id="nav-analytics" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 transition">
-          📊 Burndown & Analytics
-        </button>
-        <button id="nav-shadowing" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 transition">
-          🎙️ Shadowing Studio
-        </button>
-        <button id="btn-open-warmup" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-amber-300 bg-amber-950/60 border border-amber-800/80 hover:bg-amber-900/60 transition flex items-center gap-1" title="Khởi động 2 phút với 5 từ yếu">
-          ⚡ 2m Warm-Up
-        </button>
-        <button id="btn-open-microlesson" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-orange-300 bg-orange-950/60 border border-orange-800/80 hover:bg-orange-900/60 transition flex items-center gap-1" title="Chế độ học 10 phút">
-          ⚡ Quick 10m
-        </button>
-        <button id="btn-open-cheatsheet" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-cyan-300 bg-cyan-950/60 border border-cyan-800/80 hover:bg-cyan-900/60 transition flex items-center gap-1" title="In tờ tóm tắt A4">
-          📋 In Cheat Sheet
-        </button>
-        <a href="fundamentals.html" target="_blank" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-amber-300 bg-amber-950/40 border border-amber-800/60 hover:bg-amber-900/40 transition flex items-center gap-1">
-          <span>📖 Fundamentals</span>
-        </a>
       </div>
     </div>
+
+    <!-- Tier 2: Specialized Practice Studios & Quick Utility Actions Bar -->
+    <div class="bg-slate-900/40">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-10 flex items-center justify-between gap-4 overflow-x-auto scrollbar-none text-xs">
+        
+        <!-- Left: Practice Studios Segment -->
+        <div class="flex items-center gap-1 shrink-0">
+          <span class="text-[10px] font-mono uppercase font-bold text-slate-500 mr-1.5 hidden xl:inline">Phòng luyện:</span>
+          <button id="nav-simulators" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+            <span>🎙️</span>
+            <span>Standup/Demo</span>
+          </button>
+          <button id="nav-sparring" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+            <span>⚔️</span>
+            <span>Sparring Arena</span>
+          </button>
+          <button id="nav-prpolish" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+            <span>🛠️</span>
+            <span>PR Studio</span>
+          </button>
+          <button id="nav-shadowing" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+            <span>🎙️</span>
+            <span>Shadowing Studio</span>
+          </button>
+          <button id="nav-srs" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+            <span>🧠</span>
+            <span>SRS Vault</span>
+          </button>
+          <button id="nav-analytics" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+            <span>📊</span>
+            <span>Burndown</span>
+          </button>
+        </div>
+
+        <!-- Right: Fast-Action Utility Accelerators -->
+        <div class="flex items-center gap-1.5 shrink-0">
+          <button id="btn-open-warmup" class="px-2.5 py-1 rounded-md text-[11px] font-semibold text-amber-300 bg-amber-950/40 border border-amber-800/60 hover:bg-amber-900/50 transition flex items-center gap-1 whitespace-nowrap shadow-sm cursor-pointer" title="Khởi động 2 phút với 5 từ yếu">
+            <span>⚡</span>
+            <span>2m Warm-Up</span>
+          </button>
+          <button id="btn-open-microlesson" class="px-2.5 py-1 rounded-md text-[11px] font-semibold text-orange-300 bg-orange-950/40 border border-orange-800/60 hover:bg-orange-900/50 transition flex items-center gap-1 whitespace-nowrap shadow-sm cursor-pointer" title="Chế độ học nhanh 10 phút">
+            <span>⚡</span>
+            <span>Quick 10m</span>
+          </button>
+          <button id="btn-open-cheatsheet" class="px-2.5 py-1 rounded-md text-[11px] font-semibold text-cyan-300 bg-cyan-950/40 border border-cyan-800/60 hover:bg-cyan-900/50 transition flex items-center gap-1 whitespace-nowrap shadow-sm cursor-pointer" title="In tóm tắt khổ A4">
+            <span>📋</span>
+            <span>In Cheat Sheet</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
   </header>
 
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

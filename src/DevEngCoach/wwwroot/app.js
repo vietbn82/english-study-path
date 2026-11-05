@@ -753,48 +753,51 @@
     if (el.viewAnalytics) el.viewAnalytics.classList.add('hidden');
     if (el.viewShadowing) el.viewShadowing.classList.add('hidden');
 
-    const defaultNavClass = 'px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 transition';
-    const activeNavClass = 'px-2.5 py-1.5 rounded-lg text-xs font-medium bg-cyan-500 text-slate-950 shadow-sm transition';
+    const tier1Default = 'px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 cursor-pointer';
+    const tier1Active = 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950 shadow-sm transition flex items-center gap-1.5 cursor-pointer';
 
-    if (el.navWorkspace) el.navWorkspace.className = defaultNavClass;
-    if (el.navCurriculum) el.navCurriculum.className = defaultNavClass;
-    if (el.navSimulators) el.navSimulators.className = defaultNavClass;
-    if (el.navSparring) el.navSparring.className = defaultNavClass;
-    if (el.navPrpolish) el.navPrpolish.className = defaultNavClass;
-    if (el.navSrs) el.navSrs.className = defaultNavClass;
-    if (el.navAnalytics) el.navAnalytics.className = defaultNavClass;
-    if (el.navShadowing) el.navShadowing.className = defaultNavClass;
+    const tier2Default = 'px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer';
+    const tier2Active = 'px-2.5 py-1 rounded-md text-[11px] font-bold bg-cyan-500 text-slate-950 shadow-sm transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer';
+
+    if (el.navWorkspace) el.navWorkspace.className = tier1Default;
+    if (el.navCurriculum) el.navCurriculum.className = tier1Default;
+    if (el.navSimulators) el.navSimulators.className = tier2Default;
+    if (el.navSparring) el.navSparring.className = tier2Default;
+    if (el.navPrpolish) el.navPrpolish.className = tier2Default;
+    if (el.navSrs) el.navSrs.className = tier2Default;
+    if (el.navAnalytics) el.navAnalytics.className = tier2Default;
+    if (el.navShadowing) el.navShadowing.className = tier2Default;
 
     if (view === 'workspace') {
       if (el.viewWorkspace) el.viewWorkspace.classList.remove('hidden');
-      if (el.navWorkspace) el.navWorkspace.className = activeNavClass;
+      if (el.navWorkspace) el.navWorkspace.className = tier1Active;
     } else if (view === 'curriculum') {
       if (el.viewCurriculum) el.viewCurriculum.classList.remove('hidden');
-      if (el.navCurriculum) el.navCurriculum.className = activeNavClass;
+      if (el.navCurriculum) el.navCurriculum.className = tier1Active;
       renderCurriculumGrid('all');
     } else if (view === 'simulators') {
       if (el.viewSimulators) el.viewSimulators.classList.remove('hidden');
-      if (el.navSimulators) el.navSimulators.className = activeNavClass;
+      if (el.navSimulators) el.navSimulators.className = tier2Active;
       switchSimulatorTab('standup');
     } else if (view === 'sparring') {
       if (el.viewSparring) el.viewSparring.classList.remove('hidden');
-      if (el.navSparring) el.navSparring.className = activeNavClass;
+      if (el.navSparring) el.navSparring.className = tier2Active;
       initSparringArena();
     } else if (view === 'prpolish') {
       if (el.viewPrpolish) el.viewPrpolish.classList.remove('hidden');
-      if (el.navPrpolish) el.navPrpolish.className = activeNavClass;
+      if (el.navPrpolish) el.navPrpolish.className = tier2Active;
       initPrStudio();
     } else if (view === 'srs') {
       if (el.viewSrs) el.viewSrs.classList.remove('hidden');
-      if (el.navSrs) el.navSrs.className = activeNavClass;
+      if (el.navSrs) el.navSrs.className = tier2Active;
       refreshSrsData();
     } else if (view === 'analytics') {
       if (el.viewAnalytics) el.viewAnalytics.classList.remove('hidden');
-      if (el.navAnalytics) el.navAnalytics.className = activeNavClass;
+      if (el.navAnalytics) el.navAnalytics.className = tier2Active;
       refreshAnalyticsData();
     } else if (view === 'shadowing') {
       if (el.viewShadowing) el.viewShadowing.classList.remove('hidden');
-      if (el.navShadowing) el.navShadowing.className = activeNavClass;
+      if (el.navShadowing) el.navShadowing.className = tier2Active;
       initShadowingStudio();
     }
   }
