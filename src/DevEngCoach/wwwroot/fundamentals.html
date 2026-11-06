@@ -61,42 +61,51 @@
   <div id="reading-progress-bar" class="fixed top-0 left-0 h-1 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 z-[100] transition-all duration-150" style="width: 0%"></div>
 
   <!-- Navigation -->
-  <header class="border-b border-slate-800 bg-slate-900/95 backdrop-blur sticky top-0 z-50 shadow-md">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <a href="index.html" class="w-9 h-9 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-mono font-bold text-slate-950 shadow-lg shadow-cyan-500/20">
+  <header class="border-b border-slate-800/90 bg-slate-950/90 backdrop-blur-md sticky top-0 z-50 shadow-2xl">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      <!-- Left: Brand + Title -->
+      <a href="index.html" id="brand-logo-home" class="flex items-center gap-3 group cursor-pointer shrink-0" title="Quay về trang chủ">
+        <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-cyan-400 via-cyan-500 to-blue-600 flex items-center justify-center font-mono font-black text-slate-950 text-sm shadow-md shadow-cyan-500/25 group-hover:scale-105 transition-transform shrink-0">
           DE
-        </a>
-        <div>
-          <div class="font-bold text-base tracking-tight flex items-center gap-2">
-            <span>Cẩm Nang Cấu Âm Nền Tảng</span>
-            <span class="text-xs px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800/60 font-mono">Articulatory Phonetics</span>
-          </div>
-          <div class="text-xs text-slate-400 font-mono">Bản đồ cơ học khoang miệng & Giải phẫu phát âm tiếng Anh chuẩn</div>
         </div>
-      </div>
+        <div class="flex flex-col">
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-[15px] sm:text-[16px] tracking-tight text-white group-hover:text-cyan-400 transition-colors leading-tight">
+              Cẩm Nang Cấu Âm Nền Tảng
+            </span>
+            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800/60 font-semibold uppercase tracking-wider hidden sm:inline">Phonetics</span>
+          </div>
+          <span class="text-[11px] text-slate-400 font-mono hidden md:inline leading-none mt-1">Bản đồ cơ học khoang miệng &amp; giải phẫu phát âm tiếng Anh</span>
+        </div>
+      </a>
 
-      <div class="flex items-center gap-2 flex-wrap">
+      <!-- Right: Speed Controller + Mic + Print + Dashboard (Strict single-line flex-nowrap) -->
+      <div class="flex items-center gap-2 sm:gap-2.5 shrink-0 flex-nowrap">
         <!-- Speed Controller (UX Upgrade #2) -->
-        <div class="flex items-center gap-1 bg-slate-950 border border-slate-800 rounded-lg p-0.5 text-[10px] font-mono">
-          <span class="text-slate-400 px-1">Tốc độ:</span>
-          <button class="speed-btn px-1.5 py-0.5 rounded text-slate-300 hover:text-cyan-300" data-speed="0.5">0.5x</button>
-          <button class="speed-btn px-1.5 py-0.5 rounded text-slate-300 hover:text-cyan-300" data-speed="0.75">0.75x</button>
-          <button class="speed-btn px-1.5 py-0.5 rounded font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40" data-speed="1.0">1.0x</button>
+        <div class="flex items-center gap-1 bg-slate-900 border border-slate-800 rounded-lg p-0.5 text-[11px] font-mono shadow-sm">
+          <span class="text-slate-400 px-1 text-[10px]">Tốc độ:</span>
+          <button class="speed-btn px-1.5 py-0.5 rounded text-slate-300 hover:text-cyan-300 transition cursor-pointer text-[11px]" data-speed="0.5">0.5x</button>
+          <button class="speed-btn px-1.5 py-0.5 rounded text-slate-300 hover:text-cyan-300 transition cursor-pointer text-[11px]" data-speed="0.75">0.75x</button>
+          <button class="speed-btn px-1.5 py-0.5 rounded font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 transition cursor-pointer text-[11px]" data-speed="1.0">1.0x</button>
         </div>
 
         <!-- In-page Voice Recorder Modal Toggle (UX Upgrade #3) -->
-        <button id="btn-open-recorder-dock" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-rose-950/80 hover:bg-rose-900 text-rose-300 border border-rose-800 flex items-center gap-1 shadow-sm transition">
-          <span>🎙️ Mic Luyện Giọng</span>
+        <button id="btn-open-recorder-dock" class="px-2.5 py-1.5 rounded-lg text-[12px] font-semibold bg-rose-950/80 hover:bg-rose-900 text-rose-300 border border-rose-800/80 flex items-center gap-1.5 shadow-sm transition cursor-pointer whitespace-nowrap">
+          <span>🎙️</span>
+          <span class="hidden sm:inline">Mic Luyện Giọng</span>
+          <span class="sm:hidden">Mic</span>
         </button>
 
         <!-- Printable Mode / Export PDF (UX Upgrade #8) -->
-        <button id="btn-print-handbook" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center gap-1 transition" title="In hoặc lưu file PDF">
-          <span>🖨️ In PDF</span>
+        <button id="btn-print-handbook" class="px-2.5 py-1.5 rounded-lg text-[12px] font-semibold bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap" title="In hoặc lưu file PDF">
+          <span>🖨️</span>
+          <span class="hidden sm:inline">In PDF</span>
         </button>
 
-        <a href="index.html" class="px-3 py-1 rounded-lg text-xs font-semibold bg-cyan-600 hover:bg-cyan-500 text-slate-950 transition flex items-center gap-1.5 shadow">
-          <span>◀ Dashboard</span>
+        <!-- Back to Dashboard -->
+        <a href="index.html" class="px-3 py-1.5 rounded-lg text-[12px] font-bold bg-cyan-500 hover:bg-cyan-400 text-slate-950 transition flex items-center gap-1 shadow-md shadow-cyan-500/20 cursor-pointer whitespace-nowrap">
+          <span>◀</span>
+          <span>Dashboard</span>
         </a>
       </div>
     </div>
@@ -127,12 +136,9 @@
       <div class="flex items-center gap-2 flex-1 min-w-[280px]">
         <span class="text-cyan-400 font-bold">🔍</span>
         <input type="text" id="handbook-search-input" placeholder="Tìm kiếm nhanh âm vị, quy tắc hoặc từ khóa (ví dụ: /t/, /d/, linking, cluster, auth, commit)..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500 font-mono transition">
-      <!-- Dynamic Search Results Bar -->
-      <div id="handbook-search-status" class="hidden p-2.5 rounded-lg bg-cyan-950/80 border border-cyan-800 text-xs text-cyan-200 font-mono transition-all">
       </div>
       <!-- Dynamic Search Results Bar -->
-      <div id="handbook-search-status" class="hidden p-2.5 rounded-lg bg-cyan-950/80 border border-cyan-800 text-xs text-cyan-200 font-mono transition-all">
-      </div>
+      <div id="handbook-search-status" class="hidden w-full p-2.5 rounded-lg bg-cyan-950/80 border border-cyan-800 text-xs text-cyan-200 font-mono transition-all">
       </div>
       <div class="flex items-center gap-1.5 overflow-x-auto text-[10px] font-mono">
         <button class="quick-filter-tag px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition" data-filter="all">Tất cả</button>
