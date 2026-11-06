@@ -10,6 +10,15 @@
   --text-muted: #94a3b8;
   --cyan-accent: #22d3ee;
   --purple-accent: #c084fc;
+
+  /* Typography Design Tokens (Senior Dev Ergonomics) */
+  --font-size-xs: 1.125rem;   /* ~18px base reading */
+  --font-size-sm: 1.25rem;    /* ~20px comfortable text */
+  --font-size-base: 1.375rem; /* ~22px primary text */
+  --font-size-lg: 1.55rem;    /* ~24.8px sub-headings */
+  --font-size-xl: 1.75rem;    /* ~28px section titles */
+  --font-size-2xl: 2.2rem;    /* ~35px page titles */
+  --font-size-3xl: 2.75rem;   /* ~44px hero titles */
 }
 
 *, *::before, *::after {
@@ -292,14 +301,14 @@ pre, code, .font-mono {
 .text-red-400 { color: #f87171; }
 
 /* Typography Scale: +2 Sizes for Maximum Readability (Excluding h1) */
-.text-\[9px\], .text-\[10px\], .text-\[11px\], .text-\[12px\] { font-size: 1.125rem !important; line-height: 1.65rem !important; }
-.text-xs { font-size: 1.125rem; line-height: 1.65rem; } /* ~18px */
-.text-sm { font-size: 1.25rem; line-height: 1.8rem; }   /* ~20px */
-.text-base { font-size: 1.375rem; line-height: 1.95rem; }/* ~22px */
-.text-lg { font-size: 1.55rem; line-height: 2.1rem; }  /* ~24.8px */
-.text-xl { font-size: 1.75rem; line-height: 2.3rem; }  /* ~28px */
-.text-2xl { font-size: 2.2rem; line-height: 2.6rem; }  /* ~35px */
-.text-3xl { font-size: 2.75rem; line-height: 3.1rem; } /* ~44px */
+.text-\[9px\], .text-\[10px\], .text-\[11px\], .text-\[12px\] { font-size: var(--font-size-xs) !important; line-height: 1.65rem !important; }
+.text-xs { font-size: var(--font-size-xs); line-height: 1.65rem; } /* ~18px */
+.text-sm { font-size: var(--font-size-sm); line-height: 1.8rem; }   /* ~20px */
+.text-base { font-size: var(--font-size-base); line-height: 1.95rem; }/* ~22px */
+.text-lg { font-size: var(--font-size-lg); line-height: 2.1rem; }  /* ~24.8px */
+.text-xl { font-size: var(--font-size-xl); line-height: 2.3rem; }  /* ~28px */
+.text-2xl { font-size: var(--font-size-2xl); line-height: 2.6rem; }  /* ~35px */
+.text-3xl { font-size: var(--font-size-3xl); line-height: 3.1rem; } /* ~44px */
 .text-4xl { font-size: 3.1rem; line-height: 3.5rem; }
 
 /* Scaled Typography: 1.5x for content and headings (except h1) */
