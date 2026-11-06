@@ -687,41 +687,40 @@
       }
     }
 
-    // Auto-detect best header placement:
-    // Priority 1: Right next to #sticky-header-timer container
-    const timer = typeof document.getElementById === 'function'
-      ? document.getElementById('sticky-header-timer')
-      : (typeof document.querySelector === 'function' ? document.querySelector('#sticky-header-timer') : null);
-    if (timer && timer.parentElement) {
-      const wrapper = document.createElement('div');
-      wrapper.className = 'flex items-center ml-2';
-      wrapper.appendChild(badge);
-      timer.parentElement.appendChild(wrapper);
+    // Explicit mount point in Tier 2 utility bar (if present)
+    const mountPoint = document.getElementById('speed-badge-mount');
+    if (mountPoint) {
+      mountPoint.appendChild(badge);
       return;
     }
 
-    // Priority 2: Inside telemetry cluster
-    const telemetryCluster = document.querySelector('.hidden.lg\\:flex.items-center.gap-2');
-    if (telemetryCluster) {
-      telemetryCluster.insertBefore(badge, telemetryCluster.firstChild);
-      return;
-    }
-
-    // Priority 3: Inside primary header container
-    const header = document.querySelector('header');
-    if (header) {
-      const headerFlex = header.querySelector('.flex.items-center.justify-between') || header;
-      headerFlex.appendChild(badge);
-      return;
-    }
-
-    // Fallback: Floating badge top right
-    badge.style.position = 'fixed';
-    badge.style.top = '12px';
-    badge.style.right = '12px';
-    badge.style.zIndex = '9999';
-    document.body.appendChild(badge);
+    // Do NOT auto-inject into header or next to timer to prevent line-wrapping regressions
   }
+
+  // Bind existing .speed-btn elements across pages (e.g. fundamentals.html)
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.speed-btn[data-speed]');
+    if (btn) {
+      const speed = parseFloat(btn.dataset.speed);
+      if (!isNaN(speed)) {
+        setPlaybackSpeed(speed);
+      }
+    }
+  });
+
+  window.addEventListener('deveng:speedchange', (e) => {
+    const currentSpeed = e.detail ? e.detail.speed : getPlaybackSpeed();
+    document.querySelectorAll('.speed-btn[data-speed]').forEach(btn => {
+      const s = parseFloat(btn.dataset.speed);
+      if (Math.abs(s - currentSpeed) < 0.05) {
+        btn.classList.add('bg-cyan-500/20', 'text-cyan-300', 'border', 'border-cyan-500/40', 'font-bold');
+        btn.classList.remove('text-slate-300');
+      } else {
+        btn.classList.remove('bg-cyan-500/20', 'text-cyan-300', 'border', 'border-cyan-500/40', 'font-bold');
+        btn.classList.add('text-slate-300');
+      }
+    });
+  });
 
   window.mountSpeedBadge = autoMountSpeedBadge;
 
