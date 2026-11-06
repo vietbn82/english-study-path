@@ -12,6 +12,7 @@ public interface IProgressService
     SessionLog MicroCompleteSession(MicroSessionRequest request);
     BlockRecommendation GetRecommendation();
     void ResetProgress();
+    int RestoreSessions(IEnumerable<SessionLog> sessions);
 }
 
 public sealed class ProgressService : IProgressService
@@ -190,6 +191,17 @@ public sealed class ProgressService : IProgressService
         {
             _state = CreateDefaultState();
             SaveStateInternal();
+        }
+    }
+
+    public int RestoreSessions(IEnumerable<SessionLog> sessions)
+    {
+        ArgumentNullException.ThrowIfNull(sessions);
+        lock (_lock)
+        {
+            _state.Sessions = sessions.ToList();
+            SaveStateInternal();
+            return _state.Sessions.Count;
         }
     }
 

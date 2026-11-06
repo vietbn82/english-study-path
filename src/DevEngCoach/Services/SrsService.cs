@@ -11,6 +11,7 @@ public interface ISrsService
     SrsItem RecordReview(SrsReviewRequest request);
     SrsItem AutoEnrollWeakSpot(SrsEnrollRequest request);
     SrsStats GetStats();
+    int RestoreItems(IEnumerable<SrsItem> items);
 }
 
 public sealed class SrsService : ISrsService
@@ -196,6 +197,18 @@ public sealed class SrsService : ISrsService
                 Mastered: mastered,
                 AverageScore: averageScore
             );
+        }
+    }
+
+    public int RestoreItems(IEnumerable<SrsItem> items)
+    {
+        ArgumentNullException.ThrowIfNull(items);
+        lock (_lock)
+        {
+            _items.Clear();
+            _items.AddRange(items);
+            SaveInternal();
+            return _items.Count;
         }
     }
 

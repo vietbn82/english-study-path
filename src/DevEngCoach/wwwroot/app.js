@@ -961,6 +961,9 @@
   function loadDayLesson(dayNumber) {
     const lesson = state.lessons.find(l => l.dayNumber === dayNumber) || FALLBACK_DAY_1;
     state.currentDay = lesson.dayNumber;
+    if (typeof window.updateCapstoneButton === 'function') {
+      window.updateCapstoneButton();
+    }
 
     if (el.selectJumpDay) {
       el.selectJumpDay.value = lesson.dayNumber;
@@ -4650,6 +4653,313 @@
     }
   }
 
+  // --- Data Backup & Portability Manager ---
+  function setupBackupManager() {
+    const btnOpen = document.getElementById('btn-open-backup-modal');
+    const modal = document.getElementById('modal-backup');
+    const btnClose = document.getElementById('btn-close-backup-modal');
+    const btnExport = document.getElementById('btn-backup-export');
+    const btnImport = document.getElementById('btn-backup-import');
+    const inputFile = document.getElementById('input-backup-file');
+    const statusMsg = document.getElementById('backup-status-msg');
+
+    if (!modal) return;
+
+    if (btnOpen) {
+      btnOpen.addEventListener('click', () => {
+        modal.classList.remove('hidden');
+        if (statusMsg) statusMsg.classList.add('hidden');
+      });
+    }
+
+    if (btnClose) {
+      btnClose.addEventListener('click', () => modal.classList.add('hidden'));
+    }
+
+    if (btnExport) {
+      btnExport.addEventListener('click', async () => {
+        try {
+          btnExport.disabled = true;
+          btnExport.textContent = '⏳ Đang xuất dữ liệu...';
+          const res = await fetch('/api/backup/export');
+          if (!res.ok) throw new Error('Export failed');
+          const data = await res.json();
+          const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          const dateStr = new Date().toISOString().split('T')[0];
+          a.href = url;
+          a.download = `deveng-coach-backup-${dateStr}.json`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+          btnExport.textContent = '✅ Xuất thành công!';
+          setTimeout(() => {
+            btnExport.disabled = false;
+            btnExport.innerHTML = '<span>⬇️</span> Tải file sao lưu (.json)';
+          }, 2000);
+        } catch (err) {
+          alert('Không thể xuất file backup: ' + err.message);
+          btnExport.disabled = false;
+          btnExport.innerHTML = '<span>⬇️</span> Tải file sao lưu (.json)';
+        }
+      });
+    }
+
+    if (btnImport && inputFile) {
+      btnImport.addEventListener('click', async () => {
+        if (!inputFile.files || !inputFile.files[0]) {
+          alert('Vui lòng chọn 1 file JSON backup trước khi khôi phục.');
+          return;
+        }
+        try {
+          btnImport.disabled = true;
+          btnImport.textContent = '⏳ Đang phục hồi...';
+          const file = inputFile.files[0];
+          const text = await file.text();
+          const payload = JSON.parse(text);
+
+          const res = await fetch('/api/backup/import', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          const result = await res.json();
+          if (res.ok && result.success) {
+            if (statusMsg) {
+              statusMsg.textContent = `✅ ${result.message}`;
+              statusMsg.className = 'text-xs font-mono text-emerald-400 pt-1 block';
+            }
+            alert(`Phục hồi thành công! Đã restore ${result.restoredSessionsCount} phiên học và ${result.restoredSrsItemsCount} thẻ SRS.`);
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          } else {
+            if (statusMsg) {
+              statusMsg.textContent = `❌ ${result.message || 'Lỗi dữ liệu'}`;
+              statusMsg.className = 'text-xs font-mono text-rose-400 pt-1 block';
+            }
+            alert('Khôi phục thất bại: ' + (result.message || 'Dữ liệu không hợp lệ'));
+          }
+        } catch (err) {
+          alert('Lỗi đọc file: ' + err.message);
+        } finally {
+          btnImport.disabled = false;
+          btnImport.innerHTML = '<span>🔄</span> Khôi phục ngay';
+        }
+      });
+    }
+  }
+
+  // --- Milestone Capstone Assessment Engine ---
+  function setupCapstoneAssessment() {
+    const btnOpen = document.getElementById('btn-open-capstone-modal');
+    const modal = document.getElementById('modal-capstone');
+    const btnClose = document.getElementById('btn-close-capstone-modal');
+    const btnSubmit = document.getElementById('btn-submit-capstone');
+    const btnMic = document.getElementById('btn-capstone-mic');
+    const micLabel = document.getElementById('btn-capstone-mic-label');
+    const transcriptInput = document.getElementById('capstone-transcript-input');
+    const resultContainer = document.getElementById('capstone-result-container');
+    const scorecardGrid = document.getElementById('capstone-scorecard-grid');
+    const feedbackBox = document.getElementById('capstone-feedback-box');
+    const certBox = document.getElementById('capstone-cert-box');
+
+    if (!modal) return;
+
+    function checkMilestoneDay() {
+      const day = state.currentDay;
+      if (day === 30 || day === 60 || day === 90) {
+        if (btnOpen) {
+          btnOpen.classList.remove('hidden');
+          const badgeLabel = document.getElementById('label-capstone-badge');
+          if (badgeLabel) {
+            badgeLabel.textContent = day === 30 ? 'Sát Hạch D30' : (day === 60 ? 'Sát Hạch D60' : 'Sát Hạch Master D90');
+          }
+        }
+      } else {
+        if (btnOpen) btnOpen.classList.add('hidden');
+      }
+    }
+
+    checkMilestoneDay();
+    window.updateCapstoneButton = checkMilestoneDay;
+
+    async function openCapstoneModal() {
+      const day = (state.currentDay === 30 || state.currentDay === 60 || state.currentDay === 90) ? state.currentDay : 30;
+      modal.classList.remove('hidden');
+      if (resultContainer) resultContainer.classList.add('hidden');
+
+      try {
+        const res = await fetch(`/api/capstone/${day}`);
+        if (!res.ok) throw new Error('Could not load capstone spec');
+        const spec = await res.json();
+
+        const tagEl = document.getElementById('capstone-milestone-tag');
+        if (tagEl) tagEl.textContent = `MILESTONE DAY ${spec.dayNumber} // ${spec.milestoneName.toUpperCase()}`;
+        const titleEl = document.getElementById('capstone-milestone-title');
+        if (titleEl) titleEl.innerHTML = `<span>🎓</span> ${spec.title}`;
+        const timeEl = document.getElementById('capstone-timelimit');
+        if (timeEl) timeEl.textContent = `${spec.timeLimitSeconds}s`;
+        const scenEl = document.getElementById('capstone-scenario');
+        if (scenEl) scenEl.innerHTML = `<strong>Kịch bản:</strong> ${spec.targetScenario}`;
+
+        const chipsEl = document.getElementById('capstone-phonetics-chips');
+        if (chipsEl) {
+          chipsEl.innerHTML = spec.focusPhonetics.map(p => `
+            <span class="px-2 py-0.5 rounded bg-purple-950/80 border border-purple-700 font-mono text-purple-300 font-bold">${p}</span>
+          `).join('');
+        }
+      } catch (e) {
+        console.warn('Fallback capstone spec', e);
+      }
+    }
+
+    if (btnOpen) {
+      btnOpen.addEventListener('click', openCapstoneModal);
+    }
+    if (btnClose) {
+      btnClose.addEventListener('click', () => modal.classList.add('hidden'));
+    }
+
+    let recognition = null;
+    let isRecording = false;
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRec && btnMic) {
+      recognition = new SpeechRec();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+
+      recognition.onresult = (event) => {
+        let transcript = '';
+        for (let i = 0; i < event.results.length; i++) {
+          transcript += event.results[i][0].transcript + ' ';
+        }
+        if (transcriptInput) transcriptInput.value = transcript.trim();
+      };
+
+      recognition.onerror = () => {
+        isRecording = false;
+        if (micLabel) micLabel.textContent = 'Bật Mic';
+        btnMic.className = 'absolute bottom-3 right-3 px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs flex items-center gap-1.5 shadow transition cursor-pointer';
+      };
+
+      recognition.onend = () => {
+        isRecording = false;
+        if (micLabel) micLabel.textContent = 'Bật Mic';
+        btnMic.className = 'absolute bottom-3 right-3 px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs flex items-center gap-1.5 shadow transition cursor-pointer';
+      };
+
+      btnMic.addEventListener('click', () => {
+        if (!isRecording) {
+          try {
+            recognition.start();
+            isRecording = true;
+            if (micLabel) micLabel.textContent = 'Dừng Mic';
+            btnMic.className = 'absolute bottom-3 right-3 px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs flex items-center gap-1.5 shadow transition cursor-pointer animate-pulse';
+          } catch (e) {
+            console.warn(e);
+          }
+        } else {
+          recognition.stop();
+          isRecording = false;
+          if (micLabel) micLabel.textContent = 'Bật Mic';
+          btnMic.className = 'absolute bottom-3 right-3 px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs flex items-center gap-1.5 shadow transition cursor-pointer';
+        }
+      });
+    }
+
+    if (btnSubmit) {
+      btnSubmit.addEventListener('click', async () => {
+        const transcript = transcriptInput ? transcriptInput.value.trim() : '';
+        if (!transcript) {
+          alert('Vui lòng nói qua mic hoặc nhập bài phát biểu trước khi nộp.');
+          return;
+        }
+
+        const day = (state.currentDay === 30 || state.currentDay === 60 || state.currentDay === 90) ? state.currentDay : 30;
+        try {
+          btnSubmit.disabled = true;
+          btnSubmit.innerHTML = '<span>⏳</span><span>Đang phân tích và chấm điểm...</span>';
+
+          const res = await fetch('/api/capstone/evaluate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              dayNumber: day,
+              transcript: transcript,
+              durationSeconds: 90,
+              userNotes: 'Sát hạch trực tiếp'
+            })
+          });
+
+          const data = await res.json();
+          if (!data.success) {
+            alert('Không thể chấm điểm: ' + (data.message || 'Lỗi không xác định'));
+            return;
+          }
+
+          const sc = data.scorecard;
+          if (resultContainer) resultContainer.classList.remove('hidden');
+
+          if (scorecardGrid) {
+            scorecardGrid.innerHTML = `
+              <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+                <div class="text-xs text-slate-400">Tổng điểm</div>
+                <div class="text-2xl font-black font-mono ${sc.passed ? 'text-emerald-400' : 'text-rose-400'}">${sc.overallScore} / 100</div>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+                <div class="text-xs text-slate-400">Cơ học cấu âm</div>
+                <div class="text-2xl font-bold font-mono text-cyan-400">${sc.phoneticScore} / 100</div>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+                <div class="text-xs text-slate-400">Nhịp điệu / Lưu loát</div>
+                <div class="text-2xl font-bold font-mono text-purple-400">${sc.fluencyPacingScore} / 100</div>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+                <div class="text-xs text-slate-400">Từ vựng kỹ thuật</div>
+                <div class="text-2xl font-bold font-mono text-amber-400">${sc.technicalVocabScore} / 100</div>
+              </div>
+            `;
+          }
+
+          if (feedbackBox) {
+            feedbackBox.innerHTML = `
+              <div class="font-bold text-white mb-1">Đánh giá chuẩn Senior Engineer:</div>
+              <p class="text-slate-300 leading-relaxed">${sc.rubricFeedback}</p>
+              ${sc.strengths && sc.strengths.length ? `
+                <div class="pt-2"><strong class="text-emerald-400">Điểm mạnh:</strong> <span class="text-slate-300">${sc.strengths.join('; ')}</span></div>
+              ` : ''}
+              ${sc.improvements && sc.improvements.length ? `
+                <div class="pt-1"><strong class="text-amber-400">Cần mài sắc:</strong> <span class="text-slate-300">${sc.improvements.join('; ')}</span></div>
+              ` : ''}
+            `;
+          }
+
+          if (certBox) {
+            if (sc.passed && data.certificateId) {
+              certBox.classList.remove('hidden');
+              document.getElementById('capstone-cert-title').textContent = data.certificateTitle || 'CERTIFICATE OF MASTERY';
+              document.getElementById('capstone-cert-msg').textContent = data.graduationMessage || 'Chúc mừng kỹ sư đã xuất sắc vượt qua bài sát hạch!';
+              document.getElementById('capstone-cert-id').textContent = `Mã Chứng Nhận: ${data.certificateId}`;
+            } else {
+              certBox.classList.add('hidden');
+            }
+          }
+
+          resultContainer.scrollIntoView({ behavior: 'smooth' });
+        } catch (err) {
+          alert('Lỗi chấm điểm: ' + err.message);
+        } finally {
+          btnSubmit.disabled = false;
+          btnSubmit.innerHTML = '<span>⚡</span><span>Nộp Bài & Chấm Điểm Toàn Diện</span>';
+        }
+      });
+    }
+  }
+
   // Initialize Advanced Capabilities Suite on Startup
   setTimeout(() => {
     initIpaGlossary();
@@ -4658,6 +4968,8 @@
     setupSrsWarmup();
     setupCheatSheet();
     setupSagittalVocalTract();
+    setupBackupManager();
+    setupCapstoneAssessment();
   }, 100);
 
 })();

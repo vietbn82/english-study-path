@@ -172,6 +172,17 @@ public sealed class SpeechScoringService : ISpeechScoringService
         }
     }
 
+    public int RestoreScores(IEnumerable<DrillScoreRecord> scores)
+    {
+        ArgumentNullException.ThrowIfNull(scores);
+        lock (lockObj)
+        {
+            history = scores.ToList();
+            SaveData();
+            return history.Count;
+        }
+    }
+
     private static void EvaluateEndingConsonant(string target, string spoken, string expectedPhonemes, List<PhonemeResult> breakdown)
     {
         var endingTargets = new[] { "/t/", "/d/", "/s/", "/z/", "/k/", "/p/" };

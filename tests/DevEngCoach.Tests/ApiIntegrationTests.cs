@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using DevEngCoach.Common;
+using DevEngCoach.Services;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 
@@ -313,5 +314,62 @@ public class ApiIntegrationTests : IClassFixture<WebApplicationFactory<Program>>
         result.Should().NotBeNull();
         result!.Success.Should().BeTrue();
         result.LinkedRepresentation.Should().Contain("‿");
+    }
+
+    [Fact]
+    public async Task GetBackupExport_Returns200WithFullState()
+    {
+        var response = await _client.GetAsync("/api/backup/export");
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var payload = await response.Content.ReadFromJsonAsync<BackupPayload>();
+        payload.Should().NotBeNull();
+        payload!.Version.Should().Be(1);
+        payload.Progress.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task GetCapstoneSpec_Day30_Returns200WithMilestoneRubric()
+    {
+        var response = await _client.GetAsync("/api/capstone/30");
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var spec = await response.Content.ReadFromJsonAsync<CapstoneSpec>();
+        spec.Should().NotBeNull();
+        spec!.DayNumber.Should().Be(30);
+        spec.TimeLimitSeconds.Should().Be(90);
+        spec.FocusPhonetics.Should().Contain(p => p.Contains("/t/"));
+    }
+
+    [Fact]
+    public async Task PostCapstoneEvaluate_ValidSubmission_ReturnsEvaluationAndCertificate()
+    {
+        var request = new CapstoneSubmissionRequest(
+            DayNumber: 30,
+            Transcript: "Yesterday, I finished the unit test and committed the code. Today, I will deploy the build to staging. I am not blocked by any issue.",
+            DurationSeconds: 85,
+            UserNotes: "Final milestone rehearsal."
+        );
+        var response = await _client.PostAsJsonAsync("/api/capstone/evaluate", request);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<CapstoneEvaluationResult>();
+        result.Should().NotBeNull();
+        result!.Success.Should().BeTrue();
+        result.Scorecard.Passed.Should().BeTrue();
+        result.CertificateId.Should().NotBeNullOrWhiteSpace();
+    }
+
+    [Fact]
+    public async Task PostCapstoneEvaluate_EmptyTranscript_ReturnsBadRequest()
+    {
+        var request = new CapstoneSubmissionRequest(
+            DayNumber: 30,
+            Transcript: "",
+            DurationSeconds: 0,
+            UserNotes: ""
+        );
+        var response = await _client.PostAsJsonAsync("/api/capstone/evaluate", request);
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 }

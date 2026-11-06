@@ -18,6 +18,8 @@ builder.Services.AddSingleton<IMouthMapService, MouthMapService>();
 builder.Services.AddSingleton<ISrsWarmupService, SrsWarmupService>();
 builder.Services.AddSingleton<ICheatSheetService, CheatSheetService>();
 builder.Services.AddSingleton<IIpaGlossaryService, IpaGlossaryService>();
+builder.Services.AddSingleton<IBackupService, BackupService>();
+builder.Services.AddSingleton<ICapstoneService, CapstoneService>();
 
 // Register Reminder as both IHostedService and IReminderService
 builder.Services.AddSingleton<ReminderService>();
@@ -383,6 +385,42 @@ reminderApi.MapPost("/test", (IReminderService reminder) =>
 {
     reminder.TriggerNotification("Kiểm tra thông báo nhắc nhở 22:00: Hệ thống sẵn sàng!", "DevEng Coach");
     return Results.Ok(new { Message = "Test toast notification triggered." });
+});
+
+// Backup & Portability Endpoints
+var backupApi = app.MapGroup("/api/backup");
+backupApi.MapGet("/export", (IBackupService backup) =>
+    Results.Ok(backup.GetFullBackup()));
+
+backupApi.MapPost("/import", ([FromBody] BackupPayload payload, IBackupService backup) =>
+{
+    var result = backup.ImportBackup(payload);
+    return result.Success ? Results.Ok(result) : Results.BadRequest(result);
+});
+
+// Milestone Capstone Endpoints
+var capstoneApi = app.MapGroup("/api/capstone");
+capstoneApi.MapGet("/{day:int}", (int day, ICapstoneService capstone) =>
+{
+    try
+    {
+        var spec = capstone.GetCapstoneSpec(day);
+        return Results.Ok(spec);
+    }
+    catch (ArgumentException ex)
+    {
+        return Results.NotFound(new { Message = ex.Message });
+    }
+});
+
+capstoneApi.MapPost("/evaluate", async ([FromBody] CapstoneSubmissionRequest request, ICapstoneService capstone, CancellationToken ct) =>
+{
+    if (string.IsNullOrWhiteSpace(request.Transcript))
+    {
+        return Results.BadRequest(new { Message = "Transcript is required for capstone evaluation." });
+    }
+    var result = await capstone.EvaluateCapstoneAsync(request, ct);
+    return Results.Ok(result);
 });
 
 app.Run();
