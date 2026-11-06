@@ -9,7 +9,8 @@ public sealed record SessionLog(
     string Status, // "Completed", "Pending", "Skipped"
     int? SelfRating, // 1 to 5 stars
     string? LearnerNotes,
-    string? AiFeedbackSnippet
+    string? AiFeedbackSnippet,
+    string? SessionMode = "Visual"
 );
 
 public sealed record ProgressSummary(
@@ -29,5 +30,6 @@ public sealed record CompleteSessionRequest(
     int ActualMinutes,
     int? SelfRating,
     string? LearnerNotes,
-    string? AiFeedbackSnippet
+    string? AiFeedbackSnippet,
+    string? SessionMode = "Visual"
 );

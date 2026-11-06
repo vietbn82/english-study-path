@@ -35,7 +35,8 @@ public sealed class BackupService(
                 Status: s.Status,
                 SelfRating: s.SelfRating,
                 LearnerNotes: s.LearnerNotes,
-                AiFeedbackSnippet: s.AiFeedbackSnippet
+                AiFeedbackSnippet: s.AiFeedbackSnippet,
+                SessionMode: s.SessionMode ?? "Visual"
             ))
             .ToList();
 
@@ -136,7 +137,8 @@ public sealed class BackupService(
                 Status: s.Status,
                 SelfRating: s.SelfRating,
                 LearnerNotes: s.LearnerNotes,
-                AiFeedbackSnippet: s.AiFeedbackSnippet
+                AiFeedbackSnippet: s.AiFeedbackSnippet,
+                SessionMode: s.SessionMode ?? "Visual"
             ));
             var restoredSessions = progressService.RestoreSessions(sessionLogs);
 

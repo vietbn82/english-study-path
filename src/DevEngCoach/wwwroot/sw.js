@@ -9,6 +9,10 @@ const PRECACHE_ASSETS = [
   '/deveng-components.js',
   '/deveng-command-palette.js',
   '/deveng-kinematic-tract.js',
+  '/deveng-slow-audio.js',
+  '/deveng-self-check.js',
+  '/deveng-one-tap-start.js',
+  '/deveng-audio-only.js',
   '/manifest.json'
 ];
 

@@ -4960,6 +4960,24 @@
     }
   }
 
+  // --- Feature 015: Audio-Only Eyes-Free Mode ---
+  function setupAudioOnlyMode() {
+    const btnAudio = document.getElementById('btn-audio-only-mode');
+    const navAudio = document.getElementById('nav-audio-only');
+
+    const handleStartAudio = () => {
+      const lesson = (state.lessons && state.lessons.find(l => l.dayNumber === state.currentDay)) || FALLBACK_DAY_1;
+      if (typeof window.startAudioOnlyMode === 'function') {
+        window.startAudioOnlyMode(lesson);
+      } else {
+        console.warn('Audio-only mode engine not loaded yet.');
+      }
+    };
+
+    if (btnAudio) btnAudio.onclick = handleStartAudio;
+    if (navAudio) navAudio.onclick = handleStartAudio;
+  }
+
   // Initialize Advanced Capabilities Suite on Startup
   setTimeout(() => {
     initIpaGlossary();
@@ -4970,6 +4988,7 @@
     setupSagittalVocalTract();
     setupBackupManager();
     setupCapstoneAssessment();
+    setupAudioOnlyMode();
   }, 100);
 
 })();

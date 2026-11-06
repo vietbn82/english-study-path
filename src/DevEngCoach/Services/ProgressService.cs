@@ -3,18 +3,6 @@ using DevEngCoach.Common;
 
 namespace DevEngCoach.Services;
 
-public interface IProgressService
-{
-    ProgressSummary GetSummary();
-    IReadOnlyList<SessionLog> GetAllSessions();
-    SessionLog? GetSessionByDay(int dayNumber);
-    SessionLog CompleteSession(CompleteSessionRequest request);
-    SessionLog MicroCompleteSession(MicroSessionRequest request);
-    BlockRecommendation GetRecommendation();
-    void ResetProgress();
-    int RestoreSessions(IEnumerable<SessionLog> sessions);
-}
-
 public sealed class ProgressService : IProgressService
 {
     private readonly string _filePath;
@@ -116,7 +104,8 @@ public sealed class ProgressService : IProgressService
                 Status: "Completed",
                 SelfRating: request.SelfRating ?? 5,
                 LearnerNotes: request.LearnerNotes,
-                AiFeedbackSnippet: request.AiFeedbackSnippet
+                AiFeedbackSnippet: request.AiFeedbackSnippet,
+                SessionMode: string.IsNullOrWhiteSpace(request.SessionMode) ? "Visual" : request.SessionMode
             );
 
             if (existingIndex >= 0)
@@ -149,7 +138,8 @@ public sealed class ProgressService : IProgressService
                 Status: "CompletedPartial",
                 SelfRating: request.SelfRating ?? 4,
                 LearnerNotes: request.LearnerNotes ?? $"Micro-session: {request.SelectedBlock} block completed",
-                AiFeedbackSnippet: $"Completed 10-minute escape hatch ({request.SelectedBlock}). Streak maintained!"
+                AiFeedbackSnippet: $"Completed 10-minute escape hatch ({request.SelectedBlock}). Streak maintained!",
+                SessionMode: "Visual"
             );
 
             if (existingIndex >= 0)

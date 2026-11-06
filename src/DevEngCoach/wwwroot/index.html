@@ -72,6 +72,10 @@
               <span>🗺️</span>
               <span>90 ngày</span>
             </button>
+            <button id="nav-audio-only" class="px-3 py-1.5 rounded-lg text-xs font-medium text-indigo-300 hover:text-white hover:bg-indigo-950/60 border border-indigo-900/60 transition flex items-center gap-1.5 cursor-pointer" title="Luyện nghe nhắm mắt (Eyes-Free Audio Only Mode)">
+              <span>🎧</span>
+              <span>Chế độ Nghe</span>
+            </button>
             <a href="fundamentals.html" target="_blank" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-cyan-300 hover:bg-cyan-950/40 border border-transparent hover:border-cyan-800/40 transition flex items-center gap-1.5">
               <span>📖</span>
               <span>Cẩm nang</span>
@@ -253,6 +257,10 @@
           <span class="text-xs text-cyan-400 font-semibold" id="active-phase-indicator">Chặng 1: 0-10m Cơ học</span>
         </div>
         <div class="flex items-center gap-2">
+          <button id="btn-audio-only-mode" class="px-2.5 py-1 rounded bg-indigo-950 border border-indigo-700/80 text-indigo-300 font-semibold hover:bg-indigo-900 transition text-xs flex items-center gap-1.5 cursor-pointer" title="Luyện nghe nhắm mắt (Eyes-Free Audio Only Mode)">
+            <span>🎧</span>
+            <span>Chế độ Nghe</span>
+          </button>
           <button id="btn-quick-10m-inline" class="px-2.5 py-1 rounded bg-orange-950 border border-orange-800 text-orange-300 font-semibold hover:bg-orange-900 transition text-xs">
             ⚡ Chọn 1 Block 10m
           </button>
@@ -1898,6 +1906,10 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
   <script src="deveng-components.js"></script>
   <script src="deveng-command-palette.js"></script>
   <script src="deveng-kinematic-tract.js"></script>
+  <script src="deveng-slow-audio.js"></script>
+  <script src="deveng-self-check.js"></script>
+  <script src="deveng-one-tap-start.js"></script>
+  <script src="deveng-audio-only.js"></script>
   <script src="app.js"></script>
   <script>
     if ('serviceWorker' in navigator) {

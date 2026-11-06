@@ -14,18 +14,6 @@ public record UserProgressSummary(
     int NextDayNumber = 1
 );
 
-public record SessionRecord(
-    int DayNumber,
-    DateTime ScheduledDate,
-    DateTime? CompletedAt,
-    int PlannedMinutes,
-    int ActualMinutes,
-    string Status,
-    int? SelfRating = null,
-    string? LearnerNotes = null,
-    string? AiFeedbackSnippet = null
-);
-
 public record SpeechScoreRecord(
     string SessionId,
     DateTime Timestamp,
