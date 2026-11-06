@@ -722,21 +722,21 @@
 
         // Render loading state in popup
         popup.innerHTML = `
-          <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-2">
-            <div class="flex items-center gap-1.5 overflow-hidden">
-              <span class="font-bold text-white text-xs truncate max-w-[170px]" title="${text}">"${text}"</span>
-              <button id="sel-pop-btn-speak" class="px-2 py-0.5 rounded bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-800 text-xs font-semibold transition shrink-0 flex items-center gap-1">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-2.5">
+            <div class="flex items-center gap-2 overflow-hidden">
+              <span class="font-bold text-white text-sm truncate max-w-[200px]" title="${text}">"${text}"</span>
+              <button id="sel-pop-btn-speak" class="px-2.5 py-1 rounded-lg bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-800 text-xs font-bold transition shrink-0 flex items-center gap-1 cursor-pointer">
                 🔊 <span>Nghe</span>
               </button>
             </div>
-            <button id="sel-pop-btn-close" class="text-slate-400 hover:text-white text-xs font-mono ml-2">✕</button>
+            <button id="sel-pop-btn-close" class="text-slate-400 hover:text-white text-sm font-mono ml-2 cursor-pointer p-1" title="Đóng popup">✕</button>
           </div>
-          <div class="space-y-1.5 text-xs">
-            <div class="text-cyan-400 font-mono text-xs font-semibold" id="sel-pop-ipa">⏳ Đang tra IPA...</div>
-            <div class="text-slate-200 text-xs" id="sel-pop-meaning">Đang tải nghĩa...</div>
-            <div class="text-slate-400 italic text-xs" id="sel-pop-cue"></div>
+          <div class="space-y-2 text-sm">
+            <div class="text-cyan-300 font-mono text-sm font-bold" id="sel-pop-ipa">⏳ Đang tra IPA...</div>
+            <div class="text-slate-100 text-sm leading-relaxed" id="sel-pop-meaning">Đang tải nghĩa...</div>
+            <div class="text-slate-200 italic text-sm leading-relaxed" id="sel-pop-cue"></div>
           </div>
-          <button id="sel-pop-btn-practice" class="w-full mt-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 text-xs font-semibold flex items-center justify-center gap-1.5 transition">
+          <button id="sel-pop-btn-practice" class="w-full mt-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 text-sm font-bold flex items-center justify-center gap-2 transition cursor-pointer shadow">
             🎤 Luyện phát âm từ này
           </button>
         `;
@@ -1052,7 +1052,7 @@
             ${frame.templatePattern}
           </div>
           
-          <div class="text-sm md:text-base text-slate-100 italic font-medium leading-relaxed">
+          <div class="text-sm text-slate-100 italic font-medium leading-relaxed">
             🇻🇳 Ý nghĩa: ${frame.vietnameseTranslation || 'Khung câu cấu trúc chuẩn cho kỹ sư phần mềm.'}
           </div>
 
@@ -1208,7 +1208,7 @@
             <button class="speak-btn text-sm text-slate-200 hover:text-cyan-300 font-bold" data-word="${contrastData.drills[0]?.wordA || 'test'}">🔊</button>
           </div>
           <div class="text-xs text-cyan-300 font-bold mt-1">${soundA.name}</div>
-          <div class="text-xs md:text-sm text-slate-100 mt-1.5 leading-relaxed font-normal">${soundA.cue}</div>
+          <div class="text-sm text-slate-100 mt-1.5 leading-relaxed font-normal">${soundA.cue}</div>
         </div>
 
         <div class="p-3.5 rounded-lg bg-slate-950 border border-purple-900/60 cursor-pointer hover:border-purple-400 transition" onclick="window.selectSagittalAndMouth && window.selectSagittalAndMouth('${soundB.symbol}')" title="Bấm để kích hoạt ${soundB.symbol} trong mô hình cấu âm">
@@ -1217,7 +1217,7 @@
             <button class="speak-btn text-sm text-slate-200 hover:text-purple-300 font-bold" data-word="${contrastData.drills[0]?.wordB || 'dead'}">🔊</button>
           </div>
           <div class="text-xs text-purple-300 font-bold mt-1">${soundB.name}</div>
-          <div class="text-xs md:text-sm text-slate-100 mt-1.5 leading-relaxed font-normal">${soundB.cue}</div>
+          <div class="text-sm text-slate-100 mt-1.5 leading-relaxed font-normal">${soundB.cue}</div>
         </div>
       </div>
 
@@ -2769,7 +2769,7 @@
       const infoBox = document.getElementById('articulator-info-box');
       if (infoBox) {
         infoBox.innerHTML = data.desc;
-        infoBox.className = "p-3.5 rounded-xl bg-slate-950 border-2 border-cyan-500/80 text-xs md:text-sm text-slate-100 font-mono shadow-xl leading-relaxed transition-all";
+        infoBox.className = "p-3.5 rounded-xl bg-slate-950 border-2 border-cyan-500/80 text-sm text-slate-100 font-mono shadow-xl leading-relaxed transition-all";
       }
     }
 
@@ -4557,40 +4557,40 @@
     body.innerHTML = `
       <div class="border-b-2 border-cyan-500 pb-3">
         <h1 class="text-xl font-bold text-white uppercase">${sheet.sprintTitle}</h1>
-        <p class="text-xs text-cyan-300 font-semibold mt-1">🎯 Mục tiêu: ${sheet.focusObjective}</p>
+        <p class="text-sm text-cyan-300 font-semibold mt-1">🎯 Mục tiêu: ${sheet.focusObjective}</p>
       </div>
 
       <!-- Section 1: Top Sentence Frames -->
-      <div class="space-y-2">
-        <h3 class="text-xs font-bold font-mono text-cyan-400 uppercase tracking-wider">1. Khung Câu Standup & Demo Tiêu Biểu (10 Frames):</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+      <div class="space-y-2.5">
+        <h3 class="text-sm font-bold font-mono text-cyan-400 uppercase tracking-wider">1. Khung Câu Standup & Demo Tiêu Biểu (10 Frames):</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
           ${sheet.sentenceFrames.map(f => `
-            <div class="p-2.5 rounded bg-slate-950 border border-slate-800 space-y-1">
-              <div class="font-bold text-slate-100 font-mono text-xs">${f.number}. ${f.templatePattern}</div>
-              <div class="text-xs text-slate-400 italic">${f.translationVi}</div>
+            <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+              <div class="font-bold text-slate-100 font-mono text-sm">${f.number}. ${f.templatePattern}</div>
+              <div class="text-sm text-slate-200 italic font-sans">${f.translationVi}</div>
             </div>
           `).join('')}
         </div>
       </div>
 
       <!-- Section 2: Target Phonemes Table -->
-      <div class="space-y-2">
-        <h3 class="text-xs font-bold font-mono text-amber-400 uppercase tracking-wider">2. Bảng Tra Cứu Âm Vị & Chỉ Dẫn Khẩu Hình:</h3>
+      <div class="space-y-2.5">
+        <h3 class="text-sm font-bold font-mono text-amber-400 uppercase tracking-wider">2. Bảng Tra Cứu Âm Vị & Chỉ Dẫn Khẩu Hình:</h3>
         <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs border-collapse">
+          <table class="w-full text-left text-sm border-collapse">
             <thead>
-              <tr class="border-b border-slate-800 text-slate-400">
-                <th class="py-1 px-2 font-mono">Âm vị</th>
-                <th class="py-1 px-2">Cơ học cấu âm</th>
-                <th class="py-1 px-2 font-mono">Từ ví dụ IT</th>
+              <tr class="border-b border-slate-800 text-slate-300">
+                <th class="py-2 px-3 font-mono">Âm vị</th>
+                <th class="py-2 px-3">Cơ học cấu âm</th>
+                <th class="py-2 px-3 font-mono">Từ ví dụ IT</th>
               </tr>
             </thead>
             <tbody>
               ${sheet.targetPhonemes.map(p => `
                 <tr class="border-b border-slate-800/60">
-                  <td class="py-1 px-2 font-mono font-bold text-cyan-400">${p.symbol}</td>
-                  <td class="py-1 px-2 text-slate-200">${p.mouthPlacementCueVi}</td>
-                  <td class="py-1 px-2 font-mono text-amber-300">${p.devWords.join(', ')}</td>
+                  <td class="py-2 px-3 font-mono font-bold text-cyan-400">${p.symbol}</td>
+                  <td class="py-2 px-3 text-slate-200">${p.mouthPlacementCueVi}</td>
+                  <td class="py-2 px-3 font-mono text-amber-300">${p.devWords.join(', ')}</td>
                 </tr>
               `).join('')}
             </tbody>
@@ -4599,14 +4599,14 @@
       </div>
 
       <!-- Section 3: Essential Vocabulary -->
-      <div class="space-y-2">
-        <h3 class="text-xs font-bold font-mono text-purple-400 uppercase tracking-wider">3. Từ Vựng Kỹ Thuật Trọng Tâm:</h3>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs font-mono">
+      <div class="space-y-2.5">
+        <h3 class="text-sm font-bold font-mono text-purple-400 uppercase tracking-wider">3. Từ Vựng Kỹ Thuật Trọng Tâm:</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm font-mono">
           ${sheet.essentialVocabulary.map(v => `
-            <div class="p-1.5 rounded bg-slate-950 border border-slate-800">
-              <div class="font-bold text-cyan-300">${v.word}</div>
-              <div class="text-slate-400">${v.ipa}</div>
-              <div class="text-slate-500 text-xs truncate">${v.meaningVi}</div>
+            <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 space-y-0.5">
+              <div class="font-bold text-cyan-300 text-sm">${v.word}</div>
+              <div class="text-slate-300 text-sm">${v.ipa}</div>
+              <div class="text-slate-200 text-sm font-sans truncate">${v.meaningVi}</div>
             </div>
           `).join('')}
         </div>
