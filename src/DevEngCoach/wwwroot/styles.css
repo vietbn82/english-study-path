@@ -328,11 +328,12 @@ h1 {
   }
 }
 
-/* AI Coach Docked Mode: Pushes page content to the right so it is not occluded */
+/* AI Coach Docked Mode: Docked on the RIGHT, shifts page content to the left so it is not occluded */
 @media (min-width: 768px) {
   body.ai-coach-active main,
   body.ai-coach-active header {
-    margin-left: 440px !important;
+    margin-right: 440px !important;
+    margin-left: 0 !important;
   }
   body.ai-coach-active .floating-ai-fab {
     opacity: 0;
@@ -340,7 +341,7 @@ h1 {
   }
 }
 main, header {
-  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1), margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .font-medium { font-weight: 500; }
 .font-semibold { font-weight: 600; }
