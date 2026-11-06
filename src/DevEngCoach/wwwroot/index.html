@@ -55,7 +55,7 @@
               <span class="font-extrabold text-sm tracking-tight text-white group-hover:text-cyan-400 transition-colors">
                 DevEng<span class="text-cyan-400 font-normal ml-0.5">Coach</span>
               </span>
-              <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-cyan-950/80 text-cyan-400 border border-cyan-800/50 uppercase tracking-wider font-semibold">Pro</span>
+              <span class="text-xs font-mono px-1.5 py-0.2 rounded bg-cyan-950/80 text-cyan-400 border border-cyan-800/50 uppercase tracking-wider font-semibold">Pro</span>
             </div>
           </a>
 
@@ -74,7 +74,7 @@
             <a href="fundamentals.html" target="_blank" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-cyan-300 hover:bg-cyan-950/40 border border-transparent hover:border-cyan-800/40 transition flex items-center gap-1.5">
               <span>📖</span>
               <span>Cẩm nang</span>
-              <span class="text-[10px] text-slate-500">↗</span>
+              <span class="text-xs text-slate-500">↗</span>
             </a>
           </nav>
         </div>
@@ -84,14 +84,14 @@
           <div id="sticky-header-timer" class="flex items-center gap-2.5 px-3 py-1 rounded-full bg-slate-900/90 border border-cyan-500/30 hover:border-cyan-500/60 shadow-lg shadow-cyan-950/40 font-mono text-xs transition">
             <div class="flex items-center gap-1.5">
               <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
-              <span class="text-slate-400 text-[10px] uppercase font-bold tracking-wider">Session</span>
+              <span class="text-slate-400 text-xs uppercase font-bold tracking-wider">Session</span>
             </div>
             <span id="header-timer-display" class="font-bold text-cyan-300 text-sm tracking-wider">30:00</span>
             <span class="text-slate-700">|</span>
-            <span id="header-timer-phase" class="hidden md:inline text-[10px] text-slate-400 max-w-[100px] truncate">1. Khẩu Hình</span>
+            <span id="header-timer-phase" class="hidden md:inline text-xs text-slate-400 max-w-[100px] truncate">1. Khẩu Hình</span>
             <div class="flex items-center gap-1 ml-0.5">
-              <button id="btn-header-timer-toggle" class="px-2.5 py-0.5 rounded-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-[10px] transition cursor-pointer shadow-sm" title="Bắt đầu / Tạm dừng">Start</button>
-              <button id="btn-header-timer-reset" class="w-5 h-5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white text-[10px] flex items-center justify-center transition cursor-pointer" title="Đặt lại 30 phút">↺</button>
+              <button id="btn-header-timer-toggle" class="px-2.5 py-0.5 rounded-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs transition cursor-pointer shadow-sm" title="Bắt đầu / Tạm dừng">Start</button>
+              <button id="btn-header-timer-reset" class="w-5 h-5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white text-xs flex items-center justify-center transition cursor-pointer" title="Đặt lại 30 phút">↺</button>
             </div>
           </div>
         </div>
@@ -99,7 +99,7 @@
         <!-- Right: Modern Telemetry Capsule Cluster -->
         <div class="hidden lg:flex items-center gap-2 text-xs font-mono">
           <!-- Unified Stats Capsule -->
-          <div class="flex items-center rounded-lg bg-slate-900/80 border border-slate-800 p-0.5 text-[11px]">
+          <div class="flex items-center rounded-lg bg-slate-900/80 border border-slate-800 p-0.5 text-xs">
             <!-- Streak -->
             <div class="flex items-center gap-1.5 px-2.5 py-1 text-slate-300 border-r border-slate-800/80" title="Chuỗi ngày học liên tục">
               <span class="text-orange-400">🔥</span>
@@ -126,7 +126,7 @@
           </div>
 
           <!-- Notification Reminder Icon Pill -->
-          <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900/80 border border-slate-800 text-[11px] text-slate-400">
+          <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900/80 border border-slate-800 text-xs text-slate-400">
             <span class="text-amber-400">⏰</span>
             <span class="font-semibold text-slate-300" id="stat-reminder-time">22:00</span>
             <button id="btn-test-notification" title="Test thông báo màn hình" class="hover:text-cyan-400 transition cursor-pointer ml-0.5">🔔</button>
@@ -142,28 +142,28 @@
         
         <!-- Left: Practice Studios Segment -->
         <div class="flex items-center gap-1 shrink-0">
-          <span class="text-[10px] font-mono uppercase font-bold text-slate-500 mr-1.5 hidden xl:inline">Phòng luyện:</span>
-          <button id="nav-simulators" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+          <span class="text-xs font-mono uppercase font-bold text-slate-500 mr-1.5 hidden xl:inline">Phòng luyện:</span>
+          <button id="nav-simulators" class="px-2.5 py-1 rounded-md text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
             <span>🎙️</span>
             <span>Standup/Demo</span>
           </button>
-          <button id="nav-sparring" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+          <button id="nav-sparring" class="px-2.5 py-1 rounded-md text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
             <span>⚔️</span>
             <span>Sparring Arena</span>
           </button>
-          <button id="nav-prpolish" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+          <button id="nav-prpolish" class="px-2.5 py-1 rounded-md text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
             <span>🛠️</span>
             <span>PR Studio</span>
           </button>
-          <button id="nav-shadowing" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+          <button id="nav-shadowing" class="px-2.5 py-1 rounded-md text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
             <span>🎙️</span>
             <span>Shadowing Studio</span>
           </button>
-          <button id="nav-srs" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+          <button id="nav-srs" class="px-2.5 py-1 rounded-md text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
             <span>🧠</span>
             <span>SRS Vault</span>
           </button>
-          <button id="nav-analytics" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+          <button id="nav-analytics" class="px-2.5 py-1 rounded-md text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
             <span>📊</span>
             <span>Burndown</span>
           </button>
@@ -171,15 +171,15 @@
 
         <!-- Right: Fast-Action Utility Accelerators -->
         <div class="flex items-center gap-1.5 shrink-0">
-          <button id="btn-open-warmup" class="px-2.5 py-1 rounded-md text-[11px] font-semibold text-amber-300 bg-amber-950/40 border border-amber-800/60 hover:bg-amber-900/50 transition flex items-center gap-1 whitespace-nowrap shadow-sm cursor-pointer" title="Khởi động 2 phút với 5 từ yếu">
+          <button id="btn-open-warmup" class="px-2.5 py-1 rounded-md text-xs font-semibold text-amber-300 bg-amber-950/40 border border-amber-800/60 hover:bg-amber-900/50 transition flex items-center gap-1 whitespace-nowrap shadow-sm cursor-pointer" title="Khởi động 2 phút với 5 từ yếu">
             <span>⚡</span>
             <span>2m Warm-Up</span>
           </button>
-          <button id="btn-open-microlesson" class="px-2.5 py-1 rounded-md text-[11px] font-semibold text-orange-300 bg-orange-950/40 border border-orange-800/60 hover:bg-orange-900/50 transition flex items-center gap-1 whitespace-nowrap shadow-sm cursor-pointer" title="Chế độ học nhanh 10 phút">
+          <button id="btn-open-microlesson" class="px-2.5 py-1 rounded-md text-xs font-semibold text-orange-300 bg-orange-950/40 border border-orange-800/60 hover:bg-orange-900/50 transition flex items-center gap-1 whitespace-nowrap shadow-sm cursor-pointer" title="Chế độ học nhanh 10 phút">
             <span>⚡</span>
             <span>Quick 10m</span>
           </button>
-          <button id="btn-open-cheatsheet" class="px-2.5 py-1 rounded-md text-[11px] font-semibold text-cyan-300 bg-cyan-950/40 border border-cyan-800/60 hover:bg-cyan-900/50 transition flex items-center gap-1 whitespace-nowrap shadow-sm cursor-pointer" title="In tóm tắt khổ A4">
+          <button id="btn-open-cheatsheet" class="px-2.5 py-1 rounded-md text-xs font-semibold text-cyan-300 bg-cyan-950/40 border border-cyan-800/60 hover:bg-cyan-900/50 transition flex items-center gap-1 whitespace-nowrap shadow-sm cursor-pointer" title="In tóm tắt khổ A4">
             <span>📋</span>
             <span>In Cheat Sheet</span>
           </button>
@@ -237,13 +237,13 @@
       <div class="flex items-center justify-between bg-slate-900/80 border border-slate-800 px-4 py-2 rounded-xl text-xs">
         <div class="flex items-center gap-2">
           <span class="font-mono text-slate-400">⏱️ Điều hướng các chặng học (Pomodoro 30m):</span>
-          <span class="text-[11px] text-cyan-400 font-semibold" id="active-phase-indicator">Chặng 1: 0-10m Cơ học</span>
+          <span class="text-xs text-cyan-400 font-semibold" id="active-phase-indicator">Chặng 1: 0-10m Cơ học</span>
         </div>
         <div class="flex items-center gap-2">
-          <button id="btn-quick-10m-inline" class="px-2.5 py-1 rounded bg-orange-950 border border-orange-800 text-orange-300 font-semibold hover:bg-orange-900 transition text-[11px]">
+          <button id="btn-quick-10m-inline" class="px-2.5 py-1 rounded bg-orange-950 border border-orange-800 text-orange-300 font-semibold hover:bg-orange-900 transition text-xs">
             ⚡ Chọn 1 Block 10m
           </button>
-          <button id="btn-toggle-all-blocks" class="px-2.5 py-1 rounded bg-slate-800 border border-slate-700 text-slate-300 hover:text-white transition text-[11px]">
+          <button id="btn-toggle-all-blocks" class="px-2.5 py-1 rounded bg-slate-800 border border-slate-700 text-slate-300 hover:text-white transition text-xs">
             Thu gọn / Mở tất cả ↕
           </button>
         </div>
@@ -266,7 +266,7 @@
                   <span class="text-xs font-mono font-bold text-cyan-400 bg-cyan-950/90 px-2.5 py-0.5 rounded-full border border-cyan-800" id="phonetics-symbol">
                     /t/, /d/
                   </span>
-                  <span class="text-[11px] font-mono text-slate-400 bg-slate-800/80 px-2 py-0.5 rounded border border-slate-700">
+                  <span class="text-xs font-mono text-slate-400 bg-slate-800/80 px-2 py-0.5 rounded border border-slate-700">
                     Articulatory Mechanics & Kinematics
                   </span>
                 </div>
@@ -277,7 +277,7 @@
             <div class="flex items-center gap-2 self-end sm:self-center">
               <a href="fundamentals.html" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-950/40 hover:bg-cyan-900/50 border border-cyan-800/60 text-xs font-medium text-cyan-300 transition">
                 <span>💡 Cẩm Nang Cấu Âm Học</span>
-                <span class="text-[10px]">↗</span>
+                <span class="text-xs">↗</span>
               </a>
               <button id="btn-toggle-stage-1" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 flex items-center justify-center text-xs font-mono transition" title="Thu gọn / Mở rộng Section 1">
                 ▼
@@ -301,17 +301,17 @@
                   
                   <!-- Target 🇬🇧 vs Habit 🇻🇳 Toggle -->
                   <div class="flex items-center gap-1 bg-slate-900 border border-slate-800 rounded-lg p-0.5" id="sagittal-mode-toggle">
-                    <button id="btn-sagittal-target" class="px-2.5 py-1 rounded text-[11px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 transition">
+                    <button id="btn-sagittal-target" class="px-2.5 py-1 rounded text-xs font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 transition">
                       🇬🇧 Chuẩn Target
                     </button>
-                    <button id="btn-sagittal-vn" class="px-2.5 py-1 rounded text-[11px] font-mono text-slate-400 hover:text-rose-300 transition">
+                    <button id="btn-sagittal-vn" class="px-2.5 py-1 rounded text-xs font-mono text-slate-400 hover:text-rose-300 transition">
                       🇻🇳 Lỗi Người Việt
                     </button>
                   </div>
                 </div>
 
                 <!-- Quick Sound Articulation Selector Pills -->
-                <div class="flex items-center gap-1.5 w-full overflow-x-auto pb-1 text-[11px] font-mono scrollbar-thin" id="sagittal-sound-pills">
+                <div class="flex items-center gap-1.5 w-full overflow-x-auto pb-1 text-xs font-mono scrollbar-thin" id="sagittal-sound-pills">
                   <button data-sound="/t/" class="sound-tab-btn px-2.5 py-1 rounded bg-cyan-950/80 text-cyan-300 border border-cyan-800 whitespace-nowrap active font-bold">
                     /t/ (Bật gió)
                   </button>
@@ -475,16 +475,16 @@
                 <div class="w-full p-3 rounded-lg bg-slate-900/90 border border-cyan-900/40 space-y-2">
                   <div class="flex items-center justify-between text-xs font-mono font-bold text-cyan-400 uppercase tracking-wide">
                     <span>🧭 Hướng di chuyển động học (Kinematic Vectors):</span>
-                    <span class="text-[10px] text-slate-400">4 Pha chuẩn</span>
+                    <span class="text-xs text-slate-400">4 Pha chuẩn</span>
                   </div>
-                  <div class="grid grid-cols-2 gap-2 text-[11px] font-mono text-slate-300" id="sagittal-motion-steps">
+                  <div class="grid grid-cols-2 gap-2 text-xs font-mono text-slate-300" id="sagittal-motion-steps">
                     <div class="p-1.5 rounded bg-slate-950/70 border border-slate-800"><span class="text-cyan-400 font-bold">1. Xuất phát:</span> <span id="kin-step-start">Đầu lưỡi nghỉ sàn miệng</span></div>
                     <div class="p-1.5 rounded bg-slate-950/70 border border-slate-800"><span class="text-cyan-400 font-bold">2. Di chuyển:</span> <span id="kin-step-motion">⬆️ Nâng lên gờ lợi trên</span></div>
                     <div class="p-1.5 rounded bg-slate-950/70 border border-slate-800"><span class="text-amber-400 font-bold">3. Áp suất:</span> <span id="kin-step-pressure">🛑 Nén khí sau đầu lưỡi</span></div>
                     <div class="p-1.5 rounded bg-slate-950/70 border border-slate-800"><span class="text-emerald-400 font-bold">4. Thoát âm:</span> <span id="kin-step-release">⬇️ Giật dứt khoát giải phóng Pop</span></div>
                   </div>
                   <!-- Vietnamese Common Direction Mistake Warning -->
-                  <div class="p-2 rounded bg-amber-950/20 border border-amber-900/40 text-[11px] font-mono text-amber-300 flex items-start gap-2" id="sagittal-motion-warning">
+                  <div class="p-2 rounded bg-amber-950/20 border border-amber-900/40 text-xs font-mono text-amber-300 flex items-start gap-2" id="sagittal-motion-warning">
                     <span>⚠️</span>
                     <span id="sagittal-vn-motion-text">Lỗi hướng người Việt: Đập lưỡi vào răng cửa thay vì nâng lên gờ lợi, nuốt mất pha giật nổ xuống.</span>
                   </div>
@@ -678,7 +678,7 @@
                   <div class="text-xs font-bold text-slate-200 flex items-center gap-1.5">
                     <span>🎯 Từ vựng kỹ thuật trong ngày (20 từ):</span>
                   </div>
-                  <span class="text-[11px] text-cyan-400 font-mono">🔊 Nghe // 🎤 Luyện</span>
+                  <span class="text-xs text-cyan-400 font-mono">🔊 Nghe // 🎤 Luyện</span>
                 </div>
                 <!-- Quick Vocab Search & Sound Filter -->
                 <div>
@@ -707,7 +707,7 @@
                   <span class="text-xs font-mono font-bold text-blue-400 bg-blue-950/90 px-2.5 py-0.5 rounded-full border border-blue-800">
                     Zero Grammar Friction
                   </span>
-                  <span class="text-[11px] font-mono text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800">
+                  <span class="text-xs font-mono text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800">
                     10+ Ví Dụ Kỹ Thuật / Khung
                   </span>
                 </div>
@@ -762,7 +762,7 @@
                   <span class="text-xs font-mono font-bold text-purple-400 bg-purple-950/90 px-2.5 py-0.5 rounded-full border border-purple-800">
                     AI Speech Recognition & Real-time Scoring
                   </span>
-                  <span class="text-[11px] font-mono text-cyan-400 bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-800">
+                  <span class="text-xs font-mono text-cyan-400 bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-800">
                     Side-by-Side Audio Comparison
                   </span>
                 </div>
@@ -790,7 +790,7 @@
                     <span>KỊCH BẢN THỰC HÀNH HÔM NAY:</span>
                   </div>
                   <p class="text-xs text-slate-200 font-medium leading-relaxed" id="task-prompt">...</p>
-                  <div class="text-[11px] text-slate-400 italic bg-slate-900/60 p-2.5 rounded-lg border border-slate-800/80" id="task-scenario">...</div>
+                  <div class="text-xs text-slate-400 italic bg-slate-900/60 p-2.5 rounded-lg border border-slate-800/80" id="task-scenario">...</div>
                 </div>
 
                 <!-- PROMINENT CALL TO ACTION: BẮT ĐẦU NÓI NGAY -->
@@ -817,7 +817,7 @@
                       <span class="w-3 h-3 rounded-full bg-rose-500 animate-ping"></span>
                       <span>Đang lắng nghe giọng của bạn... Hãy nói câu tiếng Anh ngay!</span>
                     </div>
-                    <span class="text-[11px] text-rose-300 font-mono bg-rose-900/80 px-2.5 py-1 rounded-lg border border-rose-700 font-semibold">
+                    <span class="text-xs text-rose-300 font-mono bg-rose-900/80 px-2.5 py-1 rounded-lg border border-rose-700 font-semibold">
                       Bấm lại nút trên để Dừng
                     </span>
                   </div>
@@ -851,7 +851,7 @@
                       <span class="text-sm">🎙️</span>
                       <span>Đối chiếu giọng nói (Side-by-Side Audio):</span>
                     </span>
-                    <span class="text-[11px] text-cyan-400 font-mono">MediaRecorder // Native Model</span>
+                    <span class="text-xs text-cyan-400 font-mono">MediaRecorder // Native Model</span>
                   </div>
                   
                   <div class="flex items-center gap-3 flex-wrap">
@@ -933,7 +933,7 @@
                   <div class="space-y-1.5">
                     <label for="input-learner-notes" class="text-xs font-semibold text-slate-400 flex items-center justify-between">
                       <span>📝 Ghi chú cá nhân:</span>
-                      <span class="text-[10px] text-slate-500 font-mono">Nhật ký phát âm</span>
+                      <span class="text-xs text-slate-500 font-mono">Nhật ký phát âm</span>
                     </label>
                     <textarea id="input-learner-notes" rows="2" placeholder="Ghi chú buổi học: cảm nhận cơ miệng, từ vựng khó, lưu ý cho ngày mai..." class="w-full bg-slate-900/80 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition resize-none leading-relaxed"></textarea>
                   </div>
@@ -1051,17 +1051,17 @@
               <span id="sim-standup-score" class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-cyan-950 text-cyan-400 border border-cyan-800">Score: 90/100</span>
             </div>
             <div>
-              <div class="font-semibold text-slate-400 text-[11px]">Ngữ pháp & thì động từ:</div>
+              <div class="font-semibold text-slate-400 text-xs">Ngữ pháp & thì động từ:</div>
               <p id="sim-standup-grammar" class="text-slate-200 bg-slate-900 p-2 rounded mt-1 border border-slate-800">...</p>
             </div>
             <div>
-              <div class="font-semibold text-amber-400 text-[11px]">Cảnh báo âm đuôi /t/, /d/, /s/, /z/:</div>
+              <div class="font-semibold text-amber-400 text-xs">Cảnh báo âm đuôi /t/, /d/, /s/, /z/:</div>
               <ul id="sim-standup-consonants" class="list-disc list-inside text-slate-300 space-y-0.5 mt-1"></ul>
             </div>
             <div>
               <div class="flex items-center justify-between">
-                <span class="font-semibold text-cyan-400 text-[11px]">⭐ Phiên bản Senior Tech Lead:</span>
-                <button id="btn-speak-sim-standup" class="text-[11px] text-cyan-400 hover:text-cyan-300 font-mono flex items-center gap-1 cursor-pointer">
+                <span class="font-semibold text-cyan-400 text-xs">⭐ Phiên bản Senior Tech Lead:</span>
+                <button id="btn-speak-sim-standup" class="text-xs text-cyan-400 hover:text-cyan-300 font-mono flex items-center gap-1 cursor-pointer">
                   <span>🔊</span>
                   <span>Nghe mẫu</span>
                 </button>
@@ -1110,17 +1110,17 @@
               <span id="sim-demo-score" class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-blue-950 text-blue-400 border border-blue-800">Score: 88/100</span>
             </div>
             <div>
-              <div class="font-semibold text-cyan-400 text-[11px]">Nối âm (Connected Speech & Linking):</div>
+              <div class="font-semibold text-cyan-400 text-xs">Nối âm (Connected Speech & Linking):</div>
               <ul id="sim-demo-linking" class="list-disc list-inside text-slate-300 space-y-0.5 mt-1"></ul>
             </div>
             <div>
-              <div class="font-semibold text-purple-400 text-[11px]">Flap T & Weak Forms:</div>
+              <div class="font-semibold text-purple-400 text-xs">Flap T & Weak Forms:</div>
               <ul id="sim-demo-flapt" class="list-disc list-inside text-slate-300 space-y-0.5 mt-1"></ul>
             </div>
             <div>
               <div class="flex items-center justify-between">
-                <span class="font-semibold text-emerald-400 text-[11px]">⭐ Kịch bản Demo mượt mà chuẩn Lead:</span>
-                <button id="btn-speak-sim-demo" class="text-[11px] text-emerald-400 hover:text-emerald-300 font-mono flex items-center gap-1 cursor-pointer">
+                <span class="font-semibold text-emerald-400 text-xs">⭐ Kịch bản Demo mượt mà chuẩn Lead:</span>
+                <button id="btn-speak-sim-demo" class="text-xs text-emerald-400 hover:text-emerald-300 font-mono flex items-center gap-1 cursor-pointer">
                   <span>🔊</span>
                   <span>Nghe kịch bản</span>
                 </button>
@@ -1170,17 +1170,17 @@
               <span id="sim-pingpong-score" class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-purple-950 text-purple-400 border border-purple-800">Naturalness: 95/100</span>
             </div>
             <div>
-              <div class="font-semibold text-purple-400 text-[11px]">Đánh giá chất lượng chuyền bóng (Ping-Pong Quality):</div>
+              <div class="font-semibold text-purple-400 text-xs">Đánh giá chất lượng chuyền bóng (Ping-Pong Quality):</div>
               <p id="sim-pingpong-quality" class="text-slate-200 bg-slate-900 p-2 rounded mt-1 border border-slate-800">...</p>
             </div>
             <div>
-              <div class="font-semibold text-cyan-400 text-[11px]">Góp ý phản hồi:</div>
+              <div class="font-semibold text-cyan-400 text-xs">Góp ý phản hồi:</div>
               <p id="sim-pingpong-feedback" class="text-slate-300 p-1">...</p>
             </div>
             <div>
               <div class="flex items-center justify-between">
-                <span class="font-semibold text-pink-400 text-[11px]">⭐ Phiên bản giao tiếp tự nhiên chuẩn bản xứ:</span>
-                <button id="btn-speak-sim-pingpong" class="text-[11px] text-pink-400 hover:text-pink-300 font-mono flex items-center gap-1 cursor-pointer">
+                <span class="font-semibold text-pink-400 text-xs">⭐ Phiên bản giao tiếp tự nhiên chuẩn bản xứ:</span>
+                <button id="btn-speak-sim-pingpong" class="text-xs text-pink-400 hover:text-pink-300 font-mono flex items-center gap-1 cursor-pointer">
                   <span>🔊</span>
                   <span>Nghe đối thoại</span>
                 </button>
@@ -1225,17 +1225,17 @@
               <span id="sim-oneonone-score" class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-emerald-950 text-emerald-400 border border-emerald-800">Alignment: 90/100</span>
             </div>
             <div>
-              <div class="font-semibold text-emerald-400 text-[11px]">Đánh giá tác động & Tư duy hệ thống:</div>
+              <div class="font-semibold text-emerald-400 text-xs">Đánh giá tác động & Tư duy hệ thống:</div>
               <p id="sim-oneonone-feedback" class="text-slate-200 bg-slate-900 p-2.5 rounded mt-1 border border-slate-800 whitespace-pre-wrap leading-relaxed">...</p>
             </div>
             <div>
-              <div class="font-semibold text-amber-400 text-[11px]">Chiến thuật đàm phán cùng Manager:</div>
+              <div class="font-semibold text-amber-400 text-xs">Chiến thuật đàm phán cùng Manager:</div>
               <p id="sim-oneonone-tips" class="text-slate-300 p-1.5">...</p>
             </div>
             <div>
               <div class="flex items-center justify-between">
-                <span class="font-semibold text-teal-400 text-[11px]">⭐ Kịch bản 1-on-1 mẫu chuẩn Staff+:</span>
-                <button id="btn-speak-sim-oneonone" class="text-[11px] text-teal-400 hover:text-teal-300 font-mono flex items-center gap-1 cursor-pointer">
+                <span class="font-semibold text-teal-400 text-xs">⭐ Kịch bản 1-on-1 mẫu chuẩn Staff+:</span>
+                <button id="btn-speak-sim-oneonone" class="text-xs text-teal-400 hover:text-teal-300 font-mono flex items-center gap-1 cursor-pointer">
                   <span>🔊</span>
                   <span>Nghe kịch bản</span>
                 </button>
@@ -1243,7 +1243,7 @@
               <p id="sim-oneonone-script" class="text-teal-200 font-mono bg-teal-950/30 p-2.5 rounded mt-1 border border-teal-900/60 whitespace-pre-wrap leading-relaxed">...</p>
             </div>
             <div>
-              <div class="font-semibold text-cyan-400 text-[11px]">Cảnh báo cấu âm trọng tâm:</div>
+              <div class="font-semibold text-cyan-400 text-xs">Cảnh báo cấu âm trọng tâm:</div>
               <ul id="sim-oneonone-cues" class="list-disc list-inside text-slate-300 space-y-0.5 mt-1"></ul>
             </div>
           </div>
@@ -1260,12 +1260,12 @@
 
           <!-- Quick Samples -->
           <div class="space-y-1">
-            <label class="text-[11px] text-slate-400 font-mono">Mẫu thử nhanh:</label>
+            <label class="text-xs text-slate-400 font-mono">Mẫu thử nhanh:</label>
             <div class="flex flex-wrap gap-1.5">
-              <button class="linklab-sample-btn px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono transition cursor-pointer" data-text="check it out and test data">"check it out and test data"</button>
-              <button class="linklab-sample-btn px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono transition cursor-pointer" data-text="we put it on the server">"we put it on the server"</button>
-              <button class="linklab-sample-btn px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono transition cursor-pointer" data-text="tell him to log in to the network">"tell him to log in to the network"</button>
-              <button class="linklab-sample-btn px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono transition cursor-pointer" data-text="critical latency dropped under 20 milliseconds">"critical latency dropped"</button>
+              <button class="linklab-sample-btn px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition cursor-pointer" data-text="check it out and test data">"check it out and test data"</button>
+              <button class="linklab-sample-btn px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition cursor-pointer" data-text="we put it on the server">"we put it on the server"</button>
+              <button class="linklab-sample-btn px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition cursor-pointer" data-text="tell him to log in to the network">"tell him to log in to the network"</button>
+              <button class="linklab-sample-btn px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition cursor-pointer" data-text="critical latency dropped under 20 milliseconds">"critical latency dropped"</button>
             </div>
           </div>
 
@@ -1285,12 +1285,12 @@
             <!-- Linked Text Display -->
             <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-xl space-y-2">
               <div class="flex items-center justify-between">
-                <span class="text-[11px] font-mono text-cyan-400 font-bold">DẠNG NỐI ÂM LIÊN HOÀN (CONNECTED SPEECH REPRESENTATION):</span>
+                <span class="text-xs font-mono text-cyan-400 font-bold">DẠNG NỐI ÂM LIÊN HOÀN (CONNECTED SPEECH REPRESENTATION):</span>
                 <div class="flex items-center gap-2">
-                  <span class="text-[11px] text-slate-400 font-mono">Tốc độ:</span>
-                  <button class="linklab-speed-btn px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 text-[11px] active cursor-pointer" data-speed="1.0">1.0x</button>
-                  <button class="linklab-speed-btn px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 text-[11px] cursor-pointer" data-speed="0.85">0.85x</button>
-                  <button class="linklab-speed-btn px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 text-[11px] cursor-pointer" data-speed="0.7">0.7x</button>
+                  <span class="text-xs text-slate-400 font-mono">Tốc độ:</span>
+                  <button class="linklab-speed-btn px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 text-xs active cursor-pointer" data-speed="1.0">1.0x</button>
+                  <button class="linklab-speed-btn px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 text-xs cursor-pointer" data-speed="0.85">0.85x</button>
+                  <button class="linklab-speed-btn px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 text-xs cursor-pointer" data-speed="0.7">0.7x</button>
                   <button id="btn-speak-sim-linklab" class="px-3 py-1 bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-800 rounded text-xs font-bold flex items-center gap-1 transition cursor-pointer">
                     🔊 Nghe phát âm
                   </button>
@@ -1303,14 +1303,14 @@
 
             <!-- Occurrences Breakdown -->
             <div class="space-y-2">
-              <span class="font-semibold text-slate-300 text-[11px]">Chi tiết các điểm nối âm phát hiện được:</span>
+              <span class="font-semibold text-slate-300 text-xs">Chi tiết các điểm nối âm phát hiện được:</span>
               <div id="sim-linklab-occurrences" class="space-y-2">
                 <!-- Occurrences dynamic list -->
               </div>
             </div>
 
             <!-- Pacing Tip -->
-            <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-800 text-[11px] text-slate-300 flex items-start gap-2">
+            <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-800 text-xs text-slate-300 flex items-start gap-2">
               <span class="text-cyan-400 font-bold">💡</span>
               <p id="sim-linklab-pacing-tip">...</p>
             </div>
@@ -1351,10 +1351,10 @@
       <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-3">
         <div class="flex items-center justify-between border-b border-slate-800 pb-2">
           <div class="flex items-center gap-2">
-            <span class="px-2 py-0.5 rounded text-[11px] font-mono bg-indigo-950 text-indigo-300 border border-indigo-800" id="sparring-role-badge">Staff Architect</span>
+            <span class="px-2 py-0.5 rounded text-xs font-mono bg-indigo-950 text-indigo-300 border border-indigo-800" id="sparring-role-badge">Staff Architect</span>
             <span class="text-xs font-semibold text-slate-200" id="sparring-scenario-title">Microservices vs Modular Monolith</span>
           </div>
-          <div class="text-[11px] font-mono text-slate-400" id="sparring-target-vocab">Target Vocab: latency, throughput, consistency, blast radius</div>
+          <div class="text-xs font-mono text-slate-400" id="sparring-target-vocab">Target Vocab: latency, throughput, consistency, blast radius</div>
         </div>
         <p class="text-xs text-slate-300" id="sparring-role-desc">You are defending architectural boundaries to an aggressive Staff Architect who questions your data consistency and inter-service latency overhead.</p>
       </div>
@@ -1370,7 +1370,7 @@
         <div class="space-y-2 pt-2 border-t border-slate-800">
           <div class="flex items-center justify-between">
             <label class="text-xs font-semibold text-slate-300">Phản hồi của bạn (Lập luận & Bảo vệ quan điểm):</label>
-            <div class="text-[11px] font-mono text-slate-400">Tip: Bật rõ âm đuôi /t/, /d/, /s/, /z/ và tránh từ đệm (uhm, like, actually)</div>
+            <div class="text-xs font-mono text-slate-400">Tip: Bật rõ âm đuôi /t/, /d/, /s/, /z/ và tránh từ đệm (uhm, like, actually)</div>
           </div>
 
           <div class="flex gap-2">
@@ -1399,27 +1399,27 @@
         <div id="sparring-feedback-panel" class="hidden bg-slate-950 border border-indigo-900/60 rounded-xl p-4 space-y-3 text-xs">
           <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
             <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-lg">
-              <div class="text-[10px] text-slate-400">🛡️ Ngoại giao kỹ thuật</div>
+              <div class="text-xs text-slate-400">🛡️ Ngoại giao kỹ thuật</div>
               <div class="text-lg font-bold font-mono text-cyan-400" id="sparring-score-diplomacy">--/100</div>
             </div>
             <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-lg">
-              <div class="text-[10px] text-slate-400">🎯 Độ rõ ràng & Sắc bén</div>
+              <div class="text-xs text-slate-400">🎯 Độ rõ ràng & Sắc bén</div>
               <div class="text-lg font-bold font-mono text-indigo-400" id="sparring-score-clarity">--/100</div>
             </div>
             <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-lg">
-              <div class="text-[10px] text-slate-400">⚠️ Từ đệm (Filler words)</div>
+              <div class="text-xs text-slate-400">⚠️ Từ đệm (Filler words)</div>
               <div class="text-xs font-bold font-mono text-amber-400 mt-1" id="sparring-filler-words">0 phát hiện</div>
             </div>
             <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-lg">
-              <div class="text-[10px] text-slate-400">🗣️ Cảnh báo âm cuối</div>
+              <div class="text-xs text-slate-400">🗣️ Cảnh báo âm cuối</div>
               <div class="text-xs font-bold font-mono text-emerald-400 mt-1" id="sparring-phonetic-alerts">Chuẩn</div>
             </div>
           </div>
 
           <div class="space-y-1">
-            <div class="font-semibold text-indigo-300 text-[11px] flex items-center gap-1">
+            <div class="font-semibold text-indigo-300 text-xs flex items-center gap-1">
               <span>💎 Staff+ Senior Lead Refinement (Phiên bản diễn đạt chuẩn mực quốc tế):</span>
-              <button class="speak-btn text-[11px] text-cyan-400 hover:underline" id="btn-speak-sparring-refinement">🔊 Nghe</button>
+              <button class="speak-btn text-xs text-cyan-400 hover:underline" id="btn-speak-sparring-refinement">🔊 Nghe</button>
             </div>
             <p id="sparring-refinement-text" class="text-slate-200 font-mono bg-indigo-950/30 p-2.5 rounded-lg border border-indigo-900/60 leading-relaxed">...</p>
           </div>
@@ -1473,12 +1473,12 @@
 
           <!-- Quick Samples -->
           <div class="space-y-1">
-            <label class="text-[11px] text-slate-400 font-mono">Mẫu thử nhanh:</label>
+            <label class="text-xs text-slate-400 font-mono">Mẫu thử nhanh:</label>
             <div class="flex flex-wrap gap-1.5">
-              <button class="pr-sample-btn px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono transition" data-sample="this code slow fix it">"this code slow fix it"</button>
-              <button class="pr-sample-btn px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono transition" data-sample="why you do this wrong way">"why you do this wrong"</button>
-              <button class="pr-sample-btn px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono transition" data-sample="not good change, will cause bug">"not good change"</button>
-              <button class="pr-sample-btn px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono transition" data-sample="fix bug token auth null">"fix bug token auth null"</button>
+              <button class="pr-sample-btn px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition" data-sample="this code slow fix it">"this code slow fix it"</button>
+              <button class="pr-sample-btn px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition" data-sample="why you do this wrong way">"why you do this wrong"</button>
+              <button class="pr-sample-btn px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition" data-sample="not good change, will cause bug">"not good change"</button>
+              <button class="pr-sample-btn px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition" data-sample="fix bug token auth null">"fix bug token auth null"</button>
             </div>
           </div>
 
@@ -1506,8 +1506,8 @@
             <!-- Polished Comment Card -->
             <div class="bg-slate-950 border border-cyan-900/60 rounded-xl p-4 space-y-2">
               <div class="flex items-center justify-between">
-                <span class="text-[10px] font-mono text-cyan-400">Ready to paste into GitHub / GitLab PR:</span>
-                <button class="speak-btn text-[11px] text-cyan-400 hover:underline" id="btn-speak-pr-result">🔊 Nghe phát âm</button>
+                <span class="text-xs font-mono text-cyan-400">Ready to paste into GitHub / GitLab PR:</span>
+                <button class="speak-btn text-xs text-cyan-400 hover:underline" id="btn-speak-pr-result">🔊 Nghe phát âm</button>
               </div>
               <div id="pr-polished-text" class="text-xs font-mono text-slate-100 bg-slate-900/80 p-3 rounded-lg border border-slate-800/80 leading-relaxed whitespace-pre-wrap select-all">
 Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bản chuẩn hóa.
@@ -1516,7 +1516,7 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
 
             <!-- Alternative Draft -->
             <div class="space-y-1">
-              <div class="text-[11px] font-semibold text-slate-400 font-mono">Phương án diễn đạt thay thế (Alternative Draft):</div>
+              <div class="text-xs font-semibold text-slate-400 font-mono">Phương án diễn đạt thay thế (Alternative Draft):</div>
               <div id="pr-alternative-text" class="text-xs text-slate-300 font-mono bg-slate-950/60 p-2.5 rounded-lg border border-slate-800/60 italic">
                 ...
               </div>
@@ -1525,21 +1525,21 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
             <!-- Analytics Tags -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
               <div class="bg-slate-950/80 border border-slate-800 p-2.5 rounded-lg space-y-1">
-                <div class="text-[10px] text-emerald-400 font-semibold">✨ Cụm từ kỹ thuật chuẩn (Key Idioms):</div>
-                <div id="pr-key-phrases" class="flex flex-wrap gap-1 text-[11px] font-mono text-emerald-300">
+                <div class="text-xs text-emerald-400 font-semibold">✨ Cụm từ kỹ thuật chuẩn (Key Idioms):</div>
+                <div id="pr-key-phrases" class="flex flex-wrap gap-1 text-xs font-mono text-emerald-300">
                   <span class="px-1.5 py-0.5 rounded bg-emerald-950/60 border border-emerald-900">--</span>
                 </div>
               </div>
               <div class="bg-slate-950/80 border border-slate-800 p-2.5 rounded-lg space-y-1">
-                <div class="text-[10px] text-amber-400 font-semibold">🛡️ Anti-patterns đã tránh (Avoided Pitfalls):</div>
-                <div id="pr-avoided-pitfalls" class="flex flex-wrap gap-1 text-[11px] font-mono text-amber-300">
+                <div class="text-xs text-amber-400 font-semibold">🛡️ Anti-patterns đã tránh (Avoided Pitfalls):</div>
+                <div id="pr-avoided-pitfalls" class="flex flex-wrap gap-1 text-xs font-mono text-amber-300">
                   <span class="px-1.5 py-0.5 rounded bg-amber-950/60 border border-amber-900">--</span>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="text-[11px] text-slate-400 border-t border-slate-800 pt-3" id="pr-explanation-text">
+          <div class="text-xs text-slate-400 border-t border-slate-800 pt-3" id="pr-explanation-text">
             💡 Gợi ý: Hãy luôn giải thích lý do (the "why") và đề xuất hướng giải quyết thay vì chỉ chỉ trích code.
           </div>
         </div>
@@ -1561,19 +1561,19 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
           <!-- Quick stats -->
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs font-mono">
             <div class="bg-slate-950/80 border border-slate-800 px-3 py-1.5 rounded-lg">
-              <div class="text-[10px] text-slate-400">Tổng từ:</div>
+              <div class="text-xs text-slate-400">Tổng từ:</div>
               <div class="font-bold text-slate-200" id="srs-stat-total">0</div>
             </div>
             <div class="bg-slate-950/80 border border-amber-800/60 px-3 py-1.5 rounded-lg">
-              <div class="text-[10px] text-amber-400">Cần ôn:</div>
+              <div class="text-xs text-amber-400">Cần ôn:</div>
               <div class="font-bold text-amber-300" id="srs-stat-due">0</div>
             </div>
             <div class="bg-slate-950/80 border border-emerald-800/60 px-3 py-1.5 rounded-lg">
-              <div class="text-[10px] text-emerald-400">Thành thạo:</div>
+              <div class="text-xs text-emerald-400">Thành thạo:</div>
               <div class="font-bold text-emerald-300" id="srs-stat-mastered">0</div>
             </div>
             <div class="bg-slate-950/80 border border-cyan-800/60 px-3 py-1.5 rounded-lg">
-              <div class="text-[10px] text-cyan-400">Độ chính xác:</div>
+              <div class="text-xs text-cyan-400">Độ chính xác:</div>
               <div class="font-bold text-cyan-300" id="srs-stat-avg">0%</div>
             </div>
           </div>
@@ -1585,29 +1585,29 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
         <h3 class="text-xs font-mono font-bold text-slate-300">TIẾN TRÌNH 5 HỘP LEITNER (SPACED REPETITION SCHEDULE):</h3>
         <div class="grid grid-cols-1 sm:grid-cols-5 gap-3 text-xs font-mono">
           <div class="bg-slate-950 border border-red-900/60 p-3 rounded-lg text-center space-y-1">
-            <div class="text-[10px] text-red-400 font-bold">HỘP 1 (Mỗi ngày)</div>
+            <div class="text-xs text-red-400 font-bold">HỘP 1 (Mỗi ngày)</div>
             <div class="text-base font-bold text-slate-200" id="srs-box-1-count">0 từ</div>
-            <div class="text-[10px] text-slate-400">Khoảng cách: 1 ngày</div>
+            <div class="text-xs text-slate-400">Khoảng cách: 1 ngày</div>
           </div>
           <div class="bg-slate-950 border border-orange-900/60 p-3 rounded-lg text-center space-y-1">
-            <div class="text-[10px] text-orange-400 font-bold">HỘP 2 (3 ngày)</div>
+            <div class="text-xs text-orange-400 font-bold">HỘP 2 (3 ngày)</div>
             <div class="text-base font-bold text-slate-200" id="srs-box-2-count">0 từ</div>
-            <div class="text-[10px] text-slate-400">Khoảng cách: 3 ngày</div>
+            <div class="text-xs text-slate-400">Khoảng cách: 3 ngày</div>
           </div>
           <div class="bg-slate-950 border border-amber-900/60 p-3 rounded-lg text-center space-y-1">
-            <div class="text-[10px] text-amber-400 font-bold">HỘP 3 (7 ngày)</div>
+            <div class="text-xs text-amber-400 font-bold">HỘP 3 (7 ngày)</div>
             <div class="text-base font-bold text-slate-200" id="srs-box-3-count">0 từ</div>
-            <div class="text-[10px] text-slate-400">Khoảng cách: 7 ngày</div>
+            <div class="text-xs text-slate-400">Khoảng cách: 7 ngày</div>
           </div>
           <div class="bg-slate-950 border border-blue-900/60 p-3 rounded-lg text-center space-y-1">
-            <div class="text-[10px] text-blue-400 font-bold">HỘP 4 (14 ngày)</div>
+            <div class="text-xs text-blue-400 font-bold">HỘP 4 (14 ngày)</div>
             <div class="text-base font-bold text-slate-200" id="srs-box-4-count">0 từ</div>
-            <div class="text-[10px] text-slate-400">Khoảng cách: 14 ngày</div>
+            <div class="text-xs text-slate-400">Khoảng cách: 14 ngày</div>
           </div>
           <div class="bg-slate-950 border border-emerald-900/60 p-3 rounded-lg text-center space-y-1">
-            <div class="text-[10px] text-emerald-400 font-bold">HỘP 5 (Mastered)</div>
+            <div class="text-xs text-emerald-400 font-bold">HỘP 5 (Mastered)</div>
             <div class="text-base font-bold text-emerald-300" id="srs-box-5-count">0 từ</div>
-            <div class="text-[10px] text-slate-400">Khoảng cách: 30 ngày</div>
+            <div class="text-xs text-slate-400">Khoảng cách: 30 ngày</div>
           </div>
         </div>
       </div>
@@ -1618,7 +1618,7 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
         <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
           <div class="flex items-center justify-between border-b border-slate-800 pb-2">
             <span class="text-xs font-mono font-bold text-amber-400">THẺ ĐẾN HẠN ÔN TẬP HÔM NAY:</span>
-            <span class="text-[11px] font-mono text-slate-400" id="srs-card-box-indicator">Hộp 1 // Ôn mỗi ngày</span>
+            <span class="text-xs font-mono text-slate-400" id="srs-card-box-indicator">Hộp 1 // Ôn mỗi ngày</span>
           </div>
 
           <div id="srs-active-card-container" class="space-y-4">
@@ -1688,7 +1688,7 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
           <div class="space-y-2 pt-2 border-t border-slate-800">
             <div class="flex items-center justify-between text-xs">
               <span class="font-mono text-slate-400">Danh sách từ trong Vault:</span>
-              <button id="btn-srs-refresh" class="text-cyan-400 text-[11px] hover:underline">Làm mới</button>
+              <button id="btn-srs-refresh" class="text-cyan-400 text-xs hover:underline">Làm mới</button>
             </div>
             <div id="srs-all-items-list" class="max-h-48 overflow-y-auto space-y-1.5 text-xs font-mono pr-1">
               <!-- Rendered items -->
@@ -1718,7 +1718,7 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
         <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
           <div class="flex items-center justify-between border-b border-slate-800 pb-2">
             <span class="text-xs font-mono font-bold text-cyan-400">BURNDOWN TRAJECTORY (NGÀY 1 → 90):</span>
-            <div class="flex items-center gap-3 text-[11px] font-mono">
+            <div class="flex items-center gap-3 text-xs font-mono">
               <span class="flex items-center gap-1 text-slate-400"><span class="inline-block w-3 h-0.5 bg-slate-500"></span> Lý tưởng</span>
               <span class="flex items-center gap-1 text-cyan-400"><span class="inline-block w-3 h-0.5 bg-cyan-400"></span> Thực tế</span>
             </div>
@@ -1726,7 +1726,7 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
           <div class="relative w-full h-64 bg-slate-950 rounded-lg p-2 border border-slate-800/80">
             <svg id="svg-burndown" class="w-full h-full" viewBox="0 0 600 240"></svg>
           </div>
-          <div class="flex items-center justify-between text-[11px] font-mono text-slate-400 pt-1">
+          <div class="flex items-center justify-between text-xs font-mono text-slate-400 pt-1">
             <span>Sprint 1 (Ngày 1-30)</span>
             <span>Sprint 2 (Ngày 31-60)</span>
             <span>Sprint 3 (Ngày 61-90)</span>
@@ -1737,12 +1737,12 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
         <div class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
           <div class="flex items-center justify-between border-b border-slate-800 pb-2">
             <span class="text-xs font-mono font-bold text-emerald-400">HEATMAP HOẠT ĐỘNG (90 NGÀY):</span>
-            <span class="text-[10px] font-mono text-slate-400">13 tuần × 7 ngày</span>
+            <span class="text-xs font-mono text-slate-400">13 tuần × 7 ngày</span>
           </div>
           <div id="heatmap-grid" class="flex flex-wrap gap-1.5 p-2 bg-slate-950 rounded-lg border border-slate-800/80 min-h-[160px]">
             <!-- Rendered 90 cells -->
           </div>
-          <div class="flex items-center justify-between text-[10px] text-slate-400 pt-1">
+          <div class="flex items-center justify-between text-xs text-slate-400 pt-1">
             <div class="flex items-center gap-1">
               <span>Ít</span>
               <div class="heatmap-cell heatmap-intensity-0"></div>
@@ -1798,7 +1798,7 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
         <div class="lg:col-span-8 bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
           <!-- Target Sentence Display -->
           <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-2">
-            <div class="text-[11px] font-mono text-cyan-400 font-bold">CÂU LUYỆN SHADOWING (HÔM NAY):</div>
+            <div class="text-xs font-mono text-cyan-400 font-bold">CÂU LUYỆN SHADOWING (HÔM NAY):</div>
             <p id="shadow-sentence-text" class="text-base text-slate-100 font-semibold leading-relaxed">
               "Yesterday, I focused on the deployment pipeline, specifically optimizing the build cache."
             </p>
@@ -1824,7 +1824,7 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
           <!-- Stacked Waveforms -->
           <div class="space-y-3 pt-2">
             <div class="space-y-1">
-              <div class="flex items-center justify-between text-[11px] font-mono">
+              <div class="flex items-center justify-between text-xs font-mono">
                 <span class="text-cyan-400 font-bold">1. SÓNG ÂM GIỌNG MẪU (REFERENCE):</span>
                 <span id="shadow-ref-duration" class="text-slate-400">3.5s</span>
               </div>
@@ -1832,7 +1832,7 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
             </div>
 
             <div class="space-y-1">
-              <div class="flex items-center justify-between text-[11px] font-mono">
+              <div class="flex items-center justify-between text-xs font-mono">
                 <span class="text-amber-400 font-bold">2. SÓNG ÂM GIỌNG BẠN (YOUR RECORDING):</span>
                 <span id="shadow-user-duration" class="text-slate-400">0.0s (Chưa thu)</span>
               </div>
@@ -1856,17 +1856,17 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
             </div>
             <div class="space-y-1">
               <span class="text-slate-400 font-semibold">Đánh giá tốc độ:</span>
-              <div id="shadow-pacing-diagnosis" class="text-slate-200 font-mono text-[11px] p-2 bg-slate-900 rounded border border-slate-800">
+              <div id="shadow-pacing-diagnosis" class="text-slate-200 font-mono text-xs p-2 bg-slate-900 rounded border border-slate-800">
                 Chưa có dữ liệu phân tích.
               </div>
             </div>
             <div class="space-y-1">
               <span class="text-slate-400 font-semibold">Lời khuyên Stress-Timing:</span>
-              <p id="shadow-stress-tip" class="text-slate-300 text-[11px] leading-relaxed">
+              <p id="shadow-stress-tip" class="text-slate-300 text-xs leading-relaxed">
                 Nhấn giọng vào từ mang thông tin kỹ thuật chính, lướt nhanh từ chức năng.
               </p>
             </div>
-            <div id="shadow-alerts-list" class="space-y-1 text-[11px] text-amber-300">
+            <div id="shadow-alerts-list" class="space-y-1 text-xs text-amber-300">
               <!-- Alerts -->
             </div>
           </div>
@@ -1883,7 +1883,7 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
           <span class="w-8 h-8 rounded-lg bg-cyan-950 text-cyan-400 border border-cyan-800 flex items-center justify-center font-mono font-bold">🎤</span>
           <div>
             <h3 class="font-bold text-sm text-white">Luyện Âm & Chấm Điểm AI</h3>
-            <div class="text-[11px] text-slate-400 font-mono" id="modal-sound-target-desc">Mục tiêu: /t/ (Alveolar stop)</div>
+            <div class="text-xs text-slate-400 font-mono" id="modal-sound-target-desc">Mục tiêu: /t/ (Alveolar stop)</div>
           </div>
         </div>
         <button id="btn-close-sound-modal" class="text-slate-400 hover:text-white text-lg font-mono">✕</button>
@@ -1892,9 +1892,9 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
       <!-- Reference Target Card -->
       <div class="bg-slate-950/80 border border-slate-800 p-3.5 rounded-xl flex items-center justify-between">
         <div>
-          <div class="text-[11px] text-slate-400 font-mono">Mẫu chuẩn:</div>
+          <div class="text-xs text-slate-400 font-mono">Mẫu chuẩn:</div>
           <div class="text-xl font-mono font-bold text-cyan-400" id="modal-sound-target-word">test /tɛst/</div>
-          <div class="text-[11px] text-slate-300 italic" id="modal-sound-target-tip">Bật âm /t/ dứt khoát trên gờ lợi</div>
+          <div class="text-xs text-slate-300 italic" id="modal-sound-target-tip">Bật âm /t/ dứt khoát trên gờ lợi</div>
         </div>
         <button id="modal-sound-btn-listen" class="speak-btn px-3 py-1.5 bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-800 rounded-lg text-xs font-semibold flex items-center gap-1 transition" data-word="test">
           🔊 Nghe mẫu
@@ -1926,13 +1926,13 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
         </div>
         <!-- Phoneme-Level Breakdown (Feature 002) -->
         <div class="space-y-1.5">
-          <div class="text-[11px] text-slate-400 font-semibold">Chi tiết âm vị & Bắt lỗi cơ học:</div>
+          <div class="text-xs text-slate-400 font-semibold">Chi tiết âm vị & Bắt lỗi cơ học:</div>
           <div id="modal-phoneme-breakdown" class="flex flex-wrap gap-1.5 text-xs font-mono">
             <!-- Phoneme badges rendered here -->
           </div>
         </div>
         <div class="space-y-1">
-          <div class="text-[11px] text-slate-400 font-semibold">Chẩn đoán vị trí cơ học:</div>
+          <div class="text-xs text-slate-400 font-semibold">Chẩn đoán vị trí cơ học:</div>
           <p id="sound-grade-diagnostic" class="text-slate-200 bg-slate-900/80 p-2 rounded border border-slate-800">...</p>
         </div>
       </div>
@@ -1955,7 +1955,7 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
         </div>
         <div>
           <div class="font-bold text-sm text-white">AI Coach</div>
-          <div class="text-[10px] text-purple-300 font-mono">Senior Dev English Pronunciation Coach</div>
+          <div class="text-xs text-purple-300 font-mono">Senior Dev English Pronunciation Coach</div>
         </div>
       </div>
       <button id="btn-close-floating-ai" class="text-slate-400 hover:text-white text-base font-mono p-1">✕</button>
@@ -1974,7 +1974,7 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
     </div>
 
     <!-- Quick Prompt Pills -->
-    <div class="px-4 py-2 border-t border-slate-800/80 bg-slate-950/40 flex items-center gap-1.5 overflow-x-auto text-[11px] font-mono">
+    <div class="px-4 py-2 border-t border-slate-800/80 bg-slate-950/40 flex items-center gap-1.5 overflow-x-auto text-xs font-mono">
       <button class="quick-prompt-btn px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 shrink-0" data-prompt="Làm sao để không bị rụng âm đuôi /t/ và /d/ khi nói nhanh?">
         Âm đuôi /t/ vs /d/
       </button>
@@ -2043,7 +2043,7 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
         <button class="w-full p-3.5 rounded-xl border border-slate-800 bg-slate-950 hover:border-cyan-500 text-left transition flex items-center justify-between group micro-block-choice" data-block="Phonetics">
           <div class="space-y-1">
             <div class="font-bold text-xs text-cyan-400 group-hover:text-cyan-300">🦷 10m Cơ Học Khẩu Hình</div>
-            <div class="text-[11px] text-slate-400">Luyện nén khí & nhả âm đuôi /t, d, s, z, θ, ð/.</div>
+            <div class="text-xs text-slate-400">Luyện nén khí & nhả âm đuôi /t, d, s, z, θ, ð/.</div>
           </div>
           <span class="text-xs text-slate-500 group-hover:text-cyan-400 font-bold">Bắt đầu ➔</span>
         </button>
@@ -2052,7 +2052,7 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
         <button class="w-full p-3.5 rounded-xl border border-slate-800 bg-slate-950 hover:border-purple-500 text-left transition flex items-center justify-between group micro-block-choice" data-block="Frames">
           <div class="space-y-1">
             <div class="font-bold text-xs text-purple-400 group-hover:text-purple-300">📝 10m Khung Câu Kỹ Thuật</div>
-            <div class="text-[11px] text-slate-400">Thuộc lòng 2 mẫu câu Standup/Demo chuẩn.</div>
+            <div class="text-xs text-slate-400">Thuộc lòng 2 mẫu câu Standup/Demo chuẩn.</div>
           </div>
           <span class="text-xs text-slate-500 group-hover:text-purple-400 font-bold">Bắt đầu ➔</span>
         </button>
@@ -2061,13 +2061,13 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
         <button class="w-full p-3.5 rounded-xl border border-slate-800 bg-slate-950 hover:border-emerald-500 text-left transition flex items-center justify-between group micro-block-choice" data-block="Output">
           <div class="space-y-1">
             <div class="font-bold text-xs text-emerald-400 group-hover:text-emerald-300">🎤 10m Luyện Nói & Chấm AI</div>
-            <div class="text-[11px] text-slate-400">Nói 1 câu hoàn chỉnh và nhận refactor từ AI Coach.</div>
+            <div class="text-xs text-slate-400">Nói 1 câu hoàn chỉnh và nhận refactor từ AI Coach.</div>
           </div>
           <span class="text-xs text-slate-500 group-hover:text-emerald-400 font-bold">Bắt đầu ➔</span>
         </button>
       </div>
 
-      <div class="p-3 rounded-lg bg-orange-950/30 border border-orange-900/50 text-[11px] text-orange-200">
+      <div class="p-3 rounded-lg bg-orange-950/30 border border-orange-900/50 text-xs text-orange-200">
         💡 <em>Vẫn tính duy trì chuỗi Streak!</em> Bạn có thể hoàn thành nốt các phần còn lại bất cứ lúc nào.
       </div>
     </div>
@@ -2081,7 +2081,7 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
           <span class="w-8 h-8 rounded-lg bg-amber-950 text-amber-400 border border-amber-800 flex items-center justify-center font-bold">⚡</span>
           <div>
             <h3 class="font-bold text-sm text-white">Khởi Động 2 Phút (SRS Warm-Up)</h3>
-            <div class="text-[11px] text-amber-300 font-mono" id="warmup-step-indicator">Từ 1 / 5 // Hộp 1</div>
+            <div class="text-xs text-amber-300 font-mono" id="warmup-step-indicator">Từ 1 / 5 // Hộp 1</div>
           </div>
         </div>
         <div class="text-sm font-mono font-bold text-amber-400 px-3 py-1 rounded bg-amber-950 border border-amber-800" id="warmup-timer">

@@ -70,40 +70,40 @@
         </div>
         <div class="flex flex-col">
           <div class="flex items-center gap-2">
-            <span class="font-extrabold text-[15px] sm:text-[16px] tracking-tight text-white group-hover:text-cyan-400 transition-colors leading-tight">
+            <span class="font-extrabold text-sm sm:text-base tracking-tight text-white group-hover:text-cyan-400 transition-colors leading-tight">
               Cẩm Nang Cấu Âm Nền Tảng
             </span>
-            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800/60 font-semibold uppercase tracking-wider hidden sm:inline">Phonetics</span>
+            <span class="text-xs font-mono px-1.5 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800/60 font-semibold uppercase tracking-wider hidden sm:inline">Phonetics</span>
           </div>
-          <span class="text-[11px] text-slate-400 font-mono hidden md:inline leading-none mt-1">Bản đồ cơ học khoang miệng &amp; giải phẫu phát âm tiếng Anh</span>
+          <span class="text-xs text-slate-400 font-mono hidden md:inline leading-none mt-1">Bản đồ cơ học khoang miệng &amp; giải phẫu phát âm tiếng Anh</span>
         </div>
       </a>
 
       <!-- Right: Speed Controller + Mic + Print + Dashboard (Strict single-line flex-nowrap) -->
       <div class="flex items-center gap-2 sm:gap-2.5 shrink-0 flex-nowrap">
         <!-- Speed Controller (UX Upgrade #2) -->
-        <div class="flex items-center gap-1 bg-slate-900 border border-slate-800 rounded-lg p-0.5 text-[11px] font-mono shadow-sm">
-          <span class="text-slate-400 px-1 text-[10px]">Tốc độ:</span>
-          <button class="speed-btn px-1.5 py-0.5 rounded text-slate-300 hover:text-cyan-300 transition cursor-pointer text-[11px]" data-speed="0.5">0.5x</button>
-          <button class="speed-btn px-1.5 py-0.5 rounded text-slate-300 hover:text-cyan-300 transition cursor-pointer text-[11px]" data-speed="0.75">0.75x</button>
-          <button class="speed-btn px-1.5 py-0.5 rounded font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 transition cursor-pointer text-[11px]" data-speed="1.0">1.0x</button>
+        <div class="flex items-center gap-1 bg-slate-900 border border-slate-800 rounded-lg p-0.5 text-xs font-mono shadow-sm">
+          <span class="text-slate-400 px-1 text-xs">Tốc độ:</span>
+          <button class="speed-btn px-1.5 py-0.5 rounded text-slate-300 hover:text-cyan-300 transition cursor-pointer text-xs" data-speed="0.5">0.5x</button>
+          <button class="speed-btn px-1.5 py-0.5 rounded text-slate-300 hover:text-cyan-300 transition cursor-pointer text-xs" data-speed="0.75">0.75x</button>
+          <button class="speed-btn px-1.5 py-0.5 rounded font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 transition cursor-pointer text-xs" data-speed="1.0">1.0x</button>
         </div>
 
         <!-- In-page Voice Recorder Modal Toggle (UX Upgrade #3) -->
-        <button id="btn-open-recorder-dock" class="px-2.5 py-1.5 rounded-lg text-[12px] font-semibold bg-rose-950/80 hover:bg-rose-900 text-rose-300 border border-rose-800/80 flex items-center gap-1.5 shadow-sm transition cursor-pointer whitespace-nowrap">
+        <button id="btn-open-recorder-dock" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-rose-950/80 hover:bg-rose-900 text-rose-300 border border-rose-800/80 flex items-center gap-1.5 shadow-sm transition cursor-pointer whitespace-nowrap">
           <span>🎙️</span>
           <span class="hidden sm:inline">Mic Luyện Giọng</span>
           <span class="sm:hidden">Mic</span>
         </button>
 
         <!-- Printable Mode / Export PDF (UX Upgrade #8) -->
-        <button id="btn-print-handbook" class="px-2.5 py-1.5 rounded-lg text-[12px] font-semibold bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap" title="In hoặc lưu file PDF">
+        <button id="btn-print-handbook" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap" title="In hoặc lưu file PDF">
           <span>🖨️</span>
           <span class="hidden sm:inline">In PDF</span>
         </button>
 
         <!-- Back to Dashboard -->
-        <a href="index.html" class="px-3 py-1.5 rounded-lg text-[12px] font-bold bg-cyan-500 hover:bg-cyan-400 text-slate-950 transition flex items-center gap-1 shadow-md shadow-cyan-500/20 cursor-pointer whitespace-nowrap">
+        <a href="index.html" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-cyan-500 hover:bg-cyan-400 text-slate-950 transition flex items-center gap-1 shadow-md shadow-cyan-500/20 cursor-pointer whitespace-nowrap">
           <span>◀</span>
           <span>Dashboard</span>
         </a>
@@ -140,7 +140,7 @@
       <!-- Dynamic Search Results Bar -->
       <div id="handbook-search-status" class="hidden w-full p-2.5 rounded-lg bg-cyan-950/80 border border-cyan-800 text-xs text-cyan-200 font-mono transition-all">
       </div>
-      <div class="flex items-center gap-1.5 overflow-x-auto text-[10px] font-mono">
+      <div class="flex items-center gap-1.5 overflow-x-auto text-xs font-mono">
         <button class="quick-filter-tag px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition" data-filter="all">Tất cả</button>
         <button class="quick-filter-tag px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-300 transition" data-filter="/t/, /d/">/t/ vs /d/</button>
         <button class="quick-filter-tag px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-300 transition" data-filter="/θ/, /ð/">/θ/ vs /ð/</button>
@@ -168,7 +168,7 @@
           <div class="font-bold text-cyan-300 font-mono flex items-center gap-1.5">
             <span>1. 📡 Mô Hình Xử Lý Tín Hiệu (Signal Processing Pipeline)</span>
           </div>
-          <p class="text-slate-300 text-[11px] leading-relaxed">
+          <p class="text-slate-300 text-xs leading-relaxed">
             Xem thanh quản như <strong>Bộ tạo dao động (Oscillator)</strong>, khoang miệng/mũi là <strong>Bộ lọc cộng hưởng (Resonant Filter)</strong>, và môi/lưỡi là <strong>Các van điều khiển luồng (Valves/Gates)</strong>. Khi van mở/đóng đúng vị trí, dạng sóng âm thanh (Waveform) sẽ tự động khớp chuẩn với người bản ngữ.
           </p>
         </div>
@@ -178,7 +178,7 @@
           <div class="font-bold text-cyan-300 font-mono flex items-center gap-1.5">
             <span>2. ⏱️ 3 Pha Động Học Khí Nén (Kinematic Pressure Phases)</span>
           </div>
-          <p class="text-slate-300 text-[11px] leading-relaxed">
+          <p class="text-slate-300 text-xs leading-relaxed">
             Mọi âm tắc (/p, t, k, b, d, ɡ/) đều trải qua 3 pha vật lý: <strong>1. Tiếp xúc bít kín (Closure)</strong> $ightarrow$ <strong>2. Nén áp suất khí (Compression)</strong> trong 40-60ms $ightarrow$ <strong>3. Giật bung giải phóng nổ (Burst Release)</strong>. Lỗi người Việt thường chỉ làm pha 1 rồi ngậm miệng bỏ qua pha 3.
           </p>
         </div>
@@ -188,7 +188,7 @@
           <div class="font-bold text-cyan-300 font-mono flex items-center gap-1.5">
             <span>3. 📐 Tỷ Lệ Thời Lượng Nguyên Âm 1:2 (Pre-Fortis Clipping)</span>
           </div>
-          <p class="text-slate-300 text-[11px] leading-relaxed">
+          <p class="text-slate-300 text-xs leading-relaxed">
             Nguyên âm đứng trước âm vô thanh (/t, s, p, k/) bị cắt ngắn dứt khoát (~120ms), còn trước âm hữu thanh (/d, z, b, ɡ/) được ngân dài gấp đôi (~250-300ms). Đây là tín hiệu số 1 người bản ngữ dùng để nhận biết từ (ví dụ <code>write</code> vs <code>ride</code>, <code>bat</code> vs <code>bad</code>).
           </p>
         </div>
@@ -198,7 +198,7 @@
           <div class="font-bold text-cyan-300 font-mono flex items-center gap-1.5">
             <span>4. 🔗 Định Luật Nối Âm Bất Biến (Invariant Linking Laws)</span>
           </div>
-          <p class="text-slate-300 text-[11px] leading-relaxed">
+          <p class="text-slate-300 text-xs leading-relaxed">
             Trong luồng nói kỹ thuật nhanh, phụ âm đuôi của từ trước tự động nhảy sang làm phụ âm đầu của từ sau (Consonant-to-Vowel): <code>pull it up</code> $ightarrow$ <code>pul-li-tup</code>, <code>log in</code> $ightarrow$ <code>lo-gin</code>. Đừng ngắt quãng rời rạc như gõ từng ký tự.
           </p>
         </div>
@@ -208,7 +208,7 @@
           <div class="font-bold text-cyan-300 font-mono flex items-center gap-1.5">
             <span>5. 🧩 Tháo Gỡ Cụm Phụ Âm Phức Tạp (Cluster De-nesting)</span>
           </div>
-          <p class="text-slate-300 text-[11px] leading-relaxed">
+          <p class="text-slate-300 text-xs leading-relaxed">
             Các cụm 3-4 phụ âm (/kts/, /sts/, /str/) không thể phát âm đồng thời. Kỹ thuật de-nesting tách nhỏ thành chuỗi tiếp xúc liên tiếp: <code>requests</code> = <code>re-ques</code> + ép gờ lợi /t/ + xì /s/. Đầu lưỡi trượt mượt mà từ gờ lợi ra răng mà không nhả khí thừa.
           </p>
         </div>
@@ -218,7 +218,7 @@
           <div class="font-bold text-cyan-300 font-mono flex items-center gap-1.5">
             <span>6. 📊 Trực Giác Phổ & Sóng Âm (Acoustic Waveform Intuition)</span>
           </div>
-          <p class="text-slate-300 text-[11px] leading-relaxed">
+          <p class="text-slate-300 text-xs leading-relaxed">
             Âm hữu thanh có <strong>Thanh trầm (Voice Bar)</strong> dao động tuần hoàn tần số thấp (100-250Hz). Âm vô thanh tạo ra <strong>Nhiễu loạn dải rộng (White Noise Turbulence)</strong> ở tần số cao (3000-8000Hz). Cảm nhận độ rung ở ngực tương ứng với thanh trầm này.
           </p>
         </div>
@@ -228,7 +228,7 @@
           <div class="font-bold text-cyan-300 font-mono flex items-center gap-1.5">
             <span>7. 🛡️ Tách Rời Can Thiệp Tiếng Mẹ Đẻ (L1 Decoupling)</span>
           </div>
-          <p class="text-slate-300 text-[11px] leading-relaxed">
+          <p class="text-slate-300 text-xs leading-relaxed">
             Tiếng Việt có âm tiết đóng khép kín (unreleased coda) và thanh điệu đơn lập. Ý thức rõ 5 phản xạ tự động của não bộ Việt để chủ động lập trình lại cơ miệng: Không nuốt âm đuôi, không thêm âm "ơ", dám thè lưỡi ra ngoài kẹp răng.
           </p>
         </div>
@@ -238,7 +238,7 @@
           <div class="font-bold text-cyan-300 font-mono flex items-center gap-1.5">
             <span>8. 🏋️ Phòng Gym Cơ Mặt 3 Phút (Facial Muscle Gym)</span>
           </div>
-          <p class="text-slate-300 text-[11px] leading-relaxed">
+          <p class="text-slate-300 text-xs leading-relaxed">
             Cơ bắp vòm họng cần khởi động trước các buổi Daily Standup hoặc Demo kỹ thuật: Bài tập 30 giây rung môi (Lip Trill), 30 giây đảo đầu lưỡi quanh vòm họng, và 1 phút bật dứt khoát cặp âm /t/ - /d/ - /k/ - /ɡ/.
           </p>
         </div>
@@ -248,7 +248,7 @@
           <div class="font-bold text-cyan-300 font-mono flex items-center gap-1.5">
             <span>9. 🎯 Chỉ Số Rõ Nghĩa Kỹ Thuật (Tech Intelligibility Index)</span>
           </div>
-          <p class="text-slate-300 text-[11px] leading-relaxed">
+          <p class="text-slate-300 text-xs leading-relaxed">
             Mục tiêu giao tiếp quốc tế không phải là bắt chước giọng Anh/Mỹ điệu đà, mà là đạt <strong>100% độ rõ nghĩa từ khóa (Acoustic Crispness)</strong>. Đồng nghiệp và AI Speech-to-Text nhận diện chính xác các thuật ngữ như <code>asynchronous</code>, <code>Kubernetes</code>, <code>auth</code>.
           </p>
         </div>
@@ -258,7 +258,7 @@
           <div class="font-bold text-cyan-300 font-mono flex items-center gap-1.5">
             <span>10. 🪞 Tự Chẩn Đoán 3 Chiều (3-Way Diagnostic Metacognition)</span>
           </div>
-          <p class="text-slate-300 text-[11px] leading-relaxed">
+          <p class="text-slate-300 text-xs leading-relaxed">
             Học viên phát âm chuẩn qua 3 nguồn phản hồi: <strong>1. Xúc giác (Proprioception):</strong> Lưỡi chạm gờ lợi hay chạm răng? <strong>2. Thính giác (Acoustic):</strong> Tai nghe âm trầm hay tiếng xì gió? <strong>3. Dữ liệu AI (Visualizer):</strong> Hệ thống chấm điểm trực quan qua máy tính.
           </p>
         </div>
@@ -282,15 +282,15 @@
           <div class="flex items-center justify-between w-full mb-3">
             <div>
               <h3 class="text-sm font-bold text-cyan-400 font-mono">Sơ đồ mặt cắt bên (Sagittal Vocal Tract)</h3>
-              <p class="text-[11px] text-slate-400 font-mono">Cắt đứng dọc giải phẫu khoang miệng chuẩn IPA quốc tế</p>
+              <p class="text-xs text-slate-400 font-mono">Cắt đứng dọc giải phẫu khoang miệng chuẩn IPA quốc tế</p>
             </div>
-            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800">
+            <span class="text-xs font-mono px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800">
               Nhấp vào cơ quan để xem
             </span>
           </div>
 
           <!-- Quick Sound Selector for Handbook Readers -->
-          <div class="flex items-center gap-1 w-full overflow-x-auto pb-1.5 mb-3 text-[10px] font-mono scrollbar-thin">
+          <div class="flex items-center gap-1 w-full overflow-x-auto pb-1.5 mb-3 text-xs font-mono scrollbar-thin">
             <button data-sound="/t/" class="sound-tab-btn px-2 py-1 rounded bg-cyan-950/80 text-cyan-300 border border-cyan-800 whitespace-nowrap active font-bold">
               /t/ (Bật gió)
             </button>
@@ -443,7 +443,7 @@
           </div>
 
           <!-- Interactive Organ Selector Chips (Nhấp vào cơ quan để xem) -->
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 w-full mt-3 text-[11px] text-center font-mono" id="fund-articulator-chips">
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 w-full mt-3 text-xs text-center font-mono" id="fund-articulator-chips">
             <button class="fund-organ-btn p-1.5 rounded bg-slate-950 hover:bg-cyan-950/80 border border-slate-800 hover:border-cyan-700 text-slate-300 hover:text-cyan-300 transition cursor-pointer" data-organ="alveolar">3. Gờ lợi (Alveolar)</button>
             <button class="fund-organ-btn p-1.5 rounded bg-slate-950 hover:bg-cyan-950/80 border border-slate-800 hover:border-cyan-700 text-slate-300 hover:text-cyan-300 transition cursor-pointer" data-organ="hard-palate">4. Ngạc cứng (Palate)</button>
             <button class="fund-organ-btn p-1.5 rounded bg-slate-950 hover:bg-cyan-950/80 border border-slate-800 hover:border-cyan-700 text-slate-300 hover:text-cyan-300 transition cursor-pointer" data-organ="velum">5. Ngạc mềm (Velum)</button>
@@ -464,7 +464,7 @@
           <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 space-y-1.5">
             <div class="font-bold text-sm text-cyan-400 flex items-center justify-between">
               <span>1. Gờ Lợi (Alveolar Ridge) — Trọng tâm số 1 của tiếng Anh</span>
-              <span class="text-[10px] font-mono bg-cyan-950 px-2 py-0.5 rounded text-cyan-300">/t/, /d/, /s/, /z/, /n/, /l/</span>
+              <span class="text-xs font-mono bg-cyan-950 px-2 py-0.5 rounded text-cyan-300">/t/, /d/, /s/, /z/, /n/, /l/</span>
             </div>
             <p class="text-slate-300">
               <strong>Vị trí:</strong> Dùng đầu lưỡi liếm từ mặt sau của răng cửa trên lên trên vòm họng. Bạn sẽ cảm thấy một dải thịt gồ ghề, lượn sóng ngay sát chân răng trước khi lõm sâu vào trong. Đó chính là <strong>Gờ Lợi (Alveolar Ridge)</strong>.
@@ -477,7 +477,7 @@
           <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 space-y-1.5">
             <div class="font-bold text-sm text-purple-400 flex items-center justify-between">
               <span>2. Ngạc Cứng (Hard Palate) — Vòm họng cứng</span>
-              <span class="text-[10px] font-mono bg-purple-950 px-2 py-0.5 rounded text-purple-300">/j/ (yes), /ʃ/, /tʃ/</span>
+              <span class="text-xs font-mono bg-purple-950 px-2 py-0.5 rounded text-purple-300">/j/ (yes), /ʃ/, /tʃ/</span>
             </div>
             <p class="text-slate-300">
               <strong>Vị trí:</strong> Đi sâu hơn qua gờ lợi vào giữa vòm miệng. Đây là phần mái vòm hình cung có xương nâng đỡ, sờ vào rất cứng và trơn láng.
@@ -490,7 +490,7 @@
           <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 space-y-1.5">
             <div class="font-bold text-sm text-yellow-400 flex items-center justify-between">
               <span>3. Ngạc Mềm (Soft Palate / Velum) — Cánh cửa thông gió</span>
-              <span class="text-[10px] font-mono bg-yellow-950 px-2 py-0.5 rounded text-yellow-300">/k/, /ɡ/, /ŋ/</span>
+              <span class="text-xs font-mono bg-yellow-950 px-2 py-0.5 rounded text-yellow-300">/k/, /ɡ/, /ŋ/</span>
             </div>
             <p class="text-slate-300">
               <strong>Vị trí:</strong> Vùng vòm họng tận cùng phía sau, sờ vào mềm và dễ buồn nôn (không có xương). Tận cùng của nó là <strong>Lưỡi gà (Uvula)</strong>.
@@ -507,7 +507,7 @@
           <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 space-y-1.5">
             <div class="font-bold text-sm text-red-400 flex items-center justify-between">
               <span>4. Dây Thanh Âm (Vocal Folds) — Máy phát rung</span>
-              <span class="text-[10px] font-mono bg-red-950 px-2 py-0.5 rounded text-red-300">Voiced vs Voiceless</span>
+              <span class="text-xs font-mono bg-red-950 px-2 py-0.5 rounded text-red-300">Voiced vs Voiceless</span>
             </div>
             <p class="text-slate-300">
               Nằm trong thanh quản (yết hầu / trái cổ). Khi khép lại, luồng hơi làm chúng rung lên bần bật tạo ra <strong>âm thanh hữu thanh (Voiced)</strong>. Khi mở rộng ra, chỉ có gió thổi qua tạo <strong>âm vô thanh (Voiceless)</strong>.
@@ -531,7 +531,7 @@
 
       <div class="overflow-x-auto rounded-xl border border-slate-800">
         <table class="w-full text-left text-xs text-slate-300 font-mono">
-          <thead class="bg-slate-900 text-slate-400 uppercase text-[11px] border-b border-slate-800">
+          <thead class="bg-slate-900 text-slate-400 uppercase text-xs border-b border-slate-800">
             <tr>
               <th class="p-3.5">Vị trí (Place)</th>
               <th class="p-3.5">Cơ quan tiếp xúc</th>
@@ -625,7 +625,7 @@
             2. Phổi bơm hơi lên làm áp suất khí nén tăng vọt (Hold). <br>
             3. Mở bung cơ quan đột ngột tạo tiếng nổ nhỏ pực/tực (Release).
           </p>
-          <div class="text-[11px] text-amber-400 font-mono bg-amber-950/30 p-2 rounded border border-amber-900/50">
+          <div class="text-xs text-amber-400 font-mono bg-amber-950/30 p-2 rounded border border-amber-900/50">
             Ở cuối từ tiếng Anh: Người Việt hay bỏ quên pha 3 (Release), làm biến mất âm đuôi.
           </div>
         </div>
@@ -639,7 +639,7 @@
             <strong>Cơ chế ma sát:</strong> <br>
             Hai cơ quan khép rất hẹp (nhưng không đóng hoàn toàn). Luồng khí bị bóp qua khe hẹp tạo ra tiếng rít/xì ma sát liên tục. Bạn có thể giữ hơi âm này dài bao lâu tùy thích (sssss..., fffff...).
           </p>
-          <div class="text-[11px] text-blue-400 font-mono bg-blue-950/30 p-2 rounded border border-blue-900/50">
+          <div class="text-xs text-blue-400 font-mono bg-blue-950/30 p-2 rounded border border-blue-900/50">
             Ví dụ: <em>pass</em> /s/, <em>path</em> /θ/, <em>patch</em> /tʃ/.
           </div>
         </div>
@@ -654,7 +654,7 @@
             Đầu lưỡi chặn hoàn toàn gờ lợi như làm âm /t/, nhưng khi buông ra thì không bung tự do mà từ từ tạo khe hẹp để xát thành âm /ʃ/. <br>
             /t/ + /ʃ/ = /tʃ/ (<em>watch</em>, <em>chain</em>).
           </p>
-          <div class="text-[11px] text-purple-400 font-mono bg-purple-950/30 p-2 rounded border border-purple-900/50">
+          <div class="text-xs text-purple-400 font-mono bg-purple-950/30 p-2 rounded border border-purple-900/50">
             Tương tự: /d/ + /ʒ/ = /dʒ/ (<em>bridge</em>, <em>JSON</em>).
           </div>
         </div>
@@ -668,7 +668,7 @@
             <strong>Cơ chế thoát hơi qua mũi:</strong> <br>
             Miệng bị chặn hoàn toàn (ở môi /m/, ở gờ lợi /n/, hoặc ở cuống họng /ŋ/), ngạc mềm hạ xuống cho luồng hơi cộng hưởng qua khoang mũi.
           </p>
-          <div class="text-[11px] text-yellow-400 font-mono bg-yellow-950/30 p-2 rounded border border-yellow-900/50">
+          <div class="text-xs text-yellow-400 font-mono bg-yellow-950/30 p-2 rounded border border-yellow-900/50">
             Nếu bạn bịt mũi lại, bạn sẽ không thể phát âm được chữ /m/ hay /n/.
           </div>
         </div>
@@ -682,7 +682,7 @@
             <strong>Cơ chế lướt mượt:</strong> <br>
             Hai cơ quan tiến lại gần nhau nhưng khoảng cách vẫn đủ rộng để luồng khí trôi qua êm ả mà không tạo ra tiếng xì ma sát. Còn được gọi là Bán nguyên âm (Semi-vowels).
           </p>
-          <div class="text-[11px] text-emerald-400 font-mono bg-emerald-950/30 p-2 rounded border border-emerald-900/50">
+          <div class="text-xs text-emerald-400 font-mono bg-emerald-950/30 p-2 rounded border border-emerald-900/50">
             Ví dụ: <em>web</em> (/w/), <em>run</em> (/r/), <em>yes</em> (/j/).
           </div>
         </div>
@@ -696,7 +696,7 @@
             <strong>Cơ chế lượn hai mép:</strong> <br>
             Đầu lưỡi dán chặt vào tâm giữa của gờ lợi trên, nhưng hai bên rìa lưỡi thì buông chùng xuống để luồng khí lượn thoát ra hai bên má.
           </p>
-          <div class="text-[11px] text-pink-400 font-mono bg-pink-950/30 p-2 rounded border border-pink-900/50">
+          <div class="text-xs text-pink-400 font-mono bg-pink-950/30 p-2 rounded border border-pink-900/50">
             Phân biệt: Light L (đầu từ: <em>log</em>) và Dark L (cuối từ: <em>null</em>, <em>pool</em>).
           </div>
         </div>
@@ -843,14 +843,14 @@
           </h2>
           <p class="text-xs text-slate-400 mt-0.5">Phân tích giải phẫu chi tiết: vị trí đặt lưỡi, thanh tính, lỗi sai phổ biến của dev Việt và mẹo sửa ngay.</p>
         </div>
-        <div class="text-[10px] font-mono text-cyan-400 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-800">
+        <div class="text-xs font-mono text-cyan-400 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-800">
           Click 🔊 nghe // 🎤 luyện
         </div>
       </div>
 
       <div class="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900/90 shadow-lg">
         <table class="w-full text-left text-xs">
-          <thead class="bg-slate-950 border-b border-slate-800 text-[11px] font-mono text-slate-400 uppercase">
+          <thead class="bg-slate-950 border-b border-slate-800 text-xs font-mono text-slate-400 uppercase">
             <tr>
               <th class="p-3">Âm IPA</th>
               <th class="p-3">Tên & Thanh Tính</th>
@@ -860,7 +860,7 @@
               <th class="p-3">Giải Pháp Khắc Phục</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-800/60 font-sans text-[11px] text-slate-300">
+          <tbody class="divide-y divide-slate-800/60 font-sans text-xs text-slate-300">
             <!-- /p/ vs /b/ -->
             <tr class="hover:bg-slate-800/40 transition">
               <td class="p-3 font-mono font-bold text-cyan-400 text-sm">/p/</td>
@@ -975,7 +975,7 @@
           <span class="w-7 h-7 rounded-lg bg-indigo-900/80 text-indigo-300 border border-indigo-700 flex items-center justify-center font-mono text-xs font-bold">🎮</span>
           <div>
             <h3 class="font-bold text-sm text-indigo-200">Interactive Quiz: Thử Tài Luyện Tai Phân Biệt Âm Dev</h3>
-            <p class="text-[11px] text-slate-400">Bấm nghe âm thanh bí mật và chọn từ đúng để kiểm tra độ nhạy thính giác cơ học của bạn.</p>
+            <p class="text-xs text-slate-400">Bấm nghe âm thanh bí mật và chọn từ đúng để kiểm tra độ nhạy thính giác cơ học của bạn.</p>
           </div>
         </div>
         <div id="quiz-score-badge" class="px-3 py-1 rounded-full text-xs font-mono font-bold bg-indigo-950 text-indigo-300 border border-indigo-800">
@@ -1018,7 +1018,7 @@
         <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
           <div class="font-bold text-blue-400 font-mono border-b border-slate-800 pb-1.5 flex items-center justify-between">
             <span>🚀 1. Báo cáo Daily Standup</span>
-            <span class="text-[10px] text-slate-400">Past & Present Perfect</span>
+            <span class="text-xs text-slate-400">Past & Present Perfect</span>
           </div>
           <div class="space-y-1.5">
             <div class="p-2 rounded bg-slate-950 border border-slate-800/80 flex items-center justify-between gap-2">
@@ -1044,7 +1044,7 @@
         <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
           <div class="font-bold text-rose-400 font-mono border-b border-slate-800 pb-1.5 flex items-center justify-between">
             <span>🔥 2. Xử Lý Incident & Báo Cáo Blocker</span>
-            <span class="text-[10px] text-slate-400">Urgency & Clarity</span>
+            <span class="text-xs text-slate-400">Urgency & Clarity</span>
           </div>
           <div class="space-y-1.5">
             <div class="p-2 rounded bg-slate-950 border border-slate-800/80 flex items-center justify-between gap-2">
@@ -1070,7 +1070,7 @@
         <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
           <div class="font-bold text-purple-400 font-mono border-b border-slate-800 pb-1.5 flex items-center justify-between">
             <span>🔍 3. Review PR & Phản Biện Code</span>
-            <span class="text-[10px] text-slate-400">Diplomatic Precision</span>
+            <span class="text-xs text-slate-400">Diplomatic Precision</span>
           </div>
           <div class="space-y-1.5">
             <div class="p-2 rounded bg-slate-950 border border-slate-800/80 flex items-center justify-between gap-2">
@@ -1092,7 +1092,7 @@
         <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
           <div class="font-bold text-emerald-400 font-mono border-b border-slate-800 pb-1.5 flex items-center justify-between">
             <span>🏛️ 4. Đề Xuất Kiến Trúc & Trade-off</span>
-            <span class="text-[10px] text-slate-400">Strategic Framing</span>
+            <span class="text-xs text-slate-400">Strategic Framing</span>
           </div>
           <div class="space-y-1.5">
             <div class="p-2 rounded bg-slate-950 border border-slate-800/80 flex items-center justify-between gap-2">
@@ -1128,7 +1128,7 @@
             <span>1. Tại sao tôi nói mà Whisper AI / Siri / Google Meet caption không nhận diện được từ khóa IT?</span>
             <span class="text-cyan-400 group-open:rotate-180 transition-transform">▼</span>
           </summary>
-          <p class="text-slate-300 mt-2 text-[11px] leading-relaxed border-t border-slate-800/80 pt-2">
+          <p class="text-slate-300 mt-2 text-xs leading-relaxed border-t border-slate-800/80 pt-2">
             AI Speech-to-Text dựa trên phổ sóng âm (Acoustic Spectrogram). Người Việt thường bỏ rơi phụ âm cuối (Unreleased Coda) hoặc nuốt âm /t, d, s, z, k/. Khi bạn nói <code>commit</code> mà nuốt /t/, máy sẽ đoán là <code>commie</code> hoặc <code>coming</code>. Khi bật đủ âm đuôi, AI nhận diện chính xác 100%.
           </p>
         </details>
@@ -1138,7 +1138,7 @@
             <span>2. Làm sao để hết ngượng khi thè lưỡi phát âm /θ/ và /ð/ (như trong 'auth', 'thread')?</span>
             <span class="text-cyan-400 group-open:rotate-180 transition-transform">▼</span>
           </summary>
-          <p class="text-slate-300 mt-2 text-[11px] leading-relaxed border-t border-slate-800/80 pt-2">
+          <p class="text-slate-300 mt-2 text-xs leading-relaxed border-t border-slate-800/80 pt-2">
             Bạn không cần thè cả lưỡi ra ngoài! Chỉ cần đưa <strong>đúng 2 milimet đầu lưỡi</strong> chạm vào cạnh dưới của răng cửa trên, răng dưới khép hờ. Trong giao tiếp bình thường, người đối diện chỉ thấy đầu lưỡi lấp ló. Tập trước gương 3 ngày sẽ thành phản xạ tự nhiên.
           </p>
         </details>
@@ -1148,7 +1148,7 @@
             <span>3. Vì sao tôi phát âm âm /s/ và /z/ nghe cứ bị phì phò hoặc lẫn lộn?</span>
             <span class="text-cyan-400 group-open:rotate-180 transition-transform">▼</span>
           </summary>
-          <p class="text-slate-300 mt-2 text-[11px] leading-relaxed border-t border-slate-800/80 pt-2">
+          <p class="text-slate-300 mt-2 text-xs leading-relaxed border-t border-slate-800/80 pt-2">
             Đầu lưỡi của bạn đang chạm hẳn vào răng. Bí quyết cơ học: Đầu lưỡi nâng lên sát gờ lợi trên nhưng chừa lại <strong>khe hở hẹp 1mm</strong>. Mép môi cười nhẹ sang 2 bên để tăng độ rít sắc nét. Với /z/, kích hoạt rung cổ họng mạnh mẽ như tiếng mô-tơ mini.
           </p>
         </details>
@@ -1158,7 +1158,7 @@
             <span>4. Khi nói nhanh trong standup, làm sao không bị líu lưỡi khi gặp từ như 'architects' hay 'requests'?</span>
             <span class="text-cyan-400 group-open:rotate-180 transition-transform">▼</span>
           </summary>
-          <p class="text-slate-300 mt-2 text-[11px] leading-relaxed border-t border-slate-800/80 pt-2">
+          <p class="text-slate-300 mt-2 text-xs leading-relaxed border-t border-slate-800/80 pt-2">
             Áp dụng kỹ thuật <strong>De-nesting & Glottal Tamping</strong>: Âm /t/ ở giữa cụm /kts/ hoặc /sts/ không cần bật nổ bung ra, chỉ cần ép đầu lưỡi lên gờ lợi ngắt hơi (Hold) rồi trượt ngay sang âm /s/ xì ra ngoài: <code>request-(t)-s</code>. Điều này giúp nói cực nhanh mà vẫn chuẩn âm.
           </p>
         </details>
@@ -1245,7 +1245,7 @@
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-3">
           <div class="flex items-center justify-between border-b border-slate-800 pb-2">
             <div class="font-bold text-sm text-cyan-400 font-mono">/t/ (Vô thanh) ⟷ /d/ (Hữu thanh)</div>
-            <button class="open-sound-modal-btn px-2.5 py-1 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 hover:bg-cyan-900 text-[11px] font-semibold transition" data-symbol="/t/, /d/" data-word="commit" data-ipa="/kəˈmɪt/" data-tip="Bật âm /t/ dứt khoát trên gờ lợi, không rụng đuôi">
+            <button class="open-sound-modal-btn px-2.5 py-1 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 hover:bg-cyan-900 text-xs font-semibold transition" data-symbol="/t/, /d/" data-word="commit" data-ipa="/kəˈmɪt/" data-tip="Bật âm /t/ dứt khoát trên gờ lợi, không rụng đuôi">
               🎤 Luyện âm này
             </button>
           </div>
@@ -1273,7 +1273,7 @@
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-3">
           <div class="flex items-center justify-between border-b border-slate-800 pb-2">
             <div class="font-bold text-sm text-cyan-400 font-mono">/s/ (Xì gió) ⟷ /z/ (Xì rung)</div>
-            <button class="open-sound-modal-btn px-2.5 py-1 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 hover:bg-cyan-900 text-[11px] font-semibold transition" data-symbol="/s/, /z/" data-word="response" data-ipa="/rɪˈspɒns/" data-tip="Phân biệt xì êm không rung cổ và rung mô-tơ thanh quản">
+            <button class="open-sound-modal-btn px-2.5 py-1 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 hover:bg-cyan-900 text-xs font-semibold transition" data-symbol="/s/, /z/" data-word="response" data-ipa="/rɪˈspɒns/" data-tip="Phân biệt xì êm không rung cổ và rung mô-tơ thanh quản">
               🎤 Luyện âm này
             </button>
           </div>
@@ -1301,7 +1301,7 @@
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-3">
           <div class="flex items-center justify-between border-b border-slate-800 pb-2">
             <div class="font-bold text-sm text-cyan-400 font-mono">/θ/ (auth) ⟷ /ð/ (this, algorithm)</div>
-            <button class="open-sound-modal-btn px-2.5 py-1 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 hover:bg-cyan-900 text-[11px] font-semibold transition" data-symbol="/θ/, /ð/" data-word="authentication" data-ipa="/ɔːˌθɛn.tɪˈkeɪ.ʃən/" data-tip="Thè nhẹ đầu lưỡi kẹp giữa 2 hàm răng, không thụt lưỡi vào trong">
+            <button class="open-sound-modal-btn px-2.5 py-1 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 hover:bg-cyan-900 text-xs font-semibold transition" data-symbol="/θ/, /ð/" data-word="authentication" data-ipa="/ɔːˌθɛn.tɪˈkeɪ.ʃən/" data-tip="Thè nhẹ đầu lưỡi kẹp giữa 2 hàm răng, không thụt lưỡi vào trong">
               🎤 Luyện âm này
             </button>
           </div>
@@ -1329,7 +1329,7 @@
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-3">
           <div class="flex items-center justify-between border-b border-slate-800 pb-2">
             <div class="font-bold text-sm text-cyan-400 font-mono">/iː/ (Căng dài) ⟷ /ɪ/ (Chùng ngắn)</div>
-            <button class="open-sound-modal-btn px-2.5 py-1 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 hover:bg-cyan-900 text-[11px] font-semibold transition" data-symbol="/iː/, /ɪ/" data-word="leak" data-ipa="/liːk/" data-tip="Cười bè khóe miệng cho /iː/, hạ hàm thả lỏng rơi nhẹ cho /ɪ/">
+            <button class="open-sound-modal-btn px-2.5 py-1 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 hover:bg-cyan-900 text-xs font-semibold transition" data-symbol="/iː/, /ɪ/" data-word="leak" data-ipa="/liːk/" data-tip="Cười bè khóe miệng cho /iː/, hạ hàm thả lỏng rơi nhẹ cho /ɪ/">
               🎤 Luyện âm này
             </button>
           </div>
@@ -1416,27 +1416,27 @@
         <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs no-scrollbar" id="res-filter-chips">
           <button data-filter="all" class="res-chip active px-3.5 py-1.5 rounded-full font-medium transition border flex items-center gap-1.5 whitespace-nowrap bg-cyan-500 text-slate-950 border-cyan-400 shadow-sm font-semibold">
             <span>Tất cả</span>
-            <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-950 text-cyan-300 font-mono">100</span>
+            <span class="px-1.5 py-0.2 rounded-full text-xs bg-slate-950 text-cyan-300 font-mono">100</span>
           </button>
           <button data-filter="youtube" class="res-chip px-3.5 py-1.5 rounded-full font-medium transition border flex items-center gap-1.5 whitespace-nowrap bg-slate-950/80 hover:bg-slate-800 text-slate-300 border-slate-800">
             <span>🎬 YouTube</span>
-            <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-900 text-rose-300 font-mono border border-slate-800">50</span>
+            <span class="px-1.5 py-0.2 rounded-full text-xs bg-slate-900 text-rose-300 font-mono border border-slate-800">50</span>
           </button>
           <button data-filter="article" class="res-chip px-3.5 py-1.5 rounded-full font-medium transition border flex items-center gap-1.5 whitespace-nowrap bg-slate-950/80 hover:bg-slate-800 text-slate-300 border-slate-800">
             <span>📚 Bài báo & Giáo trình</span>
-            <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-900 text-indigo-300 font-mono border border-slate-800">50</span>
+            <span class="px-1.5 py-0.2 rounded-full text-xs bg-slate-900 text-indigo-300 font-mono border border-slate-800">50</span>
           </button>
           <button data-filter="tech" class="res-chip px-3.5 py-1.5 rounded-full font-medium transition border flex items-center gap-1.5 whitespace-nowrap bg-slate-950/80 hover:bg-slate-800 text-slate-300 border-slate-800">
             <span>💻 IT & Tech English</span>
-            <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-900 text-cyan-300 font-mono border border-slate-800">28</span>
+            <span class="px-1.5 py-0.2 rounded-full text-xs bg-slate-900 text-cyan-300 font-mono border border-slate-800">28</span>
           </button>
           <button data-filter="mri" class="res-chip px-3.5 py-1.5 rounded-full font-medium transition border flex items-center gap-1.5 whitespace-nowrap bg-slate-950/80 hover:bg-slate-800 text-slate-300 border-slate-800">
             <span>🔬 Giải phẫu & MRI</span>
-            <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-900 text-amber-300 font-mono border border-slate-800">41</span>
+            <span class="px-1.5 py-0.2 rounded-full text-xs bg-slate-900 text-amber-300 font-mono border border-slate-800">41</span>
           </button>
           <button data-filter="vietnamese" class="res-chip px-3.5 py-1.5 rounded-full font-medium transition border flex items-center gap-1.5 whitespace-nowrap bg-slate-950/80 hover:bg-slate-800 text-slate-300 border-slate-800">
             <span>🇻🇳 Lỗi người Việt</span>
-            <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-900 text-emerald-300 font-mono border border-slate-800">17</span>
+            <span class="px-1.5 py-0.2 rounded-full text-xs bg-slate-900 text-emerald-300 font-mono border border-slate-800">17</span>
           </button>
         </div>
 
@@ -1494,7 +1494,7 @@
           <span class="w-8 h-8 rounded-lg bg-cyan-950 text-cyan-400 border border-cyan-800 flex items-center justify-center font-mono font-bold">🎤</span>
           <div>
             <h3 class="font-bold text-sm text-white">Luyện Âm & Chấm Điểm AI</h3>
-            <div class="text-[11px] text-slate-400 font-mono" id="modal-sound-target-desc">Mục tiêu: /t/ (Alveolar stop)</div>
+            <div class="text-xs text-slate-400 font-mono" id="modal-sound-target-desc">Mục tiêu: /t/ (Alveolar stop)</div>
           </div>
         </div>
         <button id="btn-close-sound-modal" class="text-slate-400 hover:text-white text-lg font-mono">✕</button>
@@ -1502,9 +1502,9 @@
 
       <div class="bg-slate-950/80 border border-slate-800 p-3.5 rounded-xl flex items-center justify-between">
         <div>
-          <div class="text-[11px] text-slate-400 font-mono">Từ mẫu chuẩn:</div>
+          <div class="text-xs text-slate-400 font-mono">Từ mẫu chuẩn:</div>
           <div class="text-xl font-mono font-bold text-cyan-400" id="modal-sound-target-word">commit /kəˈmɪt/</div>
-          <div class="text-[11px] text-slate-300 italic" id="modal-sound-target-tip">Bật âm /t/ dứt khoát trên gờ lợi</div>
+          <div class="text-xs text-slate-300 italic" id="modal-sound-target-tip">Bật âm /t/ dứt khoát trên gờ lợi</div>
         </div>
         <button id="modal-sound-btn-listen" class="speak-btn px-3 py-1.5 bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-800 rounded-lg text-xs font-semibold flex items-center gap-1 transition" data-word="commit">
           🔊 Nghe mẫu
@@ -1533,7 +1533,7 @@
           </span>
         </div>
         <div class="space-y-1">
-          <div class="text-[11px] text-slate-400 font-semibold">Chẩn đoán từ AI Coach:</div>
+          <div class="text-xs text-slate-400 font-semibold">Chẩn đoán từ AI Coach:</div>
           <p id="sound-grade-diagnostic" class="text-slate-200 bg-slate-900/80 p-2 rounded border border-slate-800">...</p>
         </div>
       </div>
@@ -1555,7 +1555,7 @@
         </div>
         <div>
           <div class="font-bold text-sm text-white">AI Coach</div>
-          <div class="text-[10px] text-purple-300 font-mono">Senior Dev English Pronunciation Coach</div>
+          <div class="text-xs text-purple-300 font-mono">Senior Dev English Pronunciation Coach</div>
         </div>
       </div>
       <button id="btn-close-floating-ai" class="text-slate-400 hover:text-white text-base font-mono p-1">✕</button>
@@ -1742,7 +1742,7 @@
             <div class="space-y-1">
               <div class="font-bold text-cyan-400">🤖 AI Coach:</div>
               <div>${data.grammarCorrections || 'Ngữ pháp chuẩn.'}</div>
-              ${data.seniorDevRefactoring ? `<div class="p-1.5 rounded bg-cyan-950/40 border border-cyan-900/60 font-mono text-[11px] text-cyan-200">⭐ Senior Dev: "${data.seniorDevRefactoring}"</div>` : ''}
+              ${data.seniorDevRefactoring ? `<div class="p-1.5 rounded bg-cyan-950/40 border border-cyan-900/60 font-mono text-xs text-cyan-200">⭐ Senior Dev: "${data.seniorDevRefactoring}"</div>` : ''}
             </div>
           `;
         } catch (err) {
@@ -1821,16 +1821,16 @@
               <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-2">
                 <div class="flex items-center gap-1.5 overflow-hidden">
                   <span class="font-bold text-white text-xs truncate max-w-[170px]" title="${text}">"${text}"</span>
-                  <button id="sel-pop-btn-speak" class="px-2 py-0.5 rounded bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-800 text-[11px] font-semibold transition shrink-0 flex items-center gap-1 cursor-pointer">
+                  <button id="sel-pop-btn-speak" class="px-2 py-0.5 rounded bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-800 text-xs font-semibold transition shrink-0 flex items-center gap-1 cursor-pointer">
                     🔊 <span>Nghe</span>
                   </button>
                 </div>
                 <button id="sel-pop-btn-close" class="text-slate-400 hover:text-white text-xs font-mono ml-2 cursor-pointer p-0.5" title="Đóng popup">✕</button>
               </div>
               <div class="space-y-1.5 text-xs">
-                <div class="text-cyan-400 font-mono text-[11px] font-semibold" id="sel-pop-ipa">⏳ Đang tra IPA...</div>
+                <div class="text-cyan-400 font-mono text-xs font-semibold" id="sel-pop-ipa">⏳ Đang tra IPA...</div>
                 <div class="text-slate-200 text-xs" id="sel-pop-meaning">Đang tải nghĩa...</div>
-                <div class="text-slate-400 italic text-[11px]" id="sel-pop-cue"></div>
+                <div class="text-slate-400 italic text-xs" id="sel-pop-cue"></div>
               </div>
               <button id="sel-pop-btn-practice" class="w-full mt-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer">
                 🎤 Luyện phát âm từ này
@@ -1986,8 +1986,8 @@
         function renderCard(item) {
           const isYt = item.type === 'youtube';
           const typeBadge = isYt
-            ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-rose-950 text-rose-300 border border-rose-800/70">🎬 YouTube</span>`
-            : `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-indigo-950 text-indigo-300 border border-indigo-800/70">📚 Bài báo / Sách</span>`;
+            ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-mono font-semibold bg-rose-950 text-rose-300 border border-rose-800/70">🎬 YouTube</span>`
+            : `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-mono font-semibold bg-indigo-950 text-indigo-300 border border-indigo-800/70">📚 Bài báo / Sách</span>`;
 
           const actionLabel = isYt ? '▶ Xem trên YouTube ↗' : '📖 Đọc trên Google Scholar ↗';
           const actionClasses = isYt
@@ -1999,7 +1999,7 @@
               <div class="space-y-2.5">
                 <div class="flex items-center justify-between gap-2">
                   ${typeBadge}
-                  <span class="text-[10px] font-mono text-slate-400 px-2 py-0.5 rounded bg-slate-950 border border-slate-800 truncate max-w-[170px]" title="${escapeHtml(item.category)}">
+                  <span class="text-xs font-mono text-slate-400 px-2 py-0.5 rounded bg-slate-950 border border-slate-800 truncate max-w-[170px]" title="${escapeHtml(item.category)}">
                     ${escapeHtml(item.category)}
                   </span>
                 </div>
@@ -2008,7 +2008,7 @@
                   ${escapeHtml(item.title)}
                 </h3>
 
-                <div class="text-[11px] font-mono text-cyan-400/90 flex items-center gap-1">
+                <div class="text-xs font-mono text-cyan-400/90 flex items-center gap-1">
                   <span>👤</span>
                   <span class="truncate">${escapeHtml(item.author)}</span>
                 </div>
@@ -2375,7 +2375,7 @@
     </div>
 
     <div class="space-y-2 text-xs">
-      <div class="text-[11px] text-slate-300" id="dock-recorder-status">
+      <div class="text-xs text-slate-300" id="dock-recorder-status">
         Bấm nút thu âm để nói câu hoặc từ bạn muốn luyện, sau đó nghe lại giọng mình để so sánh trực diện.
       </div>
 
@@ -2463,14 +2463,14 @@
               <div class="flex items-center gap-2">
                 <span class="text-cyan-400 font-bold">🔍 Kết quả:</span>
                 <span>Tìm thấy <strong>${totalCount}</strong> mục liên quan đến "<strong>${query}</strong>"</span>
-                ${totalCount > 0 ? `<span class="text-[10px] text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">Mục ${currentMatchIndex + 1}/${totalCount}</span>` : ''}
+                ${totalCount > 0 ? `<span class="text-xs text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">Mục ${currentMatchIndex + 1}/${totalCount}</span>` : ''}
               </div>
               <div class="flex items-center gap-1.5">
                 ${totalCount > 1 ? `
-                  <button id="btn-search-prev" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-300 text-[11px] font-semibold transition cursor-pointer">⬆ Trước</button>
-                  <button id="btn-search-next" class="px-2.5 py-1 rounded bg-cyan-600 hover:bg-cyan-500 text-slate-950 text-[11px] font-bold transition cursor-pointer">⬇ Tiếp theo</button>
+                  <button id="btn-search-prev" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-300 text-xs font-semibold transition cursor-pointer">⬆ Trước</button>
+                  <button id="btn-search-next" class="px-2.5 py-1 rounded bg-cyan-600 hover:bg-cyan-500 text-slate-950 text-xs font-bold transition cursor-pointer">⬇ Tiếp theo</button>
                 ` : ''}
-                <button id="btn-search-clear" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-rose-600 text-slate-300 hover:text-white text-[11px] transition cursor-pointer">✕ Đóng tìm kiếm</button>
+                <button id="btn-search-clear" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-rose-600 text-slate-300 hover:text-white text-xs transition cursor-pointer">✕ Đóng tìm kiếm</button>
               </div>
             </div>
           `;

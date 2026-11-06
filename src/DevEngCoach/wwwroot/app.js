@@ -725,16 +725,16 @@
           <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-2">
             <div class="flex items-center gap-1.5 overflow-hidden">
               <span class="font-bold text-white text-xs truncate max-w-[170px]" title="${text}">"${text}"</span>
-              <button id="sel-pop-btn-speak" class="px-2 py-0.5 rounded bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-800 text-[11px] font-semibold transition shrink-0 flex items-center gap-1">
+              <button id="sel-pop-btn-speak" class="px-2 py-0.5 rounded bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-800 text-xs font-semibold transition shrink-0 flex items-center gap-1">
                 🔊 <span>Nghe</span>
               </button>
             </div>
             <button id="sel-pop-btn-close" class="text-slate-400 hover:text-white text-xs font-mono ml-2">✕</button>
           </div>
           <div class="space-y-1.5 text-xs">
-            <div class="text-cyan-400 font-mono text-[11px] font-semibold" id="sel-pop-ipa">⏳ Đang tra IPA...</div>
+            <div class="text-cyan-400 font-mono text-xs font-semibold" id="sel-pop-ipa">⏳ Đang tra IPA...</div>
             <div class="text-slate-200 text-xs" id="sel-pop-meaning">Đang tải nghĩa...</div>
-            <div class="text-slate-400 italic text-[11px]" id="sel-pop-cue"></div>
+            <div class="text-slate-400 italic text-xs" id="sel-pop-cue"></div>
           </div>
           <button id="sel-pop-btn-practice" class="w-full mt-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 text-xs font-semibold flex items-center justify-center gap-1.5 transition">
             🎤 Luyện phát âm từ này
@@ -820,8 +820,8 @@
     const tier1Default = 'px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 cursor-pointer';
     const tier1Active = 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950 shadow-sm transition flex items-center gap-1.5 cursor-pointer';
 
-    const tier2Default = 'px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer';
-    const tier2Active = 'px-2.5 py-1 rounded-md text-[11px] font-bold bg-cyan-500 text-slate-950 shadow-sm transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer';
+    const tier2Default = 'px-2.5 py-1 rounded-md text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer';
+    const tier2Active = 'px-2.5 py-1 rounded-md text-xs font-bold bg-cyan-500 text-slate-950 shadow-sm transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer';
 
     if (el.navWorkspace) el.navWorkspace.className = tier1Default;
     if (el.navCurriculum) el.navCurriculum.className = tier1Default;
@@ -1002,13 +1002,13 @@
             <button class="speak-btn text-cyan-400 hover:text-cyan-300 font-bold px-1.5 py-0.5 rounded hover:bg-slate-800 transition" data-word="${drill.word}" title="Bấm nghe phát âm">🔊</button>
             <div>
               <span class="font-bold text-slate-100">${drill.word}</span>
-              <span class="font-mono text-cyan-400 text-[11px] ml-1">${drill.ipa}</span>
+              <span class="font-mono text-cyan-400 text-xs ml-1">${drill.ipa}</span>
               <span class="text-slate-400 ml-1.5">— ${drill.meaningVi}</span>
             </div>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-[11px] text-slate-400 italic hidden sm:block">${drill.physicalNote}</span>
-            <button class="drill-practice-btn px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 transition" data-word="${drill.word}" data-ipa="${drill.ipa}" data-tip="${drill.physicalNote}">
+            <span class="text-xs text-slate-400 italic hidden sm:block">${drill.physicalNote}</span>
+            <button class="drill-practice-btn px-2 py-0.5 rounded text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 transition" data-word="${drill.word}" data-ipa="${drill.ipa}" data-tip="${drill.physicalNote}">
               🎤 Luyện
             </button>
           </div>
@@ -1042,10 +1042,10 @@
         card.innerHTML = `
           <div class="flex items-center justify-between border-b border-slate-800/80 pb-2 flex-wrap gap-1">
             <div class="flex items-center gap-2">
-              <span class="w-5 h-5 rounded-full bg-blue-950 text-blue-400 border border-blue-800 flex items-center justify-center font-mono text-[10px] font-bold">${fIdx + 1}</span>
+              <span class="w-5 h-5 rounded-full bg-blue-950 text-blue-400 border border-blue-800 flex items-center justify-center font-mono text-xs font-bold">${fIdx + 1}</span>
               <span class="font-bold text-blue-400 text-xs">${frame.templateName}</span>
             </div>
-            <button class="copy-frame-btn text-[11px] font-mono px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 transition" data-pattern="${frame.templatePattern}">📋 Copy Pattern</button>
+            <button class="copy-frame-btn text-xs font-mono px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 transition" data-pattern="${frame.templatePattern}">📋 Copy Pattern</button>
           </div>
 
           <div class="font-mono text-xs text-cyan-300 bg-slate-900/90 p-2.5 rounded-lg border border-slate-800/80 leading-relaxed font-semibold select-all">
@@ -1058,9 +1058,9 @@
 
           <!-- 10+ Real-World Developer Examples -->
           <div class="space-y-1.5 pt-1">
-            <div class="flex items-center justify-between text-[11px] font-mono font-bold text-slate-300">
+            <div class="flex items-center justify-between text-xs font-mono font-bold text-slate-300">
               <span class="text-blue-300">💡 10+ Ví Dụ Thực Chiến Kỹ Thuật (Backend, Frontend, DevOps, DB, Cloud):</span>
-              <span class="text-[10px] text-slate-400 font-mono">${examplesList.length} ví dụ</span>
+              <span class="text-xs text-slate-400 font-mono">${examplesList.length} ví dụ</span>
             </div>
 
             <!-- Top 2 Visible Examples -->
@@ -1068,13 +1068,13 @@
               ${topExamples.map((ex, exIdx) => `
                 <div class="flex items-center justify-between p-2 rounded-lg bg-slate-900/80 border border-slate-800/80 hover:border-slate-700 text-xs transition">
                   <div class="flex items-center gap-2 flex-1 min-w-0 pr-2">
-                    <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-950 text-blue-300 shrink-0">#${exIdx + 1}</span>
+                    <span class="text-xs font-mono font-bold px-1.5 py-0.5 rounded bg-blue-950 text-blue-300 shrink-0">#${exIdx + 1}</span>
                     <span class="text-slate-200 text-xs font-sans leading-relaxed select-all">${ex}</span>
                   </div>
                   <div class="flex items-center gap-1.5 shrink-0">
                     <button class="speak-btn text-blue-400 hover:text-blue-300 font-bold px-1.5 py-0.5 rounded hover:bg-slate-800 text-xs transition" data-word="${ex.replace(/"/g, '&quot;')}" title="Bấm nghe phát âm">🔊</button>
-                    <button class="copy-frame-btn text-slate-400 hover:text-slate-200 px-1.5 py-0.5 rounded hover:bg-slate-800 text-[11px] transition" data-pattern="${ex.replace(/"/g, '&quot;')}" title="Copy ví dụ">📋</button>
-                    <button class="practice-sentence-btn text-cyan-400 hover:text-cyan-300 text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 transition" data-sentence="${ex.replace(/"/g, '&quot;')}" title="Nạp vào ô nói để luyện">🎤 Luyện</button>
+                    <button class="copy-frame-btn text-slate-400 hover:text-slate-200 px-1.5 py-0.5 rounded hover:bg-slate-800 text-xs transition" data-pattern="${ex.replace(/"/g, '&quot;')}" title="Copy ví dụ">📋</button>
+                    <button class="practice-sentence-btn text-cyan-400 hover:text-cyan-300 text-xs font-mono px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 transition" data-sentence="${ex.replace(/"/g, '&quot;')}" title="Nạp vào ô nói để luyện">🎤 Luyện</button>
                   </div>
                 </div>
               `).join('')}
@@ -1085,20 +1085,20 @@
               ${remainingExamples.map((ex, exIdx) => `
                 <div class="flex items-center justify-between p-2 rounded-lg bg-slate-900/60 border border-slate-800/60 hover:border-slate-700 text-xs transition">
                   <div class="flex items-center gap-2 flex-1 min-w-0 pr-2">
-                    <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 shrink-0">#${exIdx + 3}</span>
+                    <span class="text-xs font-mono font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 shrink-0">#${exIdx + 3}</span>
                     <span class="text-slate-300 text-xs font-sans leading-relaxed select-all">${ex}</span>
                   </div>
                   <div class="flex items-center gap-1.5 shrink-0">
                     <button class="speak-btn text-blue-400 hover:text-blue-300 font-bold px-1.5 py-0.5 rounded hover:bg-slate-800 text-xs transition" data-word="${ex.replace(/"/g, '&quot;')}" title="Bấm nghe phát âm">🔊</button>
-                    <button class="copy-frame-btn text-slate-400 hover:text-slate-200 px-1.5 py-0.5 rounded hover:bg-slate-800 text-[11px] transition" data-pattern="${ex.replace(/"/g, '&quot;')}" title="Copy ví dụ">📋</button>
-                    <button class="practice-sentence-btn text-cyan-400 hover:text-cyan-300 text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 transition" data-sentence="${ex.replace(/"/g, '&quot;')}" title="Nạp vào ô nói để luyện">🎤 Luyện</button>
+                    <button class="copy-frame-btn text-slate-400 hover:text-slate-200 px-1.5 py-0.5 rounded hover:bg-slate-800 text-xs transition" data-pattern="${ex.replace(/"/g, '&quot;')}" title="Copy ví dụ">📋</button>
+                    <button class="practice-sentence-btn text-cyan-400 hover:text-cyan-300 text-xs font-mono px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 transition" data-sentence="${ex.replace(/"/g, '&quot;')}" title="Nạp vào ô nói để luyện">🎤 Luyện</button>
                   </div>
                 </div>
               `).join('')}
             </div>
 
             <!-- Toggle Expand Button -->
-            <button class="toggle-examples-btn w-full py-1.5 px-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-[11px] font-mono text-cyan-400 hover:text-cyan-300 border border-slate-800 hover:border-cyan-800/50 flex items-center justify-center gap-1 transition" data-target="frame-extra-examples-${fIdx}">
+            <button class="toggle-examples-btn w-full py-1.5 px-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-cyan-400 hover:text-cyan-300 border border-slate-800 hover:border-cyan-800/50 flex items-center justify-center gap-1 transition" data-target="frame-extra-examples-${fIdx}">
               <span>▼ Xem thêm ${remainingExamples.length} ví dụ thực chiến khác (Tổng cộng 10+ ví dụ)</span>
             </button>
           </div>
@@ -1162,10 +1162,10 @@
     if (contrastData.rules) {
       rulesHtml = `
         <div class="p-2.5 rounded-lg bg-slate-950/90 border border-cyan-900/40 space-y-1.5">
-          <div class="text-[11px] font-mono font-bold text-cyan-300 flex items-center gap-1.5">
+          <div class="text-xs font-mono font-bold text-cyan-300 flex items-center gap-1.5">
             <span>🎯 3 NGUYÊN TẮC CƠ HỌC BẤT DI BẤT DỊCH PHÂN BIỆT ${soundA.symbol} VS ${soundB.symbol}:</span>
           </div>
-          <div class="space-y-1 text-[11px]">
+          <div class="space-y-1 text-xs">
             ${contrastData.rules.map(r => `
               <div class="grid grid-cols-1 md:grid-cols-3 gap-1 p-1.5 rounded bg-slate-900/80 border border-slate-800/80">
                 <span class="font-bold text-slate-300">${r.title}:</span>
@@ -1225,9 +1225,9 @@
       ${howToHtml}
 
       <div class="space-y-1.5 pt-1">
-        <div class="flex items-center justify-between text-[11px] font-semibold text-slate-300 font-mono">
+        <div class="flex items-center justify-between text-xs font-semibold text-slate-300 font-mono">
           <span>⚡ Cặp Từ Tối Thiểu (Minimal Pairs) Luyện Tai & Luyện Giọng:</span>
-          <span class="text-[10px] text-amber-300 font-bold">Bấm ⚡ So sánh A ➜ B để nghe liền</span>
+          <span class="text-xs text-amber-300 font-bold">Bấm ⚡ So sánh A ➜ B để nghe liền</span>
         </div>
         ${contrastData.drills.map(d => `
           <div class="flex items-center justify-between p-2 rounded-lg bg-slate-950/80 border border-slate-800 hover:border-slate-700 transition text-xs">
@@ -1235,18 +1235,18 @@
               <button class="speak-btn text-cyan-400 hover:text-cyan-300 font-bold px-1.5 py-0.5 rounded hover:bg-slate-800 transition" data-word="${d.wordA}" title="Nghe ${d.wordA}">🔊</button>
               <div>
                 <span class="font-bold text-slate-100">${d.wordA}</span>
-                <span class="font-mono text-cyan-400 text-[10px] ml-1">${d.ipaA}</span>
+                <span class="font-mono text-cyan-400 text-xs ml-1">${d.ipaA}</span>
               </div>
             </div>
 
-            <button class="compare-ab-btn px-2.5 py-1 rounded text-[10px] font-mono font-bold bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 hover:border-amber-500/50 transition shadow" data-word-a="${d.wordA}" data-word-b="${d.wordB}">
+            <button class="compare-ab-btn px-2.5 py-1 rounded text-xs font-mono font-bold bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 hover:border-amber-500/50 transition shadow" data-word-a="${d.wordA}" data-word-b="${d.wordB}">
               ⚡ So sánh A ➜ B
             </button>
 
             <div class="flex items-center gap-1.5">
               <div>
                 <span class="font-bold text-slate-100">${d.wordB}</span>
-                <span class="font-mono text-purple-400 text-[10px] ml-1">${d.ipaB}</span>
+                <span class="font-mono text-purple-400 text-xs ml-1">${d.ipaB}</span>
               </div>
               <button class="speak-btn text-purple-400 hover:text-purple-300 font-bold px-1.5 py-0.5 rounded hover:bg-slate-800 transition" data-word="${d.wordB}" title="Nghe ${d.wordB}">🔊</button>
             </div>
@@ -1288,18 +1288,18 @@
             <span class="font-mono text-xs font-bold ${isCurrent ? 'text-cyan-400' : 'text-slate-400'}">DAY ${l.dayNumber}</span>
             ${
               isCompleted
-                ? `<span class="px-1.5 py-0.5 rounded text-[10px] bg-emerald-950 text-emerald-400 font-mono inline-flex items-center gap-1">✓ Done ${rating ? `<span class="text-amber-400 font-sans">${rating}⭐</span>` : ''}</span>`
+                ? `<span class="px-1.5 py-0.5 rounded text-xs bg-emerald-950 text-emerald-400 font-mono inline-flex items-center gap-1">✓ Done ${rating ? `<span class="text-amber-400 font-sans">${rating}⭐</span>` : ''}</span>`
                 : isCurrent
-                ? '<span class="px-1.5 py-0.5 rounded text-[10px] bg-cyan-950 text-cyan-400 font-mono">Active</span>'
-                : '<span class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 text-slate-400 font-mono">Pending</span>'
+                ? '<span class="px-1.5 py-0.5 rounded text-xs bg-cyan-950 text-cyan-400 font-mono">Active</span>'
+                : '<span class="px-1.5 py-0.5 rounded text-xs bg-slate-800 text-slate-400 font-mono">Pending</span>'
             }
           </div>
           <div class="font-bold text-xs text-slate-200 line-clamp-2 leading-snug">${l.title}</div>
         </div>
-        <div class="flex items-center justify-between text-[11px] text-slate-400 pt-2 border-t border-slate-800/60 font-mono">
+        <div class="flex items-center justify-between text-xs text-slate-400 pt-2 border-t border-slate-800/60 font-mono">
           <span class="text-cyan-400/80">${l.phonetics.phoneticSymbol}</span>
           <div class="flex items-center gap-1.5">
-            ${isCompleted && rating ? `<span class="text-amber-400 text-[10px]">${'★'.repeat(rating)}</span>` : ''}
+            ${isCompleted && rating ? `<span class="text-amber-400 text-xs">${'★'.repeat(rating)}</span>` : ''}
             <span>S${l.sprintId}</span>
           </div>
         </div>
@@ -1485,8 +1485,8 @@
         <div class="space-y-1.5">
           <div class="font-bold text-cyan-400">🤖 AI Coach:</div>
           <div>${data.grammarCorrections || 'Cấu trúc câu tốt.'}</div>
-          ${data.phoneticMechanicsAlerts?.length ? `<div class="text-[11px] text-amber-300">⚠️ Cơ học: ${data.phoneticMechanicsAlerts.join('; ')}</div>` : ''}
-          ${data.seniorDevRefactoring ? `<div class="p-1.5 rounded bg-cyan-950/40 border border-cyan-900/60 font-mono text-[11px] text-cyan-200">⭐ Senior Dev: "${data.seniorDevRefactoring}"</div>` : ''}
+          ${data.phoneticMechanicsAlerts?.length ? `<div class="text-xs text-amber-300">⚠️ Cơ học: ${data.phoneticMechanicsAlerts.join('; ')}</div>` : ''}
+          ${data.seniorDevRefactoring ? `<div class="p-1.5 rounded bg-cyan-950/40 border border-cyan-900/60 font-mono text-xs text-cyan-200">⭐ Senior Dev: "${data.seniorDevRefactoring}"</div>` : ''}
         </div>
       `;
     } catch (err) {
@@ -2597,9 +2597,9 @@
     if (statusBadge) {
       statusBadge.textContent = config.badge;
       if (mode === 'vn') {
-        statusBadge.className = 'text-[10px] px-2 py-0.5 rounded font-mono font-bold bg-rose-950 text-rose-300 border border-rose-800';
+        statusBadge.className = 'text-xs px-2 py-0.5 rounded font-mono font-bold bg-rose-950 text-rose-300 border border-rose-800';
       } else {
-        statusBadge.className = 'text-[10px] px-2 py-0.5 rounded font-mono font-bold bg-emerald-950 text-emerald-300 border border-emerald-800';
+        statusBadge.className = 'text-xs px-2 py-0.5 rounded font-mono font-bold bg-emerald-950 text-emerald-300 border border-emerald-800';
       }
     }
     if (statusDesc) statusDesc.textContent = config.desc;
@@ -2664,15 +2664,15 @@
     if (btnTarget && btnVN) {
       btnTarget.addEventListener('click', () => {
         currentSagittalMode = 'target';
-        btnTarget.className = 'px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 transition';
-        btnVN.className = 'px-2 py-0.5 rounded text-[10px] font-mono text-slate-400 hover:text-rose-300 transition';
+        btnTarget.className = 'px-2 py-0.5 rounded text-xs font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 transition';
+        btnVN.className = 'px-2 py-0.5 rounded text-xs font-mono text-slate-400 hover:text-rose-300 transition';
         renderSagittalSound(currentSagittalSound, 'target');
       });
 
       btnVN.addEventListener('click', () => {
         currentSagittalMode = 'vn';
-        btnVN.className = 'px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 transition';
-        btnTarget.className = 'px-2 py-0.5 rounded text-[10px] font-mono text-slate-400 hover:text-emerald-300 transition';
+        btnVN.className = 'px-2 py-0.5 rounded text-xs font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 transition';
+        btnTarget.className = 'px-2 py-0.5 rounded text-xs font-mono text-slate-400 hover:text-emerald-300 transition';
         renderSagittalSound(currentSagittalSound, 'vn');
       });
     }
@@ -3084,11 +3084,11 @@
             const card = document.createElement('div');
             card.className = 'bg-slate-900 border border-slate-800 p-2.5 rounded-lg space-y-1';
             card.innerHTML = `
-              <div class="flex items-center justify-between text-[11px]">
+              <div class="flex items-center justify-between text-xs">
                 <span class="font-bold text-cyan-400 font-mono">${occ.ruleType}</span>
                 <span class="font-mono text-amber-300 font-bold bg-amber-950/60 px-2 py-0.5 rounded border border-amber-800">${occ.transformation}</span>
               </div>
-              <p class="text-slate-300 text-[11px] leading-relaxed">${occ.mechanicExplanation}</p>
+              <p class="text-slate-300 text-xs leading-relaxed">${occ.mechanicExplanation}</p>
             `;
             occurrencesList.appendChild(card);
           });
@@ -3278,7 +3278,7 @@
         <div class="bg-indigo-950/40 border border-indigo-800/60 p-3 rounded-xl space-y-1.5 text-xs">
           <div class="flex items-center justify-between">
             <span class="font-bold text-indigo-300 font-mono">🤖 ${scenario.roleDescription.split(' ')[0] || 'Senior Lead'}</span>
-            <button class="speak-btn text-[11px] text-cyan-400 hover:underline" data-word="${scenario.openingLine.replace(/"/g, '&quot;')}">🔊 Nghe</button>
+            <button class="speak-btn text-xs text-cyan-400 hover:underline" data-word="${scenario.openingLine.replace(/"/g, '&quot;')}">🔊 Nghe</button>
           </div>
           <p class="text-slate-100 font-mono leading-relaxed">${scenario.openingLine}</p>
         </div>
@@ -3399,7 +3399,7 @@
         aiBubble.innerHTML = `
           <div class="flex items-center justify-between">
             <span class="font-bold text-indigo-300 font-mono">🤖 ${sparringState.currentScenario?.roleDescription.split(' ')[0] || 'Senior Lead'}</span>
-            <button class="speak-btn text-[11px] text-cyan-400 hover:underline" data-word="${data.aiResponse.replace(/"/g, '&quot;')}">🔊 Nghe</button>
+            <button class="speak-btn text-xs text-cyan-400 hover:underline" data-word="${data.aiResponse.replace(/"/g, '&quot;')}">🔊 Nghe</button>
           </div>
           <p class="text-slate-100 font-mono leading-relaxed">${data.aiResponse}</p>
           ${data.nextQuestion ? `<div class="mt-2 text-indigo-200 font-semibold border-t border-indigo-900/60 pt-1.5">❓ Câu hỏi phản biện tiếp theo: ${data.nextQuestion}</div>` : ''}
@@ -3657,10 +3657,10 @@
           <div class="flex items-center justify-between p-2 rounded bg-slate-950/80 border border-slate-800">
             <div>
               <span class="font-bold text-cyan-400">${item.wordOrPhrase}</span>
-              <span class="text-[10px] text-amber-300 ml-1.5">${item.targetPhoneme}</span>
+              <span class="text-xs text-amber-300 ml-1.5">${item.targetPhoneme}</span>
             </div>
             <div class="flex items-center gap-2">
-              <span class="px-1.5 py-0.5 rounded text-[10px] bg-slate-900 border border-slate-700 font-mono">Hộp ${item.box}</span>
+              <span class="px-1.5 py-0.5 rounded text-xs bg-slate-900 border border-slate-700 font-mono">Hộp ${item.box}</span>
               <button class="speak-btn text-xs text-cyan-400 hover:text-cyan-300" data-word="${item.wordOrPhrase}">🔊</button>
             </div>
           </div>
@@ -3956,8 +3956,8 @@
           <div class="text-2xl">${badge.emoji}</div>
           <div>
             <div class="font-bold text-xs ${badge.isUnlocked ? 'text-amber-300' : 'text-slate-400'}">${badge.name}</div>
-            <div class="text-[10px] text-slate-400 leading-snug">${badge.description}</div>
-            <div class="text-[9px] font-mono mt-1 ${badge.isUnlocked ? 'text-emerald-400' : 'text-slate-500'}">
+            <div class="text-xs text-slate-400 leading-snug">${badge.description}</div>
+            <div class="text-xs font-mono mt-1 ${badge.isUnlocked ? 'text-emerald-400' : 'text-slate-500'}">
               ${badge.isUnlocked ? 'ĐÃ MỞ KHÓA' : `Cần chuỗi ${badge.requiredStreak} ngày`}
             </div>
           </div>
@@ -3973,11 +3973,11 @@
 
     (velocity || []).forEach(v => {
       const div = document.createElement('div');
-      div.className = `p-2 rounded-lg bg-slate-950 border ${v.isCurrentWeek ? 'border-purple-600' : 'border-slate-800'} flex items-center justify-between text-[11px]`;
+      div.className = `p-2 rounded-lg bg-slate-950 border ${v.isCurrentWeek ? 'border-purple-600' : 'border-slate-800'} flex items-center justify-between text-xs`;
       div.innerHTML = `
         <div>
           <span class="font-bold text-slate-200">${v.weekLabel}</span>
-          ${v.isCurrentWeek ? '<span class="text-purple-400 ml-1 font-mono text-[9px]">(Hiện tại)</span>' : ''}
+          ${v.isCurrentWeek ? '<span class="text-purple-400 ml-1 font-mono text-xs">(Hiện tại)</span>' : ''}
         </div>
         <div class="font-mono text-slate-300 flex items-center gap-2">
           <span>${v.sessionsCompleted}/7 buổi</span>
@@ -4248,11 +4248,11 @@
       <div class="space-y-1.5">
         <div class="flex items-center justify-between border-b border-slate-700 pb-1">
           <span class="font-mono font-bold text-cyan-400 text-xs">${data.symbol}</span>
-          <span class="text-[10px] text-slate-400">${data.soundCategory}</span>
+          <span class="text-xs text-slate-400">${data.soundCategory}</span>
         </div>
-        <div class="text-[10px] text-amber-300 font-semibold">${data.vietnameseEquivalent}</div>
-        <p class="text-[10px] text-slate-300 leading-snug">${data.physicalCueVi}</p>
-        <div class="text-[10px] text-slate-400 font-mono">Ví dụ: ${data.devExampleWords.join(', ')}</div>
+        <div class="text-xs text-amber-300 font-semibold">${data.vietnameseEquivalent}</div>
+        <p class="text-xs text-slate-300 leading-snug">${data.physicalCueVi}</p>
+        <div class="text-xs text-slate-400 font-mono">Ví dụ: ${data.devExampleWords.join(', ')}</div>
       </div>
     `;
 
@@ -4566,8 +4566,8 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
           ${sheet.sentenceFrames.map(f => `
             <div class="p-2.5 rounded bg-slate-950 border border-slate-800 space-y-1">
-              <div class="font-bold text-slate-100 font-mono text-[11px]">${f.number}. ${f.templatePattern}</div>
-              <div class="text-[10px] text-slate-400 italic">${f.translationVi}</div>
+              <div class="font-bold text-slate-100 font-mono text-xs">${f.number}. ${f.templatePattern}</div>
+              <div class="text-xs text-slate-400 italic">${f.translationVi}</div>
             </div>
           `).join('')}
         </div>
@@ -4577,7 +4577,7 @@
       <div class="space-y-2">
         <h3 class="text-xs font-bold font-mono text-amber-400 uppercase tracking-wider">2. Bảng Tra Cứu Âm Vị & Chỉ Dẫn Khẩu Hình:</h3>
         <div class="overflow-x-auto">
-          <table class="w-full text-left text-[11px] border-collapse">
+          <table class="w-full text-left text-xs border-collapse">
             <thead>
               <tr class="border-b border-slate-800 text-slate-400">
                 <th class="py-1 px-2 font-mono">Âm vị</th>
@@ -4601,12 +4601,12 @@
       <!-- Section 3: Essential Vocabulary -->
       <div class="space-y-2">
         <h3 class="text-xs font-bold font-mono text-purple-400 uppercase tracking-wider">3. Từ Vựng Kỹ Thuật Trọng Tâm:</h3>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-[10px] font-mono">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs font-mono">
           ${sheet.essentialVocabulary.map(v => `
             <div class="p-1.5 rounded bg-slate-950 border border-slate-800">
               <div class="font-bold text-cyan-300">${v.word}</div>
               <div class="text-slate-400">${v.ipa}</div>
-              <div class="text-slate-500 text-[9px] truncate">${v.meaningVi}</div>
+              <div class="text-slate-500 text-xs truncate">${v.meaningVi}</div>
             </div>
           `).join('')}
         </div>
