@@ -11,13 +11,13 @@
       theme: {
         extend: {
           fontSize: {
-            'xs': ['1.125rem', { lineHeight: '1.65rem' }],
-            'sm': ['1.25rem', { lineHeight: '1.8rem' }],
-            'base': ['1.375rem', { lineHeight: '1.95rem' }],
-            'lg': ['1.55rem', { lineHeight: '2.1rem' }],
-            'xl': ['1.75rem', { lineHeight: '2.3rem' }],
-            '2xl': ['2.2rem', { lineHeight: '2.6rem' }],
-            '3xl': ['2.75rem', { lineHeight: '3.1rem' }]
+            'xs': ['0.8125rem', { lineHeight: '1.25rem' }],
+            'sm': ['0.9375rem', { lineHeight: '1.45rem' }],
+            'base': ['1.0625rem', { lineHeight: '1.65rem' }],
+            'lg': ['1.25rem', { lineHeight: '1.75rem' }],
+            'xl': ['1.5rem', { lineHeight: '2rem' }],
+            '2xl': ['1.875rem', { lineHeight: '2.35rem' }],
+            '3xl': ['2.25rem', { lineHeight: '2.75rem' }]
           },
           colors: {
             slate: {
@@ -40,19 +40,19 @@
     <!-- ========================================================================= -->
   <!-- MODERN 2-TIER ARCHITECTURAL HEADER                                        -->
   <!-- ========================================================================= -->
-  <header class="border-b border-slate-800/90 bg-slate-950/90 backdrop-blur-md sticky top-0 z-50 shadow-2xl">
+  <header class="border-b border-slate-800/90 bg-slate-950/90 backdrop-blur-md sticky top-0 z-50 shadow-2xl overflow-x-clip">
     
     <!-- Tier 1: Brand, Core Navigation, Sticky Session Timer, Telemetry Badges -->
     <div class="border-b border-slate-800/60">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-4">
+      <div class="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-4">
         
         <!-- Left: Brand + Primary Tabs -->
-        <div class="flex items-center gap-5">
-          <a href="/" id="brand-logo-home" class="flex items-center gap-2.5 group cursor-pointer" title="Quay về trang chủ">
+        <div class="flex items-center gap-2 sm:gap-4 shrink-0">
+          <a href="/" id="brand-logo-home" class="flex items-center gap-2 group cursor-pointer" title="Quay về trang chủ">
             <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-400 via-cyan-500 to-blue-600 flex items-center justify-center font-mono font-black text-slate-950 text-xs shadow-md shadow-cyan-500/25 group-hover:scale-105 transition-transform">
               DE
             </div>
-            <div class="flex items-baseline gap-1.5">
+            <div class="hidden sm:flex items-baseline gap-1.5">
               <span class="font-extrabold text-sm tracking-tight text-white group-hover:text-cyan-400 transition-colors">
                 DevEng<span class="text-cyan-400 font-normal ml-0.5">Coach</span>
               </span>
@@ -60,21 +60,21 @@
             </div>
           </a>
 
-          <div class="h-4 w-px bg-slate-800 hidden sm:block"></div>
+          <div class="h-4 w-px bg-slate-800 hidden md:block"></div>
 
           <!-- Primary View Links -->
           <nav class="flex items-center gap-1">
-            <button id="nav-workspace" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950 shadow-sm transition flex items-center gap-1.5 cursor-pointer">
+            <button id="nav-workspace" class="px-2.5 sm:px-3 py-1 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950 shadow-sm transition flex items-center gap-1.5 cursor-pointer">
               <span>💻</span>
-              <span>Buổi học</span>
+              <span class="hidden sm:inline">Buổi học</span>
             </button>
-            <button id="nav-curriculum" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 cursor-pointer">
+            <button id="nav-curriculum" class="px-2.5 sm:px-3 py-1 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 cursor-pointer">
               <span>🗺️</span>
-              <span>90 ngày</span>
+              <span class="hidden sm:inline">90 ngày</span>
             </button>
-            <a href="fundamentals.html" target="_blank" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-cyan-300 hover:bg-cyan-950/40 border border-transparent hover:border-cyan-800/40 transition flex items-center gap-1.5">
+            <a href="fundamentals.html" target="_blank" class="px-2.5 sm:px-3 py-1 rounded-lg text-xs font-medium text-slate-300 hover:text-cyan-300 hover:bg-cyan-950/40 border border-transparent hover:border-cyan-800/40 transition flex items-center gap-1.5">
               <span>📖</span>
-              <span>Cẩm nang</span>
+              <span class="hidden sm:inline">Cẩm nang</span>
               <span class="text-xs text-slate-500">↗</span>
             </a>
           </nav>
@@ -138,40 +138,50 @@
     </div>
 
     <!-- Tier 2: Specialized Practice Studios & Quick Utility Actions Bar -->
-    <div class="bg-slate-900/40">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-10 flex items-center justify-between gap-4 overflow-x-auto scrollbar-none text-xs">
+    <div id="header-tier-2" class="bg-slate-900/40 border-b border-slate-800/40 relative z-40">
+      <div class="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-8 h-10 flex items-center justify-between gap-3 text-xs">
         
         <!-- Left: Practice Studios Segment -->
-        <div class="flex items-center gap-1 shrink-0">
-          <span class="text-xs font-mono uppercase font-bold text-slate-500 mr-1.5 hidden xl:inline">Phòng luyện:</span>
+        <div class="flex items-center gap-1.5 shrink-0">
+          <span class="text-xs font-mono uppercase font-bold text-slate-500 mr-1 hidden xl:inline">Phòng luyện:</span>
           <button id="nav-simulators" class="px-2.5 py-1 rounded-md text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
             <span>🎙️</span>
-            <span>Standup/Demo</span>
-          </button>
-          <button id="nav-sparring" class="px-2.5 py-1 rounded-md text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
-            <span>⚔️</span>
-            <span>Sparring Arena</span>
-          </button>
-          <button id="nav-prpolish" class="px-2.5 py-1 rounded-md text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
-            <span>🛠️</span>
-            <span>PR Studio</span>
+            <span class="hidden sm:inline">Standup/Demo</span>
           </button>
           <button id="nav-shadowing" class="px-2.5 py-1 rounded-md text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
             <span>🎙️</span>
-            <span>Shadowing Studio</span>
+            <span class="hidden md:inline">Shadowing</span>
           </button>
           <button id="nav-srs" class="px-2.5 py-1 rounded-md text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
             <span>🧠</span>
-            <span>SRS Vault</span>
+            <span class="hidden sm:inline">SRS Vault</span>
           </button>
-          <button id="nav-analytics" class="px-2.5 py-1 rounded-md text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
-            <span>📊</span>
-            <span>Burndown</span>
-          </button>
-          <button id="nav-audio-only" class="px-2.5 py-1 rounded-md text-xs font-medium text-indigo-300 hover:text-white hover:bg-indigo-950/80 border border-indigo-800/60 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer" title="Luyện nghe nhắm mắt (Eyes-Free Audio Only Mode)">
-            <span>🎧</span>
-            <span>Audio-Only</span>
-          </button>
+
+          <!-- Grouped Studios Dropdown -->
+          <div class="relative inline-block text-left" id="studios-dropdown-container">
+            <button id="btn-toggle-studios-menu" type="button" class="px-2.5 py-1 rounded-md text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1 whitespace-nowrap cursor-pointer">
+              <span>Phòng khác</span>
+              <span class="text-xs text-slate-500">▾</span>
+            </button>
+            <div id="menu-more-studios" class="hidden absolute left-0 mt-1.5 w-48 rounded-xl bg-slate-900/95 border border-slate-800 shadow-2xl p-1.5 z-50 flex flex-col gap-1 backdrop-blur-md">
+              <button id="nav-sparring" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-2 whitespace-nowrap cursor-pointer text-left w-full">
+                <span>⚔️</span>
+                <span>Sparring Arena</span>
+              </button>
+              <button id="nav-prpolish" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-2 whitespace-nowrap cursor-pointer text-left w-full">
+                <span>🛠️</span>
+                <span>PR Studio</span>
+              </button>
+              <button id="nav-analytics" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-2 whitespace-nowrap cursor-pointer text-left w-full">
+                <span>📊</span>
+                <span>Burndown Chart</span>
+              </button>
+              <button id="nav-audio-only" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-indigo-300 hover:text-white hover:bg-indigo-950/80 border border-indigo-800/60 transition flex items-center gap-2 whitespace-nowrap cursor-pointer text-left w-full" title="Luyện nghe nhắm mắt">
+                <span>🎧</span>
+                <span>Audio-Only Mode</span>
+              </button>
+            </div>
+          </div>
         </div>
 
         <!-- Right: Fast-Action Utility Accelerators -->
@@ -179,36 +189,50 @@
           <div id="speed-badge-mount" class="flex items-center"></div>
           <button id="btn-open-warmup" class="px-2.5 py-1 rounded-md text-xs font-semibold text-amber-300 bg-amber-950/40 border border-amber-800/60 hover:bg-amber-900/50 transition flex items-center gap-1 whitespace-nowrap shadow-sm cursor-pointer" title="Khởi động 2 phút với 5 từ yếu">
             <span>⚡</span>
-            <span>2m Warm-Up</span>
-          </button>
-          <button id="btn-open-microlesson" class="px-2.5 py-1 rounded-md text-xs font-semibold text-orange-300 bg-orange-950/40 border border-orange-800/60 hover:bg-orange-900/50 transition flex items-center gap-1 whitespace-nowrap shadow-sm cursor-pointer" title="Chế độ học nhanh 10 phút">
-            <span>⚡</span>
-            <span>Quick 10m</span>
-          </button>
-          <button id="btn-open-cheatsheet" class="px-2.5 py-1 rounded-md text-xs font-semibold text-cyan-300 bg-cyan-950/40 border border-cyan-800/60 hover:bg-cyan-900/50 transition flex items-center gap-1 whitespace-nowrap shadow-sm cursor-pointer" title="In tóm tắt khổ A4">
-            <span>📋</span>
-            <span>In Cheat Sheet</span>
+            <span class="hidden sm:inline">2m Warm-Up</span>
           </button>
           <button id="btn-open-palette" onclick="window.toggleDevEngCommandPalette()" class="px-2.5 py-1 rounded-md text-xs font-mono font-semibold text-cyan-300 bg-slate-800/90 border border-slate-700 hover:border-cyan-500 transition flex items-center gap-1.5 shadow-sm cursor-pointer" title="Mở Developer Command Palette (Ctrl+K)">
             <span class="text-cyan-400">⌘</span>
-            <span>Ctrl+K</span>
+            <span class="hidden md:inline">Ctrl+K</span>
           </button>
-          <button id="btn-open-backup-modal" class="px-2.5 py-1 rounded-md text-xs font-semibold text-emerald-300 bg-emerald-950/40 border border-emerald-800/60 hover:bg-emerald-900/50 transition flex items-center gap-1 whitespace-nowrap shadow-sm cursor-pointer" title="Sao lưu & Phục hồi dữ liệu học">
-            <span>📦</span>
-            <span>Backup</span>
-          </button>
-          <button id="btn-open-capstone-modal" class="hidden px-2.5 py-1 rounded-md text-xs font-semibold text-purple-300 bg-purple-950/60 border border-purple-700 hover:bg-purple-900/60 transition flex items-center gap-1 whitespace-nowrap shadow-sm cursor-pointer animate-pulse" title="Phòng thi sát hạch Milestone Capstone">
-            <span>🎓</span>
-            <span id="label-capstone-badge">Thi Capstone</span>
-          </button>
+
+          <!-- Grouped Utilities Dropdown -->
+          <div class="relative inline-block text-right" id="utils-dropdown-container">
+            <button id="btn-toggle-utils-menu" type="button" class="px-2.5 py-1 rounded-md text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1 whitespace-nowrap cursor-pointer">
+              <span>⚡</span>
+              <span class="hidden sm:inline">Tiện ích</span>
+              <span class="text-xs text-slate-500">▾</span>
+            </button>
+            <div id="menu-more-utils" class="hidden absolute right-0 mt-1.5 w-52 rounded-xl bg-slate-900/95 border border-slate-800 shadow-2xl p-1.5 z-50 flex flex-col gap-1 backdrop-blur-md">
+              <button id="btn-open-microlesson" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-orange-300 hover:text-orange-200 hover:bg-orange-950/60 transition flex items-center gap-2 whitespace-nowrap cursor-pointer text-left w-full">
+                <span>⚡</span>
+                <span>Chế độ Quick 10m</span>
+              </button>
+              <button id="btn-open-cheatsheet" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-cyan-300 hover:text-cyan-200 hover:bg-cyan-950/60 transition flex items-center gap-2 whitespace-nowrap cursor-pointer text-left w-full">
+                <span>📋</span>
+                <span>In Cheat Sheet (A4)</span>
+              </button>
+              <button id="btn-open-backup-modal" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-emerald-300 hover:text-emerald-200 hover:bg-emerald-950/60 transition flex items-center gap-2 whitespace-nowrap cursor-pointer text-left w-full">
+                <span>📦</span>
+                <span>Sao lưu & Khôi phục</span>
+              </button>
+              <button id="btn-open-capstone-modal" class="hidden px-2.5 py-1.5 rounded-lg text-xs font-semibold text-purple-300 hover:text-purple-200 hover:bg-purple-950/60 transition flex items-center gap-2 whitespace-nowrap cursor-pointer text-left w-full animate-pulse">
+                <span>🎓</span>
+                <span id="label-capstone-badge">Thi Capstone</span>
+              </button>
+            </div>
+          </div>
         </div>
+
+      </div>
+    </div>
 
       </div>
     </div>
 
   </header>
 
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <main class="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
     <!-- VIEW 1: TODAY'S 30-MINUTE WORKSPACE -->
     <section id="view-workspace" class="space-y-6">

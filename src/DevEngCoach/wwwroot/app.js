@@ -542,28 +542,50 @@
       el.btnSubmitSoundGrade.addEventListener('click', submitSoundGrade);
     }
 
-    // Floating AI Assistant Events
-    if (el.btnFloatingAi) {
-      el.btnFloatingAi.addEventListener('click', toggleFloatingAiModal);
-    }
+    // Sticky Header Auto-Collapse on Scroll: hides non-essential Tier 2 when scrolling into the lesson
+    window.addEventListener('scroll', () => {
+      const currentY = window.scrollY;
+      const tier2 = document.getElementById('header-tier-2');
+      if (!tier2) return;
+      if (currentY > 60) {
+        tier2.classList.add('header-tier2-collapsed');
+      } else if (currentY < 30) {
+        tier2.classList.remove('header-tier2-collapsed');
+      }
+    }, { passive: true });
 
-    if (el.btnCloseFloatingAi) {
-      el.btnCloseFloatingAi.addEventListener('click', closeFloatingAiModal);
-    }
+    // Header Dropdowns for condensed Studios and Utilities
+    const btnStudiosMenu = document.getElementById('btn-toggle-studios-menu');
+    const menuStudios = document.getElementById('menu-more-studios');
+    const btnUtilsMenu = document.getElementById('btn-toggle-utils-menu');
+    const menuUtils = document.getElementById('menu-more-utils');
 
-    if (el.floatingBtnSend) {
-      el.floatingBtnSend.addEventListener('click', sendFloatingAiMessage);
-    }
-
-    // Quick prompt pills
-    document.querySelectorAll('.quick-prompt-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        if (el.floatingAiInput) {
-          el.floatingAiInput.value = btn.dataset.prompt;
-          sendFloatingAiMessage();
-        }
-      });
+    btnStudiosMenu?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      menuUtils?.classList.add('hidden');
+      menuStudios?.classList.toggle('hidden');
     });
+
+    btnUtilsMenu?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      menuStudios?.classList.add('hidden');
+      menuUtils?.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', () => {
+      menuStudios?.classList.add('hidden');
+      menuUtils?.classList.add('hidden');
+    });
+
+    menuStudios?.querySelectorAll('button').forEach(b => {
+      b.addEventListener('click', () => menuStudios.classList.add('hidden'));
+    });
+    menuUtils?.querySelectorAll('button').forEach(b => {
+      b.addEventListener('click', () => menuUtils.classList.add('hidden'));
+    });
+
+    // Floating AI Assistant Events are managed natively by <deveng-ai-coach>
+    // to avoid duplicate event listener race conditions.
 
     // Sprint Filter Buttons
     document.querySelectorAll('.sprint-filter-btn').forEach(btn => {
@@ -1437,7 +1459,11 @@
   }
 
   // Floating AI Assistant Logic (FR-008)
-  function toggleFloatingAiModal() {
+  function toggleFloatingAiModal(forceState) {
+    if (typeof window.toggleAiCoach === 'function') {
+      window.toggleAiCoach(forceState);
+      return;
+    }
     if (!el.modalFloatingAi) return;
     if (el.modalFloatingAi.classList.contains('hidden')) {
       el.modalFloatingAi.classList.remove('hidden');
@@ -1450,6 +1476,10 @@
   }
 
   function closeFloatingAiModal() {
+    if (typeof window.toggleAiCoach === 'function') {
+      window.toggleAiCoach(false);
+      return;
+    }
     if (el.modalFloatingAi) el.modalFloatingAi.classList.add('hidden');
     document.body.classList.remove('ai-coach-active');
   }

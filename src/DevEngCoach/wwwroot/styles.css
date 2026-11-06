@@ -12,13 +12,13 @@
   --purple-accent: #c084fc;
 
   /* Typography Design Tokens (Senior Dev Ergonomics) */
-  --font-size-xs: 1.125rem;   /* ~18px base reading */
-  --font-size-sm: 1.25rem;    /* ~20px comfortable text */
-  --font-size-base: 1.375rem; /* ~22px primary text */
-  --font-size-lg: 1.55rem;    /* ~24.8px sub-headings */
-  --font-size-xl: 1.75rem;    /* ~28px section titles */
-  --font-size-2xl: 2.2rem;    /* ~35px page titles */
-  --font-size-3xl: 2.75rem;   /* ~44px hero titles */
+  --font-size-xs: 0.8125rem;   /* ~13px badges, telemetry, buttons, code tokens */
+  --font-size-sm: 0.9375rem;   /* ~15px secondary info, hints, notes */
+  --font-size-base: 1.0625rem; /* ~17px comfortable reading body text */
+  --font-size-lg: 1.25rem;     /* ~20px sub-headings */
+  --font-size-xl: 1.5rem;      /* ~24px card titles */
+  --font-size-2xl: 1.875rem;   /* ~30px section titles */
+  --font-size-3xl: 2.25rem;    /* ~36px hero titles */
 }
 
 *, *::before, *::after {
@@ -45,6 +45,34 @@ pre, code, .font-mono {
 ::-webkit-scrollbar-track { background: #090d16; }
 ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #334155; }
+
+/* Scrollbar suppression utility */
+.scrollbar-none {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Header Tier 2 Auto-Collapse on Scroll */
+#header-tier-2 {
+  max-height: 48px;
+  opacity: 1;
+  overflow: hidden;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease, transform 0.25s ease, padding 0.3s ease;
+}
+
+#header-tier-2.header-tier2-collapsed {
+  max-height: 0 !important;
+  opacity: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  transform: translateY(-6px);
+  pointer-events: none !important;
+}
 
 /* CRITICAL: Explicit Hidden Rule */
 .hidden { display: none !important; }
@@ -300,16 +328,16 @@ pre, code, .font-mono {
 .text-orange-400 { color: #fb923c; }
 .text-red-400 { color: #f87171; }
 
-/* Typography Scale: +2 Sizes for Maximum Readability (Excluding h1) */
-.text-\[9px\], .text-\[10px\], .text-\[11px\], .text-\[12px\] { font-size: var(--font-size-xs) !important; line-height: 1.65rem !important; }
-.text-xs { font-size: var(--font-size-xs); line-height: 1.65rem; } /* ~18px */
-.text-sm { font-size: var(--font-size-sm); line-height: 1.8rem; }   /* ~20px */
-.text-base { font-size: var(--font-size-base); line-height: 1.95rem; }/* ~22px */
-.text-lg { font-size: var(--font-size-lg); line-height: 2.1rem; }  /* ~24.8px */
-.text-xl { font-size: var(--font-size-xl); line-height: 2.3rem; }  /* ~28px */
-.text-2xl { font-size: var(--font-size-2xl); line-height: 2.6rem; }  /* ~35px */
-.text-3xl { font-size: var(--font-size-3xl); line-height: 3.1rem; } /* ~44px */
-.text-4xl { font-size: 3.1rem; line-height: 3.5rem; }
+/* Typography Scale: Clean, readable ergonomics */
+.text-\[9px\], .text-\[10px\], .text-\[11px\], .text-\[12px\] { font-size: var(--font-size-xs) !important; line-height: 1.25rem !important; }
+.text-xs { font-size: var(--font-size-xs); line-height: 1.25rem; } /* ~13px */
+.text-sm { font-size: var(--font-size-sm); line-height: 1.45rem; } /* ~15px */
+.text-base { font-size: var(--font-size-base); line-height: 1.65rem; } /* ~17px */
+.text-lg { font-size: var(--font-size-lg); line-height: 1.75rem; } /* ~20px */
+.text-xl { font-size: var(--font-size-xl); line-height: 2rem; } /* ~24px */
+.text-2xl { font-size: var(--font-size-2xl); line-height: 2.35rem; } /* ~30px */
+.text-3xl { font-size: var(--font-size-3xl); line-height: 2.75rem; } /* ~36px */
+.text-4xl { font-size: 2.75rem; line-height: 3.1rem; }
 
 /* Scaled Typography: 1.5x for content and headings (except h1) */
 h2:not(h1) {

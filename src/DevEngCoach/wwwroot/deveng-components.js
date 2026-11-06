@@ -465,13 +465,13 @@ class DevEngAiCoach extends HTMLElement {
 
     this.innerHTML = `
       <!-- FLOATING ACTION BUTTON (GLOBAL AI COACH) -->
-      <button id="btn-floating-ai" title="Mở AI Coach" class="floating-ai-fab fixed bottom-6 right-6 z-50 px-4 py-3 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-bold text-xs rounded-full shadow-2xl flex items-center gap-2 border border-purple-400/40 cursor-pointer transition transform hover:scale-105">
+      <button id="btn-floating-ai" title="Mở AI Coach" class="floating-ai-fab fixed bottom-6 right-6 z-[60] px-4 py-3 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-bold text-xs rounded-full shadow-2xl flex items-center gap-2 border border-purple-400/40 cursor-pointer transition transform hover:scale-105 pointer-events-auto">
         <span class="text-base animate-pulse">🤖</span>
         <span>AI Coach</span>
       </button>
 
       <!-- SLIDE-OVER/DOCKED PANEL: Floating AI Assistant Panel (Right Docked to shift page content left) -->
-      <div id="modal-floating-ai" class="hidden fixed inset-y-0 right-0 z-40 w-full md:w-[440px] bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col justify-between">
+      <div id="modal-floating-ai" class="hidden fixed inset-y-0 right-0 z-[70] w-full md:w-[440px] bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col justify-between">
         <!-- Header -->
         <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/60">
           <div class="flex items-center gap-2.5">
@@ -534,20 +534,30 @@ class DevEngAiCoach extends HTMLElement {
     const messages = document.getElementById('floating-chat-messages');
 
     window.toggleAiCoach = (forceState) => {
-      if (!modalFloating) return;
-      const willOpen = forceState !== undefined ? forceState : modalFloating.classList.contains('hidden');
+      const modal = document.getElementById('modal-floating-ai') || modalFloating;
+      if (!modal) return;
+      const willOpen = forceState !== undefined ? forceState : modal.classList.contains('hidden');
       if (willOpen) {
-        modalFloating.classList.remove('hidden');
+        modal.classList.remove('hidden');
         document.body.classList.add('ai-coach-active');
-        input?.focus();
+        const inp = document.getElementById('floating-ai-input') || input;
+        inp?.focus();
       } else {
-        modalFloating.classList.add('hidden');
+        modal.classList.add('hidden');
         document.body.classList.remove('ai-coach-active');
       }
     };
 
-    btnFloating?.addEventListener('click', () => window.toggleAiCoach());
-    btnCloseFloating?.addEventListener('click', () => window.toggleAiCoach(false));
+    btnFloating?.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      window.toggleAiCoach();
+    });
+    btnCloseFloating?.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      window.toggleAiCoach(false);
+    });
 
     // Send AI Question
     const sendMessage = async () => {
