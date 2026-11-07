@@ -1,4 +1,4 @@
-const CACHE_NAME = 'deveng-cache-v1';
+const CACHE_NAME = 'deveng-cache-v5';
 
 const PRECACHE_ASSETS = [
   '/',
@@ -126,23 +126,22 @@ async function handleApiRequest(request) {
 }
 
 /**
- * Handle static assets: Cache-first -> Network fallback -> HTML fallback
+ * Handle static assets: Network-first (always fresh on F5) -> Cache fallback (100% offline resilience)
  */
 async function handleStaticAssetRequest(request) {
-  const cachedResponse = await caches.match(request);
-  if (cachedResponse) {
-    return cachedResponse;
-  }
-
   try {
-    const networkResponse = await fetch(request);
+    const networkResponse = await fetch(request, { cache: 'no-cache' });
     if (networkResponse && networkResponse.ok) {
       const cache = await caches.open(CACHE_NAME);
       cache.put(request, networkResponse.clone());
     }
     return networkResponse;
   } catch (error) {
-    console.warn('[SW] Static asset network fetch failed:', request.url, error);
+    console.warn('[SW] Static asset network fetch failed, serving from offline cache:', request.url, error);
+    const cachedResponse = await caches.match(request);
+    if (cachedResponse) {
+      return cachedResponse;
+    }
 
     // If navigation fails while offline, fallback to cached index.html
     if (request.mode === 'navigate') {

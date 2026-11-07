@@ -62,6 +62,7 @@
       super();
       this._isVisible = false;
       this._currentDay = 1;
+      this._lessonData = { dayNumber: 1 };
       this._observer = null;
       this._handleKeyDown = this._handleKeyDown.bind(this);
     }
@@ -72,6 +73,7 @@
       this.bindEvents();
       this.observeDOMChanges();
       this.syncWithWorkspace();
+      fetchAndPopulateHero(this);
     }
 
     disconnectedCallback() {
@@ -179,6 +181,40 @@
           transform: translateY(1px) scale(0.99);
         }
 
+        /* Milestone & SRS Header Badges */
+        .deveng-hero-milestone-badge {
+          padding: 0.25rem 0.75rem;
+          border-radius: 9999px;
+          font-size: 0.75rem;
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+          font-weight: 800;
+          background: linear-gradient(135deg, rgba(245, 158, 11, 0.25) 0%, rgba(217, 119, 6, 0.35) 100%);
+          color: #fde68a;
+          border: 1px solid rgba(251, 191, 36, 0.75);
+          box-shadow: 0 0 14px rgba(245, 158, 11, 0.3);
+          display: inline-flex;
+          align-items: center;
+          gap: 0.375rem;
+        }
+
+        .deveng-hero-milestone-badge[hidden] {
+          display: none !important;
+        }
+
+        .deveng-hero-srs-badge {
+          padding: 0.25rem 0.75rem;
+          border-radius: 9999px;
+          font-size: 0.75rem;
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+          font-weight: 700;
+          background: rgba(88, 28, 135, 0.45);
+          color: #e9d5ff;
+          border: 1px solid rgba(168, 85, 247, 0.45);
+          display: inline-flex;
+          align-items: center;
+          gap: 0.375rem;
+        }
+
         /* Secondary Quick 10m Button */
         .deveng-hero-quick-btn {
           width: 100%;
@@ -202,6 +238,32 @@
           background: rgba(51, 65, 85, 0.9);
           border-color: rgba(251, 191, 36, 0.5);
           color: #fef08a;
+          transform: translateY(-1px);
+        }
+
+        /* Secondary Eyes-Free Audio CTA Button */
+        .deveng-hero-audio-btn {
+          width: 100%;
+          padding: 0.75rem 1rem;
+          border-radius: 0.875rem;
+          background: rgba(15, 23, 42, 0.85);
+          border: 1px solid rgba(56, 189, 248, 0.45);
+          color: #7dd3fc;
+          font-family: inherit;
+          font-size: 0.875rem;
+          font-weight: 700;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          cursor: pointer;
+          transition: all 180ms ease;
+        }
+
+        .deveng-hero-audio-btn:hover {
+          background: rgba(12, 74, 110, 0.55);
+          border-color: rgba(56, 189, 248, 0.8);
+          color: #e0f2fe;
           transform: translateY(-1px);
         }
 
@@ -248,6 +310,12 @@
               <span id="deveng-hero-streak-badge" class="px-3 py-1 rounded-full text-xs font-mono font-bold bg-amber-950/70 text-amber-300 border border-amber-800/80 flex items-center gap-1.5 shadow-sm">
                 <span id="deveng-hero-streak-text">🔥 0 ngày liên tiếp</span>
               </span>
+
+              <!-- SRS Due Badge -->
+              <span id="deveng-hero-srs-badge" class="deveng-hero-srs-badge shadow-sm">🧠 0 từ cần ôn</span>
+
+              <!-- Milestone Badge (Days 30, 60, 90) -->
+              <span id="deveng-hero-milestone-badge" class="deveng-hero-milestone-badge hidden" hidden>🏆 Sát Hạch Milestone Ngày 30</span>
             </div>
 
             <!-- Pre-title context -->
@@ -266,18 +334,26 @@
             </p>
 
             <!-- Actions Cluster -->
-            <div class="space-y-3 w-full max-w-md mx-auto">
+            <div class="hero-actions space-y-3 w-full max-w-md mx-auto">
               <!-- Giant Primary CTA -->
               <button id="deveng-hero-btn-primary" class="deveng-hero-primary-btn" title="Bắt đầu buổi học 30 phút ngay bây giờ">
                 <span class="text-xl">▶</span>
                 <span id="deveng-hero-btn-label">Bắt Đầu Ngày 1 (30 phút)</span>
               </button>
 
-              <!-- Secondary Quick 10m Button -->
-              <button id="deveng-hero-btn-quick" class="deveng-hero-quick-btn" title="Chế độ học nhanh 10 phút">
-                <span>⚡</span>
-                <span>Quick 10min</span>
-              </button>
+              <!-- Secondary Action Buttons Row -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <!-- Secondary Quick 10m Button -->
+                <button id="deveng-hero-btn-quick" class="deveng-hero-quick-btn" title="Chế độ học nhanh 10 phút">
+                  <span>⚡</span>
+                  <span>Quick 10min</span>
+                </button>
+
+                <!-- Secondary Eyes-Free Audio CTA Button -->
+                <button id="deveng-hero-btn-audio" class="deveng-hero-audio-btn" title="Chế độ Nghe không cần nhìn màn hình (Eyes-Free)">
+                  <span>🎧 Chế độ Nghe (Eyes-Free)</span>
+                </button>
+              </div>
 
               <!-- Subtle Skip Link -->
               <div class="pt-1">
@@ -294,6 +370,7 @@
     bindEvents() {
       const btnPrimary = this.querySelector('#deveng-hero-btn-primary');
       const btnQuick = this.querySelector('#deveng-hero-btn-quick');
+      const btnAudio = this.querySelector('#deveng-hero-btn-audio');
       const linkSkip = this.querySelector('#deveng-hero-link-skip');
       const overlay = this.querySelector('#deveng-hero-overlay');
 
@@ -303,6 +380,10 @@
 
       if (btnQuick) {
         btnQuick.addEventListener('click', () => this.handleQuickTenMin());
+      }
+
+      if (btnAudio) {
+        btnAudio.addEventListener('click', () => this.startEyesFreeSession());
       }
 
       if (linkSkip) {
@@ -445,6 +526,96 @@
       if (btnLabel) {
         btnLabel.textContent = `▶ Bắt Đầu Ngày ${dayNumber} (30 phút)`;
       }
+
+      // 6. Read SRS due count from DOM if available and update Milestone + SRS badges
+      const srsDueEl = document.getElementById('stat-srs-due');
+      let domSrsDue = undefined;
+      if (srsDueEl && srsDueEl.textContent) {
+        const parsedDue = parseInt(srsDueEl.textContent.replace(/[^\d]/g, ''), 10);
+        if (!isNaN(parsedDue)) domSrsDue = parsedDue;
+      }
+
+      this.updateContent({
+        dayNumber,
+        srsDueCount: domSrsDue
+      });
+    }
+
+    updateContent(data = {}) {
+      const dayNum = Number(data?.dayNumber ?? data?.day ?? this._currentDay ?? 1);
+      this._currentDay = dayNum;
+      this._lessonData = {
+        ...(this._lessonData || {}),
+        ...data,
+        dayNumber: dayNum
+      };
+
+      // Update Day Title if provided
+      if (data.title || data.topic) {
+        const heroTitleEl = this.querySelector('#deveng-hero-day-title');
+        if (heroTitleEl) {
+          heroTitleEl.textContent = data.title || data.topic;
+        }
+      }
+
+      // Update Objective if provided
+      if (data.objective || data.focusObjective) {
+        const heroObjEl = this.querySelector('#deveng-hero-day-objective');
+        if (heroObjEl) {
+          heroObjEl.textContent = data.objective || data.focusObjective;
+        }
+      }
+
+      // Update Sprint Badge if provided
+      if (data.sprintName || data.sprintId) {
+        const heroSprintTextEl = this.querySelector('#deveng-hero-sprint-text');
+        if (heroSprintTextEl) {
+          const sprintId = data.sprintId || Math.ceil(dayNum / 10);
+          heroSprintTextEl.textContent = data.sprintName
+            ? (String(data.sprintName).toUpperCase().includes('SPRINT') ? data.sprintName : `SPRINT ${sprintId} // ${data.sprintName}`)
+            : `SPRINT ${sprintId}`;
+        }
+      }
+
+      // Update Streak Badge if provided
+      const streakVal = typeof data.currentStreak === 'number' ? data.currentStreak : data.streak;
+      if (typeof streakVal === 'number') {
+        const heroStreakTextEl = this.querySelector('#deveng-hero-streak-text');
+        if (heroStreakTextEl) {
+          heroStreakTextEl.textContent = `🔥 ${streakVal} ngày liên tiếp`;
+        }
+      }
+
+      // Update Primary CTA Label
+      const btnLabel = this.querySelector('#deveng-hero-btn-label');
+      if (btnLabel) {
+        btnLabel.textContent = `▶ Bắt Đầu Ngày ${dayNum} (30 phút)`;
+      }
+
+      // Milestone Badge (Days 30, 60, 90)
+      const milestoneBadge = this.querySelector('#deveng-hero-milestone-badge');
+      if (milestoneBadge) {
+        if (dayNum === 30 || dayNum === 60 || dayNum === 90) {
+          milestoneBadge.textContent = `🏆 Sát Hạch Milestone Ngày ${dayNum}`;
+          milestoneBadge.hidden = false;
+          milestoneBadge.classList.remove('hidden');
+        } else {
+          milestoneBadge.hidden = true;
+          milestoneBadge.classList.add('hidden');
+        }
+      }
+
+      // SRS Due Badge
+      const srsBadge = this.querySelector('#deveng-hero-srs-badge');
+      if (srsBadge && typeof data.srsDueCount === 'number') {
+        srsBadge.textContent = `🧠 ${data.srsDueCount} từ cần ôn`;
+      }
+    }
+
+    dismiss() {
+      const day = this._lessonData?.dayNumber || this.getCurrentDay();
+      this.markDismissed(day);
+      this.hideOverlay(true);
     }
 
     showOverlay() {
@@ -478,9 +649,7 @@
 
     // 1. One-Tap Start Action
     async handleOneTapStart() {
-      const day = this.getCurrentDay();
-      this.markDismissed(day);
-      this.hideOverlay(true);
+      this.dismiss();
 
       // A. Automatically start Pomodoro 30m timer
       if (typeof window.startPomodoroTimer === 'function') {
@@ -496,9 +665,7 @@
 
     // 2. Secondary Quick 10m Action
     handleQuickTenMin() {
-      const day = this.getCurrentDay();
-      this.markDismissed(day);
-      this.hideOverlay(true);
+      this.dismiss();
 
       // Trigger micro-lesson mode
       const btnOpenMicro = document.getElementById('btn-open-microlesson')
@@ -512,11 +679,31 @@
       }
     }
 
-    // 3. Subtle Skip Link
+    // 3. Secondary Eyes-Free Audio Action
+    startEyesFreeSession() {
+      const dayNumber = this._lessonData?.dayNumber || this.getCurrentDay() || 1;
+      this.dismiss();
+
+      this.dispatchEvent(
+        new CustomEvent('deveng-one-tap-audio', {
+          bubbles: true,
+          composed: true,
+          detail: { dayNumber }
+        })
+      );
+
+      if (typeof window.startAudioOnlyMode === 'function' && window.state?.currentLesson) {
+        window.startAudioOnlyMode(window.state.currentLesson);
+      } else {
+        document.getElementById('nav-audio-only')?.click();
+      }
+
+      window.showDevEngToast?.('🎧 Đang khởi động chế độ Nghe (Eyes-Free)...', 'info');
+    }
+
+    // 4. Subtle Skip Link
     handleSkip() {
-      const day = this.getCurrentDay();
-      this.markDismissed(day);
-      this.hideOverlay(true);
+      this.dismiss();
     }
 
     // Accordion Expansion Helper
@@ -619,7 +806,10 @@
       const selectJump = document.getElementById('select-jump-day');
       if (selectJump) {
         selectJump.addEventListener('change', () => {
-          setTimeout(() => this.syncWithWorkspace(), 60);
+          setTimeout(() => {
+            this.syncWithWorkspace();
+            fetchAndPopulateHero(this);
+          }, 60);
         });
       }
 
@@ -627,13 +817,74 @@
       const btnPrev = document.getElementById('btn-prev-day');
       const btnNext = document.getElementById('btn-next-day');
       if (btnPrev) {
-        btnPrev.addEventListener('click', () => setTimeout(() => this.syncWithWorkspace(), 80));
+        btnPrev.addEventListener('click', () => setTimeout(() => {
+          this.syncWithWorkspace();
+          fetchAndPopulateHero(this);
+        }, 80));
       }
       if (btnNext) {
-        btnNext.addEventListener('click', () => setTimeout(() => this.syncWithWorkspace(), 80));
+        btnNext.addEventListener('click', () => setTimeout(() => {
+          this.syncWithWorkspace();
+          fetchAndPopulateHero(this);
+        }, 80));
       }
     }
   }
+
+  // =============================================================================
+  // DATA FETCHER FOR HERO OVERLAY (/api/progress, /api/lessons/{day}, /api/srs/due)
+  // =============================================================================
+  async function fetchAndPopulateHero(heroEl) {
+    if (!heroEl || typeof heroEl.updateContent !== 'function') return;
+
+    try {
+      const progressRes = await fetch('/api/progress').catch(() => null);
+      const progress = progressRes && progressRes.ok
+        ? await progressRes.json().catch(() => null)
+        : null;
+
+      const selectJump = document.getElementById('select-jump-day');
+      const jumpDay = selectJump && selectJump.value ? parseInt(selectJump.value, 10) : null;
+      const currentDay = (jumpDay && !isNaN(jumpDay) && jumpDay > 0)
+        ? jumpDay
+        : (progress?.currentDay || heroEl.getCurrentDay?.() || 1);
+
+      const [lessonRes, srsDueRes] = await Promise.all([
+        fetch(`/api/lessons/${currentDay}`).catch(() => null),
+        fetch('/api/srs/due').catch(() => null)
+      ]);
+
+      const lesson = lessonRes && lessonRes.ok
+        ? await lessonRes.json().catch(() => null)
+        : null;
+      const srsDueData = srsDueRes && srsDueRes.ok
+        ? await srsDueRes.json().catch(() => null)
+        : null;
+
+      let srsDueCount = 0;
+      if (Array.isArray(srsDueData)) {
+        srsDueCount = srsDueData.length;
+      } else if (srsDueData && typeof srsDueData.count === 'number') {
+        srsDueCount = srsDueData.count;
+      } else if (srsDueData && typeof srsDueData.dueToday === 'number') {
+        srsDueCount = srsDueData.dueToday;
+      }
+
+      heroEl.updateContent({
+        dayNumber: lesson?.dayNumber || currentDay,
+        title: lesson?.title || lesson?.topic,
+        objective: lesson?.focusObjective || lesson?.objective,
+        sprintId: lesson?.sprintId,
+        sprintName: lesson?.sprintName,
+        currentStreak: progress?.currentStreak ?? progress?.streakDays,
+        srsDueCount
+      });
+    } catch (err) {
+      console.warn('[OneTapStart] Failed fetching hero data:', err);
+    }
+  }
+
+  window.fetchAndPopulateHero = fetchAndPopulateHero;
 
   // =============================================================================
   // REGISTER CUSTOM ELEMENT & AUTO-MOUNT COMPONENT

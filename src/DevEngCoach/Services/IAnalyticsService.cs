@@ -9,4 +9,5 @@ public interface IAnalyticsService
     Task<IReadOnlyList<StreakBadge>> GetStreakBadgesAsync(CancellationToken ct = default);
     Task<IReadOnlyList<WeeklyVelocity>> GetWeeklyVelocityAsync(CancellationToken ct = default);
     Task<AnalyticsOverview> GetOverviewAsync(CancellationToken ct = default);
+    Task<CatchUpPlan> GetCatchUpPlanAsync(CancellationToken ct = default);
 }

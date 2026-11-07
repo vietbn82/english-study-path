@@ -116,6 +116,70 @@ public sealed class SpeechScoringService : ISpeechScoringService
         ));
     }
 
+    private static readonly Regex VietnameseDiacriticRegex = new(
+        @"[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+    public Task<SpeechTranscribeResponse> TranscribeFallbackAsync(SpeechTranscribeRequest request, CancellationToken ct = default)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        var spokenHint = request.SpokenHint?.Trim() ?? string.Empty;
+        var targetText = request.TargetText?.Trim() ?? string.Empty;
+
+        if (request.PeakAmplitude is < 0.02 || (string.IsNullOrWhiteSpace(spokenHint) && string.IsNullOrWhiteSpace(targetText)))
+        {
+            return Task.FromResult(new SpeechTranscribeResponse(
+                TranscribedText: string.Empty,
+                Confidence: 0.0,
+                IsSilent: true,
+                IsVietnameseDetected: false,
+                DiagnosticWarning: "Không phát hiện âm thanh (No speech detected / Silence detected). Vui lòng kiểm tra micro."
+            ));
+        }
+
+        if (!string.IsNullOrWhiteSpace(spokenHint) && VietnameseDiacriticRegex.IsMatch(spokenHint))
+        {
+            return Task.FromResult(new SpeechTranscribeResponse(
+                TranscribedText: spokenHint,
+                Confidence: 0.35,
+                IsSilent: false,
+                IsVietnameseDetected: true,
+                DiagnosticWarning: "Phát hiện tiếng Việt (Vietnamese detected) — vui lòng phát âm bằng tiếng Anh."
+            ));
+        }
+
+        var raw = !string.IsNullOrWhiteSpace(spokenHint) ? spokenHint : targetText;
+        var confidence = 0.85;
+
+        if (!string.IsNullOrWhiteSpace(spokenHint) && !string.IsNullOrWhiteSpace(targetText))
+        {
+            if (string.Equals(spokenHint, targetText, StringComparison.OrdinalIgnoreCase))
+            {
+                confidence = 0.95;
+            }
+            else
+            {
+                var targetWords = Regex.Split(targetText.ToLowerInvariant(), @"\W+").Where(w => w.Length > 0).ToList();
+                var spokenWords = Regex.Split(spokenHint.ToLowerInvariant(), @"\W+").Where(w => w.Length > 0).ToHashSet();
+                if (targetWords.Count > 0)
+                {
+                    var matchedCount = targetWords.Count(spokenWords.Contains);
+                    var ratio = (double)matchedCount / targetWords.Count;
+                    confidence = Math.Clamp(0.55 + (ratio * 0.40), 0.55, 0.95);
+                }
+            }
+        }
+
+        return Task.FromResult(new SpeechTranscribeResponse(
+            TranscribedText: raw,
+            Confidence: Math.Round(confidence, 2),
+            IsSilent: false,
+            IsVietnameseDetected: false,
+            DiagnosticWarning: null
+        ));
+    }
+
     public Task<SpeechSummaryResponse> GetSummaryAsync(CancellationToken ct = default)
     {
         lock (lockObj)

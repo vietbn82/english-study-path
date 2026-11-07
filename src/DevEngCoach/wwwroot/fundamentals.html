@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi" class="dark">
 <head>
   <meta charset="UTF-8">
@@ -95,6 +95,12 @@
           <span>🎙️</span>
           <span class="hidden sm:inline">Mic Luyện Giọng</span>
           <span class="sm:hidden">Mic</span>
+        </button>
+
+        <!-- Command Palette Ctrl+K -->
+        <button id="btn-open-palette" class="px-2.5 py-1.5 rounded-lg text-xs font-mono font-bold bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-cyan-300 border border-slate-700/80 flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap" title="Mở bảng lệnh nhanh (Ctrl+K)">
+          <span>⌘</span>
+          <span class="hidden sm:inline">Ctrl+K</span>
         </button>
 
         <!-- Printable Mode / Export PDF (UX Upgrade #8) -->
@@ -2039,7 +2045,7 @@
               <div class="flex items-center gap-2">
                 <span class="text-cyan-400 font-bold">🔍 Kết quả:</span>
                 <span>Tìm thấy <strong>${totalCount}</strong> mục liên quan đến "<strong>${query}</strong>"</span>
-                ${totalCount > 0 ? `<span class="text-xs text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">Mục ${currentMatchIndex + 1}/${totalCount}</span>` : ''}
+                ${totalCount > 0 ? `<span id="handbook-search-counter" class="text-xs text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">Mục ${currentMatchIndex + 1}/${totalCount}</span>` : ''}
               </div>
               <div class="flex items-center gap-1.5">
                 ${totalCount > 1 ? `
@@ -2086,7 +2092,7 @@
       }, 2500);
 
       // Update counter tag in searchStatus
-      const counter = searchStatus?.querySelector('span.text-\\[10px\\]');
+      const counter = document.getElementById('handbook-search-counter') || searchStatus?.querySelector('span.text-xs');
       if (counter) counter.textContent = `Mục ${index + 1}/${matchingElements.length}`;
     }
 

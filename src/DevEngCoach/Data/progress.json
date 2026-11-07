@@ -2,5 +2,26 @@
   "TargetTime": "22:00",
   "DailyPlannedMinutes": 30,
   "StartDate": "2026-11-04",
-  "Sessions": []
+  "Sessions": [
+    {
+      "DayNumber": 1,
+      "ScheduledDate": "2026-11-07T22:00:00+07:00",
+      "CompletedAt": "2026-11-07T20:05:00.1430276+07:00",
+      "PlannedMinutes": 30,
+      "ActualMinutes": 15,
+      "Status": "Completed",
+      "SelfRating": 5,
+      "LearnerNotes": "Auto-completed via 70% threshold (10/10 correct)",
+      "AiFeedbackSnippet": "Perfect drill accuracy! Session completed.",
+      "SessionMode": "Visual",
+      "CompletedBlock": null,
+      "BlocksCompleted": [
+        "Phonetics",
+        "Frames",
+        "Output"
+      ],
+      "CompletionMode": "Manual",
+      "DateCompleted": "2026-11-07"
+    }
+  ]
 }

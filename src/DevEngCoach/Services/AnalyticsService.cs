@@ -36,13 +36,16 @@ public sealed class AnalyticsService : IAnalyticsService
         LoadBadges();
     }
 
+    private static bool IsCompletedOrPartial(SessionLog s) =>
+        string.Equals(s.Status, "Completed", StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(s.Status, "CompletedPartial", StringComparison.OrdinalIgnoreCase);
+
     public Task<BurndownData> GetBurndownDataAsync(CancellationToken ct = default)
     {
         const int totalDays = 90;
-        var summary = progressService.GetSummary();
         var sessions = progressService.GetAllSessions();
 
-        var completedCount = summary.TotalCompletedDays;
+        var completedCount = sessions.Count(IsCompletedOrPartial);
         var elapsedDays = sessions.Count > 0 ? Math.Max(sessions.Max(s => s.DayNumber), 1) : 1;
 
         // Points for Days 1 to 90
@@ -51,8 +54,8 @@ public sealed class AnalyticsService : IAnalyticsService
         {
             var ideal = Math.Max(0.0, totalDays - (day - 1));
             
-            // Actual completed up to this day
-            var completedUpToDay = sessions.Count(s => s.DayNumber <= day && string.Equals(s.Status, "Completed", StringComparison.OrdinalIgnoreCase));
+            // Actual completed (including CompletedPartial) up to this day
+            var completedUpToDay = sessions.Count(s => s.DayNumber <= day && IsCompletedOrPartial(s));
             var actualRemaining = day <= elapsedDays
                 ? Math.Max(0.0, totalDays - completedUpToDay)
                 : Math.Max(0.0, totalDays - completedCount);
@@ -173,7 +176,7 @@ public sealed class AnalyticsService : IAnalyticsService
             var endDay = Math.Min(week * 7, 90);
 
             var weekSessions = sessions
-                .Where(s => s.DayNumber >= startDay && s.DayNumber <= endDay && string.Equals(s.Status, "Completed", StringComparison.OrdinalIgnoreCase))
+                .Where(s => s.DayNumber >= startDay && s.DayNumber <= endDay && IsCompletedOrPartial(s))
                 .ToList();
 
             var completed = weekSessions.Count;
@@ -200,8 +203,144 @@ public sealed class AnalyticsService : IAnalyticsService
         var heatmap = await GetHeatmapGridAsync(ct);
         var badges = await GetStreakBadgesAsync(ct);
         var velocity = await GetWeeklyVelocityAsync(ct);
+        var blockFrequency = ComputeBlockFrequency();
+        var catchUp = await GetCatchUpPlanAsync(ct);
 
-        return new AnalyticsOverview(burndown, heatmap, badges, velocity);
+        return new AnalyticsOverview(burndown, heatmap, badges, velocity, blockFrequency, catchUp);
+    }
+
+    public Task<CatchUpPlan> GetCatchUpPlanAsync(CancellationToken ct = default)
+    {
+        var sessions = progressService.GetAllSessions();
+        var completedSessions = sessions.Where(IsCompletedOrPartial).ToList();
+        var completedCount = completedSessions.Count;
+        var elapsedDays = sessions.Count > 0 ? Math.Max(sessions.Max(s => s.DayNumber), 1) : 1;
+        var variance = completedCount - elapsedDays;
+        var completedDaysSet = completedSessions.Select(s => s.DayNumber).ToHashSet();
+
+        var missedDays = new List<int>();
+        for (var d = 1; d <= elapsedDays; d++)
+        {
+            if (!completedDaysSet.Contains(d))
+            {
+                missedDays.Add(d);
+            }
+        }
+
+        // If user is behind in variance but missedDays list is empty (e.g. only started Day 1), take next pending days up to gap
+        if (missedDays.Count == 0 && variance < 0)
+        {
+            var deficit = Math.Min(90, Math.Abs(variance));
+            for (var d = completedCount + 1; d <= Math.Min(90, completedCount + deficit); d++)
+            {
+                missedDays.Add(d);
+            }
+        }
+
+        var isBehind = variance < 0 || missedDays.Count > 0;
+        var daysBehind = Math.Max(missedDays.Count, Math.Max(0, -variance));
+
+        var pacingStatus = variance > 0
+            ? "Ahead"
+            : variance == 0 && missedDays.Count == 0
+                ? "OnPace"
+                : daysBehind <= 3
+                    ? "SlightlyBehind"
+                    : "SeverelyBehind";
+
+        var suggestedStrategy = daysBehind switch
+        {
+            <= 0 => "Maintenance",
+            <= 3 => "MicroCatchup",
+            <= 6 => "WeekendSprint",
+            _ => "FastTrackAudio"
+        };
+
+        var catchUpItems = new List<CatchUpDayItem>();
+        foreach (var dayNum in missedDays.OrderBy(d => d).Take(7))
+        {
+            var lesson = curriculumService.GetLessonByDay(dayNum);
+            var sprintId = lesson?.SprintId ?? (dayNum <= 30 ? 1 : dayNum <= 60 ? 2 : 3);
+            var title = lesson?.Title ?? $"Day {dayNum} Technical English";
+            var phoneticTarget = lesson?.Phonetics?.PhoneticSymbol ?? "/coda/";
+
+            var isCorePhoneme = phoneticTarget.Contains("/t/") || phoneticTarget.Contains("/d/") ||
+                                phoneticTarget.Contains("/s/") || phoneticTarget.Contains("/z/") ||
+                                phoneticTarget.Contains("/θ/") || phoneticTarget.Contains("/ð/");
+
+            var recommendedMode = isCorePhoneme ? "Micro10m" : "AudioOnly";
+            var focusReason = isCorePhoneme
+                ? $"Âm cốt lõi {phoneticTarget}: Ưu tiên 10m Khẩu hình để không rụng âm đuôi"
+                : "Khung câu Standup: Nghe nhắm mắt 10m để nạp mẫu câu phản xạ";
+
+            catchUpItems.Add(new CatchUpDayItem(
+                DayNumber: dayNum,
+                SprintId: sprintId,
+                Title: title,
+                PhoneticTarget: phoneticTarget,
+                EstimatedMinutes: 10,
+                RecommendedMode: recommendedMode,
+                FocusReason: focusReason
+            ));
+        }
+
+        var coachAdvice = daysBehind switch
+        {
+            <= 0 => "🚀 Bạn đang bám rất sát hoặc vượt tiến độ lý tưởng! Hãy duy trì nhịp độ 15-30 phút mỗi ngày.",
+            <= 2 => "⚡ Bạn chỉ chậm 1-2 ngày. Đừng học dồn 2 tiếng! Hãy áp dụng chiến lược 'Micro-Catchup': mỗi ngày học thêm 1 chặng 10m (tổng 20m), sau 2-3 ngày bạn sẽ tự động san bằng độ trễ.",
+            <= 5 => "☕ Độ trễ 3-5 ngày là rất bình thường khi dự án vào đợt release. Chiến lược tối ưu: Chọn 'Weekend Sprint' (dành 45m sáng thứ Bảy xử lý 3 bài) hoặc chuyển sang 'Audio-Only' khi commute.",
+            _ => "🎯 Đừng để tâm lý quá tải khiến bạn bỏ cuộc! Hãy áp dụng nguyên tắc 80/20: Chỉ hoàn thành 10 phút chặng Khẩu hình hoặc nghe Audio-Only cho các bài bị trễ để lấy lại đà học ngay hôm nay."
+        };
+
+        var plan = new CatchUpPlan(
+            IsBehind: isBehind,
+            DaysBehind: daysBehind,
+            ElapsedDays: elapsedDays,
+            CompletedDays: completedCount,
+            PacingStatus: pacingStatus,
+            SuggestedStrategy: suggestedStrategy,
+            CatchUpDaysTarget: daysBehind,
+            PrioritizedCatchUpDays: catchUpItems,
+            SeniorCoachAdvice: coachAdvice
+        );
+
+        return Task.FromResult(plan);
+    }
+
+    private BlockFrequencySummary ComputeBlockFrequency()
+    {
+        var sessions = progressService.GetAllSessions();
+
+        var phoneticsDays = sessions.Count(s =>
+            string.Equals(s.Status, "Completed", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(s.CompletedBlock, "Phonetics", StringComparison.OrdinalIgnoreCase) ||
+            (s.BlocksCompleted?.Contains("Phonetics", StringComparer.OrdinalIgnoreCase) ?? false));
+
+        var framesDays = sessions.Count(s =>
+            string.Equals(s.Status, "Completed", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(s.CompletedBlock, "Frames", StringComparison.OrdinalIgnoreCase) ||
+            (s.BlocksCompleted?.Contains("Frames", StringComparer.OrdinalIgnoreCase) ?? false));
+
+        var outputDays = sessions.Count(s =>
+            string.Equals(s.Status, "Completed", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(s.CompletedBlock, "Output", StringComparison.OrdinalIgnoreCase) ||
+            (s.BlocksCompleted?.Contains("Output", StringComparer.OrdinalIgnoreCase) ?? false));
+
+        var fullCount = sessions.Count(s => string.Equals(s.Status, "Completed", StringComparison.OrdinalIgnoreCase));
+        var partialCount = sessions.Count(s => string.Equals(s.Status, "CompletedPartial", StringComparison.OrdinalIgnoreCase));
+        var audioOnlyCount = sessions.Count(s =>
+            string.Equals(s.CompletedBlock, "AudioOnly", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(s.CompletionMode, "AudioOnly", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(s.SessionMode, "AudioOnly", StringComparison.OrdinalIgnoreCase));
+
+        return new BlockFrequencySummary(
+            PhoneticsDays: phoneticsDays,
+            FramesDays: framesDays,
+            OutputDays: outputDays,
+            FullSessionsCount: fullCount,
+            PartialSessionsCount: partialCount,
+            AudioOnlySessionsCount: audioOnlyCount
+        );
     }
 
     private void LoadBadges()

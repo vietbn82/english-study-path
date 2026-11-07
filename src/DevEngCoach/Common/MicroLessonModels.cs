@@ -20,5 +20,12 @@ public sealed record MicroSessionResponse(
 public sealed record BlockRecommendation(
     string RecommendedBlock, // "Phonetics", "Frames", "Output"
     string ReasonVi,
-    int PriorityWeight
-);
+    int PriorityWeight = 1,
+    int WeakSpotCount = 0,
+    int DaysSinceLastSpeaking = 0,
+    bool ShowConsecutivePartialNudge = false,
+    int EstimatedMinutes = 5
+)
+{
+    public string Reason => ReasonVi;
+}

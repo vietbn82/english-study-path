@@ -132,4 +132,50 @@ public class SpeechScoringServiceTests : IDisposable
         summary.AverageAccuracy.Should().BeGreaterThan(0);
         summary.CategoryPerformance.Should().NotBeEmpty();
     }
+
+    [Fact]
+    public async Task TranscribeFallbackAsync_WithSilentAmplitude_ReturnsSilenceWarning()
+    {
+        var result = await scoringService.TranscribeFallbackAsync(new SpeechTranscribeRequest(
+            SpokenHint: "",
+            TargetText: "method",
+            DayNumber: 1,
+            PeakAmplitude: 0.005
+        ));
+
+        result.IsSilent.Should().BeTrue();
+        result.Confidence.Should().Be(0.0);
+        result.DiagnosticWarning.Should().Contain("Silence detected");
+    }
+
+    [Fact]
+    public async Task TranscribeFallbackAsync_WithVietnameseDiacritics_FlagsVietnameseMismatch()
+    {
+        var result = await scoringService.TranscribeFallbackAsync(new SpeechTranscribeRequest(
+            SpokenHint: "phương thức xác thực",
+            TargetText: "authentication method",
+            DayNumber: 1
+        ));
+
+        result.IsVietnameseDetected.Should().BeTrue();
+        result.IsSilent.Should().BeFalse();
+        result.DiagnosticWarning.Should().Contain("Vietnamese");
+    }
+
+    [Fact]
+    public async Task TranscribeFallbackAsync_WithValidEnglishPhrase_ReturnsNormalizedTranscriptAndHighConfidence()
+    {
+        var result = await scoringService.TranscribeFallbackAsync(new SpeechTranscribeRequest(
+            SpokenHint: "  authentication method  ",
+            TargetText: "authentication method",
+            DayNumber: 1,
+            PeakAmplitude: 0.45
+        ));
+
+        result.IsSilent.Should().BeFalse();
+        result.IsVietnameseDetected.Should().BeFalse();
+        result.TranscribedText.Should().Be("authentication method");
+        result.Confidence.Should().BeGreaterThanOrEqualTo(0.85);
+        result.DiagnosticWarning.Should().BeNull();
+    }
 }

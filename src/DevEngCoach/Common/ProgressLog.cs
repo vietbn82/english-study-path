@@ -6,12 +6,18 @@ public sealed record SessionLog(
     DateTime? CompletedAt,
     int PlannedMinutes,
     int ActualMinutes,
-    string Status, // "Completed", "Pending", "Skipped"
+    string Status, // "Completed", "CompletedPartial", "Pending", "Skipped"
     int? SelfRating, // 1 to 5 stars
     string? LearnerNotes,
     string? AiFeedbackSnippet,
-    string? SessionMode = "Visual"
-);
+    string? SessionMode = "Visual",
+    string? CompletedBlock = null,
+    IReadOnlyList<string>? BlocksCompleted = null,
+    string? CompletionMode = "Manual"
+)
+{
+    public string DateCompleted => (CompletedAt ?? ScheduledDate).ToString("yyyy-MM-dd");
+}
 
 public sealed record ProgressSummary(
     int CurrentStreakDays,

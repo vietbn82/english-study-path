@@ -270,6 +270,12 @@ public class ApiIntegrationTests : IClassFixture<WebApplicationFactory<Program>>
         var heatmap = await heatmapResponse.Content.ReadFromJsonAsync<List<HeatmapCell>>();
         heatmap.Should().NotBeNull();
         heatmap!.Count.Should().Be(90);
+
+        var catchupResponse = await _client.GetAsync("/api/analytics/catchup");
+        catchupResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        var catchup = await catchupResponse.Content.ReadFromJsonAsync<CatchUpPlan>();
+        catchup.Should().NotBeNull();
+        catchup!.PacingStatus.Should().NotBeNullOrWhiteSpace();
     }
 
     [Fact]
@@ -371,5 +377,36 @@ public class ApiIntegrationTests : IClassFixture<WebApplicationFactory<Program>>
         );
         var response = await _client.PostAsJsonAsync("/api/capstone/evaluate", request);
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task PostSpeechTranscribe_ReturnsStructuredFallbackResponse()
+    {
+        var request = new SpeechTranscribeRequest(
+            SpokenHint: "commit the code",
+            TargetText: "commit the code",
+            DayNumber: 1,
+            PeakAmplitude: 0.5
+        );
+        var response = await _client.PostAsJsonAsync("/api/speech/transcribe", request);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<SpeechTranscribeResponse>();
+        result.Should().NotBeNull();
+        result!.TranscribedText.Should().Be("commit the code");
+        result.IsSilent.Should().BeFalse();
+        result.IsVietnameseDetected.Should().BeFalse();
+        result.Confidence.Should().BeGreaterThanOrEqualTo(0.85);
+    }
+
+    [Fact]
+    public async Task GetCurriculumCheatSheetAlias_ReturnsValidSprintCheatSheet()
+    {
+        var response = await _client.GetAsync("/api/curriculum/cheatsheet/1");
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var sheet = await response.Content.ReadFromJsonAsync<SprintCheatSheet>();
+        sheet.Should().NotBeNull();
+        sheet!.SprintId.Should().Be(1);
     }
 }

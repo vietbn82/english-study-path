@@ -45,9 +45,42 @@ public sealed record WeeklyVelocity(
     bool IsCurrentWeek
 );
 
+public sealed record BlockFrequencySummary(
+    int PhoneticsDays,
+    int FramesDays,
+    int OutputDays,
+    int FullSessionsCount,
+    int PartialSessionsCount,
+    int AudioOnlySessionsCount
+);
+
+public sealed record CatchUpDayItem(
+    int DayNumber,
+    int SprintId,
+    string Title,
+    string PhoneticTarget,
+    int EstimatedMinutes,
+    string RecommendedMode, // "Micro10m", "AudioOnly", "Standard15m"
+    string FocusReason
+);
+
+public sealed record CatchUpPlan(
+    bool IsBehind,
+    int DaysBehind,
+    int ElapsedDays,
+    int CompletedDays,
+    string PacingStatus, // "Ahead", "OnPace", "SlightlyBehind", "SeverelyBehind"
+    string SuggestedStrategy, // "MicroCatchup", "WeekendSprint", "FastTrackAudio"
+    int CatchUpDaysTarget,
+    IReadOnlyList<CatchUpDayItem> PrioritizedCatchUpDays,
+    string SeniorCoachAdvice
+);
+
 public sealed record AnalyticsOverview(
     BurndownData Burndown,
     IReadOnlyList<HeatmapCell> Heatmap,
     IReadOnlyList<StreakBadge> Badges,
-    IReadOnlyList<WeeklyVelocity> Velocity
+    IReadOnlyList<WeeklyVelocity> Velocity,
+    BlockFrequencySummary? BlockFrequency = null,
+    CatchUpPlan? CatchUp = null
 );

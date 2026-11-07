@@ -54,3 +54,18 @@ public sealed record SpeechSummaryResponse(
     IReadOnlyList<CategoryScore> CategoryPerformance,
     IReadOnlyList<string> CurrentWeakSpots
 );
+
+public sealed record SpeechTranscribeRequest(
+    string? SpokenHint = null,
+    string? TargetText = null,
+    int DayNumber = 1,
+    double? PeakAmplitude = null
+);
+
+public sealed record SpeechTranscribeResponse(
+    string TranscribedText,
+    double Confidence,
+    bool IsSilent,
+    bool IsVietnameseDetected,
+    string? DiagnosticWarning = null
+);

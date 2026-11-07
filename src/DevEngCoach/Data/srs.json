@@ -100,11 +100,23 @@
     "WordOrPhrase": "distributed",
     "TargetPhoneme": "/d/ \u002B /b/",
     "ContextSentence": "We are designing a distributed transaction coordinator.",
-    "NextReviewDate": "2026-11-09T15:48:53.2634444Z",
+    "NextReviewDate": "2026-11-09T16:15:30.9910481Z",
     "IntervalDays": 3,
     "Box": 2,
     "ConsecutiveCorrect": 1,
     "LastScore": 85,
-    "ReviewCount": 8
+    "ReviewCount": 10
+  },
+  {
+    "Id": "6111db6e3edc40dcb407060f4b8e664b",
+    "WordOrPhrase": "method",
+    "TargetPhoneme": "/t/",
+    "ContextSentence": "Day 1 70% threshold auto-enroll",
+    "NextReviewDate": "2026-11-07T13:05:00.1297663Z",
+    "IntervalDays": 1,
+    "Box": 1,
+    "ConsecutiveCorrect": 0,
+    "LastScore": 50,
+    "ReviewCount": 0
   }
 ]

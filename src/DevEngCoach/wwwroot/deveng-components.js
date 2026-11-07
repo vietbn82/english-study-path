@@ -9,6 +9,49 @@
  */
 
 // =============================================================================
+// GLOBAL NON-BLOCKING TOAST NOTIFICATION SYSTEM (VIBE CODING UI)
+// =============================================================================
+window.showDevEngToast = function(message, type = 'info', durationMs = 4200) {
+  if (!message) return;
+  let stack = document.getElementById('deveng-notification-stack');
+  if (!stack) {
+    stack = document.createElement('div');
+    stack.id = 'deveng-notification-stack';
+    document.body.appendChild(stack);
+  }
+
+  const icons = {
+    success: '✅',
+    warning: '⚠️',
+    error: '❌',
+    info: '✨'
+  };
+  const resolvedType = ['success', 'warning', 'error', 'info'].includes(type) ? type : 'info';
+
+  const item = document.createElement('div');
+  item.className = `deveng-toast-item toast-${resolvedType}`;
+  item.innerHTML = `
+    <span class="text-base shrink-0 mt-0.5">${icons[resolvedType]}</span>
+    <div class="flex-1 text-slate-100 font-medium leading-snug">${message}</div>
+    <button type="button" class="text-slate-400 hover:text-white text-xs font-mono px-1 cursor-pointer shrink-0" aria-label="Đóng">✕</button>
+  `;
+
+  const closeBtn = item.querySelector('button');
+  const removeItem = () => {
+    item.style.opacity = '0';
+    item.style.transform = 'translateX(16px)';
+    item.style.transition = 'all 0.18s ease';
+    setTimeout(() => item.remove(), 180);
+  };
+  closeBtn?.addEventListener('click', removeItem);
+
+  stack.appendChild(item);
+  if (durationMs > 0) {
+    setTimeout(removeItem, durationMs);
+  }
+};
+
+// =============================================================================
 // GLOBAL SPEECH SYNTHESIS ENGINE
 // =============================================================================
 window.speakWord = function(text, rate) {
@@ -23,9 +66,11 @@ window.speakText = window.speakWord;
 
 // Global Omnipresent Audio Delegation for any .speak-btn
 document.addEventListener('click', (e) => {
+  if (e.defaultPrevented) return;
   const btn = e.target.closest('.speak-btn');
   if (btn && btn.dataset.word) {
     e.preventDefault();
+    e.stopPropagation();
     window.speakWord(btn.dataset.word);
   }
 });
@@ -225,7 +270,7 @@ class DevEngSoundModal extends HTMLElement {
               <div class="text-2xl font-mono font-bold text-cyan-400 mt-0.5" id="modal-sound-target-word">commit /kəˈmɪt/</div>
               <div class="text-sm text-slate-200 italic mt-0.5 font-sans" id="modal-sound-target-tip">Bật âm /t/ dứt khoát trên gờ lợi</div>
             </div>
-            <button id="modal-sound-btn-listen" class="speak-btn px-3.5 py-2 bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-800 rounded-lg text-sm font-bold flex items-center gap-1.5 transition shrink-0 cursor-pointer" data-word="commit">
+            <button id="modal-sound-btn-listen" class="px-3.5 py-2 bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-800 rounded-lg text-sm font-bold flex items-center gap-1.5 transition shrink-0 cursor-pointer" data-word="commit">
               🔊 Nghe mẫu
             </button>
           </div>
@@ -380,6 +425,7 @@ class DevEngSoundModal extends HTMLElement {
     // Submit Grade
     submitBtn?.addEventListener('click', async () => {
       const input = (transcriptInput?.value || '').trim() || currentWord;
+      const activeDay = (window.state && window.state.currentDay) || 1;
       submitBtn.disabled = true;
       submitBtn.textContent = '⏳ AI Coach đang phân tích âm học...';
 
@@ -390,7 +436,7 @@ class DevEngSoundModal extends HTMLElement {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              dayNumber: 1,
+              dayNumber: activeDay,
               targetWordOrSentence: currentWord,
               expectedPhonemes: currentSymbol,
               spokenText: input
@@ -416,16 +462,32 @@ class DevEngSoundModal extends HTMLElement {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            dayNumber: 1,
+            dayNumber: activeDay,
             inputText: `Pronunciation check for sound ${currentSymbol}. Target: ${currentWord}. Learner pronounced: "${input}".`
           })
         });
         const evalData = await evalRes.json();
+        const score = evalData.fluencyScore || 92;
 
         resultBox?.classList.remove('hidden');
-        if (scoreEl) scoreEl.textContent = `${evalData.fluencyScore || 92}/100`;
+        if (scoreEl) scoreEl.textContent = `${score}/100`;
         if (diagnosticEl) {
           diagnosticEl.textContent = evalData.phoneticMechanicsAlerts?.join(' ') || evalData.naturalSpeakingTip || 'Khẩu hình, điểm tiếp xúc và luồng khí chuẩn xác.';
+        }
+
+        if (score < 75) {
+          fetch('/api/srs/enroll', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              wordOrPhrase: currentWord,
+              targetPhoneme: currentSymbol,
+              contextSentence: `Day ${activeDay} drill practice`,
+              initialScore: score
+            })
+          }).then(() => {
+            if (typeof window.refreshSrsStatsOnly === 'function') window.refreshSrsStatsOnly();
+          }).catch(() => {});
         }
       } catch (err) {
         resultBox?.classList.remove('hidden');
@@ -655,7 +717,7 @@ class DevEngRecorderDock extends HTMLElement {
 
   render() {
     this.innerHTML = `
-      <div id="recorder-dock" class="fixed bottom-4 right-4 z-50 bg-slate-900/95 border-2 border-cyan-500/80 rounded-2xl p-4 shadow-2xl backdrop-blur max-w-md w-full space-y-3 hidden transition-all">
+      <div id="recorder-dock" class="fixed bottom-20 right-6 z-[75] bg-slate-900/95 border-2 border-cyan-500/80 rounded-2xl p-4 shadow-2xl backdrop-blur-xl max-w-md w-full space-y-3 hidden transition-all">
         <div class="flex items-center justify-between border-b border-slate-800 pb-2">
           <div class="flex items-center gap-2">
             <span class="w-3 h-3 rounded-full bg-rose-500 animate-pulse"></span>

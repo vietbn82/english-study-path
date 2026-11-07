@@ -831,9 +831,11 @@
 
       // Expand card if collapsed
       const body = card.querySelector('.stage-body');
-      if (body && body.classList.contains('hidden')) {
-        const toggleBtn = document.getElementById(`btn-toggle-stage-${stageNum}`);
-        if (toggleBtn) toggleBtn.click();
+      const toggleBtn = document.getElementById(`btn-toggle-stage-${stageNum}`);
+      if (card.classList.contains('collapsed') || (body && body.classList.contains('hidden'))) {
+        card.classList.remove('collapsed');
+        if (body) body.classList.remove('hidden');
+        if (toggleBtn) toggleBtn.textContent = '▼';
       }
 
       // Scroll smoothly

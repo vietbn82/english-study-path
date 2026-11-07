@@ -1,5 +1,17 @@
 // DevEng Coach - Client Application (Resilient Offline-First Engine)
 (() => {
+  // Route legacy alert() calls through our non-blocking Vibe-Coding Toast System
+  function alert(message) {
+    const text = String(message || '');
+    let type = 'info';
+    if (/🎉|✓|✅|thành công|Hoàn thành|🎯/i.test(text)) type = 'success';
+    else if (/Lỗi|Không thể|thất bại|❌/i.test(text)) type = 'error';
+    else if (/Vui lòng|⏰|⚠️/i.test(text)) type = 'warning';
+    if (typeof window.showDevEngToast === 'function') {
+      window.showDevEngToast(text, type);
+    }
+  }
+
   // Pre-compiled Fallback for Day 1 (Ensures instant 0ms paint even if server is offline)
   const FALLBACK_DAY_1 = {
     dayNumber: 1,
@@ -125,9 +137,12 @@
   // Application State
   const state = {
     currentDay: 1,
+    currentLesson: FALLBACK_DAY_1,
     currentSelfRating: 5,
+    srsWarmupQuickMode: false,
     lessons: [FALLBACK_DAY_1],
     sessions: {},
+    progress: null,
     summary: {
       currentStreakDays: 0,
       longestStreakDays: 0,
@@ -160,6 +175,13 @@
       isRecording: false,
       recognition: null
     }
+  };
+
+  // Track first-attempt drill pronunciation results per day (Feature 009)
+  const drillWordAttempts = {
+    attempted: new Set(),
+    firstAttemptSuccess: new Set(),
+    failedWords: new Set()
   };
 
   // DOM Elements
@@ -340,6 +362,13 @@
 
   // Initialize
   async function init() {
+    // Expose core state & navigation helpers for Command Palette, Audio-Only & One-Tap Start
+    window.state = state;
+    window.loadDayLesson = loadDayLesson;
+    window.switchView = switchView;
+    window.fetchProgressSummary = fetchInitialData;
+    window.refreshSrsStatsOnly = refreshSrsStatsOnly;
+
     setupEventListeners();
     setupSpeechRecognition();
     setupSelectionLookup();
@@ -473,8 +502,8 @@
     if (brandHome) {
       brandHome.addEventListener('click', (e) => {
         e.preventDefault();
-        showView('workspace');
-        loadLesson(1);
+        switchView('workspace');
+        loadDayLesson(state.currentDay || 1);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
     }
@@ -534,25 +563,15 @@
       });
     }
 
-    if (el.btnCloseSoundModal) {
-      el.btnCloseSoundModal.addEventListener('click', closeSoundPracticeModal);
-    }
-
-    if (el.btnSubmitSoundGrade) {
-      el.btnSubmitSoundGrade.addEventListener('click', submitSoundGrade);
-    }
-
-    // Sticky Header Auto-Collapse on Scroll: hides non-essential Tier 2 when scrolling into the lesson
-    window.addEventListener('scroll', () => {
-      const currentY = window.scrollY;
-      const tier2 = document.getElementById('header-tier-2');
-      if (!tier2) return;
-      if (currentY > 60) {
-        tier2.classList.add('header-tier2-collapsed');
-      } else if (currentY < 30) {
-        tier2.classList.remove('header-tier2-collapsed');
+    // Only bind legacy modal listeners if <deveng-sound-modal> web component is not managing it
+    if (!document.querySelector('deveng-sound-modal')) {
+      if (el.btnCloseSoundModal) {
+        el.btnCloseSoundModal.addEventListener('click', closeSoundPracticeModal);
       }
-    }, { passive: true });
+      if (el.btnSubmitSoundGrade) {
+        el.btnSubmitSoundGrade.addEventListener('click', submitSoundGrade);
+      }
+    }
 
     // Header Dropdowns for condensed Studios and Utilities
     const btnStudiosMenu = document.getElementById('btn-toggle-studios-menu');
@@ -600,13 +619,15 @@
 
     // Global Delegated Click Listeners for dynamic audio playback and sound practice
     document.addEventListener('click', (e) => {
-      // Audio playback
-      const speakBtn = e.target.closest('.speak-btn');
-      if (speakBtn && speakBtn.dataset.word) {
-        e.preventDefault();
-        e.stopPropagation();
-        speakWord(speakBtn.dataset.word);
-        return;
+      // Audio playback (skip if already handled by deveng-components.js)
+      if (!e.defaultPrevented) {
+        const speakBtn = e.target.closest('.speak-btn');
+        if (speakBtn && speakBtn.dataset.word) {
+          e.preventDefault();
+          e.stopPropagation();
+          speakWord(speakBtn.dataset.word);
+          return;
+        }
       }
 
       // Toggle Sentence Frame 10+ Examples Accordion
@@ -675,6 +696,10 @@
 
   // Selection Quick Lookup Popover (FR-012: Bôi đen để tra cứu IPA & Nghĩa & Phát âm)
   function setupSelectionLookup() {
+    // Delegate to <deveng-selection-lookup> web component if mounted to avoid duplicate mouseup listeners
+    if (document.querySelector('deveng-selection-lookup')) {
+      return;
+    }
     let popup = document.getElementById('selection-lookup-popup');
     if (!popup) {
       popup = document.createElement('div');
@@ -909,6 +934,7 @@
 
       if (progressRes && progressRes.ok) {
         state.summary = await progressRes.json();
+        state.progress = state.summary;
       }
 
       if (sessionsRes && sessionsRes.ok) {
@@ -936,6 +962,9 @@
       const targetDay = state.summary?.nextDayNumber || 1;
       state.currentDay = targetDay;
       loadDayLesson(targetDay);
+
+      // Check smart block recommendation & partial session nudge
+      fetchBlockRecommendation();
 
     } catch (err) {
       console.warn('Backend unavailable, running in local cached mode:', err);
@@ -983,6 +1012,22 @@
   function loadDayLesson(dayNumber) {
     const lesson = state.lessons.find(l => l.dayNumber === dayNumber) || FALLBACK_DAY_1;
     state.currentDay = lesson.dayNumber;
+    state.currentLesson = lesson;
+    if (lesson.phonetics && !Array.isArray(lesson.phonetics.targetWords)) {
+      lesson.phonetics.targetWords = (lesson.vocabularyDrills || []).map(d => d.word);
+    }
+
+    // Reset daily drill tracking for auto-complete threshold
+    drillWordAttempts.attempted.clear();
+    drillWordAttempts.firstAttemptSuccess.clear();
+    drillWordAttempts.failedWords.clear();
+    const savedThresholdPct = parseInt(localStorage.getItem('deveng_autocomplete_threshold') || '70', 10);
+    const totalDrillWords = (lesson.phonetics?.targetWords || lesson.vocabularyDrills || []).length || 10;
+    const drillProgressTextEl = document.getElementById('drill-progress-text');
+    if (drillProgressTextEl) {
+      drillProgressTextEl.textContent = `0/${totalDrillWords} từ đúng lần đầu (Mục tiêu ${savedThresholdPct}%)`;
+    }
+
     if (typeof window.updateCapstoneButton === 'function') {
       window.updateCapstoneButton();
     }
@@ -1350,6 +1395,10 @@
 
   // Sound Practice Modal Logic (FR-009)
   function openSoundPracticeModal(targetSound, word, ipa, tip) {
+    if (typeof window.openSoundPracticeModal === 'function') {
+      window.openSoundPracticeModal(targetSound, word, ipa, tip);
+      return;
+    }
     const pop = document.getElementById('selection-lookup-popup');
     if (pop) pop.classList.add('hidden');
     try { window.getSelection()?.removeAllRanges(); } catch (_) {}
@@ -1370,6 +1419,10 @@
   }
 
   function closeSoundPracticeModal() {
+    if (typeof window.closeSoundPracticeModal === 'function') {
+      window.closeSoundPracticeModal();
+      return;
+    }
     if (el.modalSoundPractice) el.modalSoundPractice.classList.add('hidden');
     stopAudioVisualizer();
     if (state.soundPractice.isRecording && state.soundPractice.recognition) {
@@ -1447,6 +1500,23 @@
           })
         }).then(() => refreshSrsStatsOnly()).catch(() => {});
       }
+
+      // Track first-attempt drill pronunciation for Auto-Complete Threshold (Spec 009)
+      const targetWordsList = state.currentLesson?.phonetics?.targetWords ||
+        (state.currentLesson?.vocabularyDrills || []).map(d => d.word) || [];
+      const wordIdx = targetWordsList.findIndex(w =>
+        String(w).toLowerCase() === String(state.soundPractice.targetWord).toLowerCase()
+      );
+      const trackKey = wordIdx >= 0 ? wordIdx : state.soundPractice.targetWord;
+      if (!drillWordAttempts.attempted.has(trackKey)) {
+        drillWordAttempts.attempted.add(trackKey);
+        if (score >= 75) {
+          drillWordAttempts.firstAttemptSuccess.add(trackKey);
+        } else {
+          drillWordAttempts.failedWords.add(state.soundPractice.targetWord);
+        }
+      }
+      await checkAutoCompleteThreshold();
     } catch (err) {
       console.error('Sound evaluation error', err);
       if (el.soundGradeResult) el.soundGradeResult.classList.remove('hidden');
@@ -1643,14 +1713,14 @@
       stopAudioVisualizer();
     };
 
-    if (el.btnRecordSound) {
+    if (el.btnRecordSound && !document.querySelector('deveng-sound-modal')) {
       el.btnRecordSound.addEventListener('click', () => {
         if (state.soundPractice.isRecording) state.soundPractice.recognition.stop();
         else state.soundPractice.recognition.start();
       });
     }
 
-    // 3. Floating AI Mic
+    // 3. Floating AI Mic (Managed by <deveng-ai-coach> when present)
     state.floatingAi.recognition = new SpeechRec();
     state.floatingAi.recognition.continuous = false;
     state.floatingAi.recognition.interimResults = false;
@@ -1671,7 +1741,7 @@
       if (el.floatingBtnMic) el.floatingBtnMic.className = 'px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 text-xs transition';
     };
 
-    if (el.floatingBtnMic) {
+    if (el.floatingBtnMic && !document.querySelector('deveng-ai-coach')) {
       el.floatingBtnMic.addEventListener('click', () => {
         if (state.floatingAi.isRecording) state.floatingAi.recognition.stop();
         else state.floatingAi.recognition.start();
@@ -2614,9 +2684,133 @@
       }
     }
 
-    // Guidance Text & Badge Updates
+    // Guidance Text, 4-Pillar IPA Coordinates & Side-by-Side Comparison Updates
+    const COORDS_BY_SOUND = {
+      '/t/': {
+        active: 'Đầu lưỡi (Tongue Tip)',
+        passive: 'Gờ lợi sau răng trên (Alveolar Ridge)',
+        manner: 'Plosive — Nén khí & Bật hơi nổ (Stop)',
+        isVoiced: false,
+        voicedText: '❌ Vô thanh (Voiceless) — Không rung dây thanh',
+        formulaEn: 'Dán chặt đầu lưỡi vào gờ lợi ➜ Nén khí (cổ họng im lặng) ➜ Giật lưỡi bật hơi Pop sắc nét.',
+        mistakeShort: 'Đọc "commit" thành "côm-mít" ngậm miệng, làm mất âm đuôi /t/.',
+        physicalTest: '💡 <strong>Bài test vật lý (/t/):</strong> Đặt tờ giấy cách miệng 5cm — khi bật âm <strong>/t/</strong> (commit, test, request), luồng gió nổ phải làm tờ giấy bay nhẹ.'
+      },
+      '/d/': {
+        active: 'Đầu lưỡi (Tongue Tip)',
+        passive: 'Gờ lợi sau răng trên (Alveolar Ridge)',
+        manner: 'Voiced Stop — Chạm gờ lợi & Rung thanh quản',
+        isVoiced: true,
+        voicedText: '⚡ Hữu thanh (Voiced) — Dây thanh RUNG MẠNH',
+        formulaEn: 'Chạm đầu lưỡi vào gờ lợi ➜ Kích hoạt dây thanh rung rừ rừ ➜ Nhả êm & kéo dài nguyên âm trước nó x2.',
+        mistakeShort: 'Đọc "code" thành "cút" (nuốt âm) hoặc "cút-đờ" (chêm nguyên âm thừa).',
+        physicalTest: '💡 <strong>Bài test vật lý (/d/):</strong> Đặt 2 ngón tay lên cổ họng khi đọc <strong>code, build, thread</strong> — cổ họng phải rung mạnh ở cuối từ và tờ giấy trước miệng đứng yên.'
+      },
+      '/θ/': {
+        active: 'Đầu lưỡi (Tongue Tip)',
+        passive: 'Giữa 2 hàm răng cửa (Interdental)',
+        manner: 'Fricative — Khe hẹp xì gió liên tục',
+        isVoiced: false,
+        voicedText: '❌ Vô thanh (Voiceless) — Không rung dây thanh',
+        formulaEn: 'Đẩy đầu lưỡi nhô ra 2–3mm giữa 2 hàm răng ➜ Cắn hờ ➜ Thổi luồng hơi xì đều qua kẽ răng.',
+        mistakeShort: 'Rụt lưỡi vào trong đọc thành chữ "th" tiếng Việt hoặc /t/ (auth -> ót, think -> tinh).',
+        physicalTest: '💡 <strong>Bài test vật lý (/θ/):</strong> Đặt ngón trỏ chạm sát môi — khi phát âm <strong>auth, thread, throughput</strong>, đầu lưỡi phải chạm nhẹ vào ngón tay.'
+      },
+      '/ð/': {
+        active: 'Đầu lưỡi (Tongue Tip)',
+        passive: 'Giữa 2 hàm răng cửa (Interdental)',
+        manner: 'Voiced Fricative — Kẹp răng xì + Rung họng',
+        isVoiced: true,
+        voicedText: '⚡ Hữu thanh (Voiced) — Dây thanh RUNG MẠNH',
+        formulaEn: 'Đặt đầu lưỡi giữa 2 hàm răng y hệt /θ/ ➜ Kích hoạt dây thanh quản rung rền như tiếng ong.',
+        mistakeShort: 'Thụt lưỡi vào trong đọc thành âm "d" hoặc "đ" (this -> đít, algorithm -> an-gô-rít).',
+        physicalTest: '💡 <strong>Bài test vật lý (/ð/):</strong> Giữ đầu lưỡi giữa 2 hàm răng và ngân âm <strong>this, with, algorithm</strong> — đầu lưỡi phải có cảm giác tê nhẹ do rung.'
+      },
+      '/s/': {
+        active: 'Đầu lưỡi (Tongue Tip / Blade)',
+        passive: 'Sát gờ lợi trên (cách 1mm, tạo rãnh hẹp)',
+        manner: 'Sibilant Fricative — Luồng khí xì rít sắc',
+        isVoiced: false,
+        voicedText: '❌ Vô thanh (Voiceless) — Không rung dây thanh',
+        formulaEn: 'Nâng đầu lưỡi sát gờ lợi (không chạm hẳn) ➜ Khép nhẹ 2 hàm răng ➜ Đẩy tia khí xì sắc bén.',
+        mistakeShort: 'Bỏ quên âm xì ở giữa hoặc cuối từ (response -> rì-pón, workspace -> uốc-pây).',
+        physicalTest: '💡 <strong>Bài test vật lý (/s/):</strong> Lòng bàn tay đặt trước miệng khi đọc <strong>service, status, response</strong> phải cảm nhận được tia gió mát lạnh tập trung.'
+      },
+      '/z/': {
+        active: 'Đầu lưỡi (Tongue Tip / Blade)',
+        passive: 'Sát gờ lợi trên (cách 1mm, tạo rãnh hẹp)',
+        manner: 'Voiced Sibilant — Xì rãnh hẹp + Rung họng',
+        isVoiced: true,
+        voicedText: '⚡ Hữu thanh (Voiced) — Dây thanh RUNG MẠNH',
+        formulaEn: 'Giữ khẩu hình giống hệt âm /s/ ➜ Bật công tắc rung dây thanh quản kêu "zzzz" như tiếng ong.',
+        mistakeShort: 'Đọc thành âm /s/ không rung làm sai đuôi số nhiều / ngôi thứ 3 (keys -> kí-s, nodes -> nốt-s).',
+        physicalTest: '💡 <strong>Bài test vật lý (/z/):</strong> Chạm tay vào cổ họng khi kéo dài âm cuối của <strong>phase, keys, merges</strong> — cổ họng phải rung rõ rệt.'
+      },
+      '/ʃ/': {
+        active: 'Thân lưỡi (Blade) + Hai môi chu tròn',
+        passive: 'Vòm ngạc cứng (Postalveolar / Hard Palate)',
+        manner: 'Postalveolar Fricative — Chu môi xì dày',
+        isVoiced: false,
+        voicedText: '❌ Vô thanh (Voiceless) — Không rung dây thanh',
+        formulaEn: 'Chu tròn hai môi về phía trước ➜ Nâng vồng thân lưỡi sát vòm ngạc ➜ Đẩy luồng hơi xì dày "shhh".',
+        mistakeShort: 'Miệng bẹt ngang đọc thành chữ "s" nhẹ hoặc nuốt âm cuối (cache -> cát, push -> pút).',
+        physicalTest: '💡 <strong>Bài test vật lý (/ʃ/):</strong> Khi đọc <strong>cache, bash, push, session</strong>, hai môi bắt buộc phải chu tròn hướng ra phía trước.'
+      },
+      '/k/': {
+        active: 'Gốc lưỡi (Tongue Back / Dorsum)',
+        passive: 'Ngạc mềm (Soft Palate / Velum)',
+        manner: 'Velar Plosive — Nén cuống họng & Bật nổ khô',
+        isVoiced: false,
+        voicedText: '❌ Vô thanh (Voiceless) — Không rung dây thanh',
+        formulaEn: 'Đầu lưỡi hạ thấp ➜ Nâng gốc lưỡi ép kín ngạc mềm ➜ Giật gốc lưỡi xuống bật âm "k" khô giòn.',
+        mistakeShort: 'Ngậm họng nuốt mất âm /k/ ở cuối từ (stack -> x-tác ngậm miệng, check -> ché).',
+        physicalTest: '💡 <strong>Bài test vật lý (/k/):</strong> Đọc <strong>stack, mock, webhook</strong> — cuối từ phải nghe rõ tiếng bật "k" khô ở cuống họng, dây thanh không rung.'
+      },
+      '/ɡ/': {
+        active: 'Gốc lưỡi (Tongue Back / Dorsum)',
+        passive: 'Ngạc mềm (Soft Palate / Velum)',
+        manner: 'Voiced Velar Stop — Chạm ngạc mềm & Rung họng',
+        isVoiced: true,
+        voicedText: '⚡ Hữu thanh (Voiced) — Dây thanh RUNG MẠNH',
+        formulaEn: 'Nâng gốc lưỡi chạm ngạc mềm như /k/ ➜ Rung mạnh dây thanh quản từ sâu trong họng ➜ Nhả êm.',
+        mistakeShort: 'Đọc thành âm /k/ vô thanh hoặc chêm "gờ" rời rạc (bug -> bấc hoặc bấc-gờ, log -> lốc).',
+        physicalTest: '💡 <strong>Bài test vật lý (/ɡ/):</strong> Đọc <strong>debug, log, config</strong> — giữ nguyên âm trước nó dài hơn và cảm nhận độ rung trầm ở cuống họng.'
+      },
+      '/p/': {
+        active: 'Môi trên & Môi dưới (Both Lips)',
+        passive: 'Mép trong của hai môi ép kín',
+        manner: 'Bilabial Plosive — Nén khí 2 môi & Bung nổ',
+        isVoiced: false,
+        voicedText: '❌ Vô thanh (Voiceless) — Không rung dây thanh',
+        formulaEn: 'Mím chặt 2 môi khóa kín khí ➜ Nén áp suất trong khoang miệng ➜ Bung mạnh 2 môi giải phóng tiếng Pop.',
+        mistakeShort: 'Đọc giống âm /b/ hoặc mím môi rồi đứng im không bung hơi (stop -> x-tóp ngậm môi).',
+        physicalTest: '💡 <strong>Bài test vật lý (/p/):</strong> Đặt tờ giấy trước miệng khi đọc <strong>push, pipeline, backup</strong> — hai môi bung hơi phải làm tờ giấy bật tung.'
+      },
+      '/b/': {
+        active: 'Môi trên & Môi dưới (Both Lips)',
+        passive: 'Mép trong của hai môi chạm nhẹ',
+        manner: 'Voiced Bilabial Stop — Chạm 2 môi & Rung họng',
+        isVoiced: true,
+        voicedText: '⚡ Hữu thanh (Voiced) — Dây thanh RUNG MẠNH',
+        formulaEn: 'Khép nhẹ hai môi ➜ Kích hoạt dây thanh quản rung rền ➜ Tách môi êm ái, không phụt gió mạnh.',
+        mistakeShort: 'Đọc thành /p/ hoặc chêm âm "bờ" thừa ở cuối từ (job -> chóp-bờ, web -> quép-bờ).',
+        physicalTest: '💡 <strong>Bài test vật lý (/b/):</strong> Đọc <strong>job, web, branch</strong> — cổ họng rung ngay từ khoảnh khắc hai môi chạm nhau, tờ giấy trước miệng không bay.'
+      },
+      'rest': {
+        active: 'Toàn bộ khoang miệng thả lỏng',
+        passive: 'Không tiếp xúc (Trạng thái nghỉ)',
+        manner: 'Thở tự nhiên qua mũi & miệng',
+        isVoiced: false,
+        voicedText: 'Thả lỏng tự nhiên (Neutral)',
+        formulaEn: 'Đầu lưỡi đặt nhẹ sau răng cửa dưới, hàm thả lỏng tự nhiên.',
+        mistakeShort: 'Gồng cứng hàm hoặc rụt lưỡi quá sâu khi chuyển giữa các âm.',
+        physicalTest: '💡 <strong>Trạng thái chuẩn bị:</strong> Thả lỏng cơ hàm và lưỡi trước khi chuyển sang luyện từng âm vị.'
+      }
+    };
+
+    const coords = COORDS_BY_SOUND[soundKey] || COORDS_BY_SOUND['/t/'];
+
     const statusSound = document.getElementById('sagittal-status-sound');
-    const statusBadge = document.getElementById('sagittal-status-badge');
     const statusDesc = document.getElementById('sagittal-status-desc');
     const statusOrgan = document.getElementById('sagittal-status-organ');
     const statusVoicing = document.getElementById('sagittal-status-voicing');
@@ -2627,17 +2821,50 @@
     const vnMotionWarning = document.getElementById('sagittal-vn-motion-text');
 
     if (statusSound) statusSound.textContent = data.soundName;
-    if (statusBadge) {
-      statusBadge.textContent = config.badge;
-      if (mode === 'vn') {
-        statusBadge.className = 'text-xs px-2 py-0.5 rounded font-mono font-bold bg-rose-950 text-rose-300 border border-rose-800';
-      } else {
-        statusBadge.className = 'text-xs px-2 py-0.5 rounded font-mono font-bold bg-emerald-950 text-emerald-300 border border-emerald-800';
-      }
-    }
-    if (statusDesc) statusDesc.textContent = config.desc;
+    if (statusDesc) statusDesc.textContent = data.target.desc;
     if (statusOrgan) statusOrgan.textContent = data.organText;
     if (statusVoicing) statusVoicing.textContent = data.voicing;
+
+    // Update 4-Pillar IPA Technical Coordinates dynamically for the selected sound
+    const activeEl = document.getElementById('phonetics-active');
+    const passiveEl = document.getElementById('phonetics-passive');
+    const mannerEl = document.getElementById('phonetics-manner');
+    const voicedEl = document.getElementById('phonetics-voiced');
+    const voicedCardEl = document.getElementById('phonetics-voiced-card');
+
+    if (activeEl) activeEl.textContent = coords.active;
+    if (passiveEl) passiveEl.textContent = coords.passive;
+    if (mannerEl) mannerEl.textContent = coords.manner;
+    if (voicedEl) {
+      voicedEl.textContent = coords.voicedText;
+      voicedEl.className = coords.isVoiced
+        ? 'text-emerald-300 font-bold mt-1 text-sm'
+        : 'text-cyan-300 font-bold mt-1 text-sm';
+    }
+    if (voicedCardEl) {
+      voicedCardEl.className = coords.isVoiced
+        ? 'p-3 rounded-lg bg-emerald-950/30 border border-emerald-700/70 transition-colors'
+        : 'p-3 rounded-lg bg-slate-900/90 border border-slate-800 transition-colors';
+    }
+
+    // Update Side-by-Side Comparison Card (Both English Target & Vietnamese Habit simultaneously)
+    const enTitleEl = document.getElementById('mouth-en-title');
+    const enDescEl = document.getElementById('mouth-en-desc');
+    const vnTitleEl = document.getElementById('mouth-vn-title');
+    const vnDescEl = document.getElementById('mouth-vn-desc');
+    const instructionEl = document.getElementById('phonetics-instruction');
+    const mistakeEl = document.getElementById('phonetics-mistake');
+    const alertBoxEl = document.getElementById('mouth-alert-box');
+
+    if (enTitleEl) enTitleEl.textContent = `Chuẩn Target Tiếng Anh (${soundKey})`;
+    if (enDescEl) enDescEl.textContent = data.target.desc;
+    if (vnTitleEl) vnTitleEl.textContent = `Lỗi Thói Quen Người Việt (${soundKey})`;
+    if (vnDescEl) {
+      vnDescEl.textContent = (data.vn?.desc || '').replace(/^⚠️\s*Thói quen Việt:\s*/i, '');
+    }
+    if (instructionEl) instructionEl.textContent = coords.formulaEn;
+    if (mistakeEl) mistakeEl.textContent = coords.mistakeShort;
+    if (alertBoxEl) alertBoxEl.innerHTML = coords.physicalTest;
 
     if (data.kinematicSteps) {
       if (stepStart) stepStart.textContent = data.kinematicSteps.start;
@@ -2665,11 +2892,9 @@
         btn.classList.add('active', 'font-bold', 'bg-cyan-950/80', 'text-cyan-300', 'border-cyan-800');
         btn.classList.remove('bg-slate-900', 'text-slate-300', 'border-slate-800');
 
-        renderSagittalSound(soundKey, currentSagittalMode);
-
-        // Sync with Mouth Map pills if /t/ or /d/
+        renderSagittalSound(soundKey, 'target');
+        syncMouthMapPill(soundKey);
         if (soundKey === '/t/' || soundKey === '/d/') {
-          syncMouthMapPill(soundKey);
           loadMouthMap(soundKey);
         }
       });
@@ -2680,33 +2905,44 @@
     mouthPills.forEach(btn => {
       btn.addEventListener('click', () => {
         const sound = btn.dataset.sound;
-        syncMouthMapPill(sound);
-        loadMouthMap(sound);
-
-        // Sync with Sagittal diagram
         currentSagittalSound = sound;
+        syncMouthMapPill(sound);
         syncSagittalSoundPill(sound);
-        renderSagittalSound(sound, currentSagittalMode);
+        renderSagittalSound(sound, 'target');
+        loadMouthMap(sound);
       });
     });
 
-    // Mode Toggle (Target 🇬🇧 vs VN 🇻🇳)
-    const btnTarget = document.getElementById('btn-sagittal-target');
-    const btnVN = document.getElementById('btn-sagittal-vn');
+    // Mouth-Map Audio & Animation Button (#btn-animate-mouth)
+    const btnAnimateMouth = document.getElementById('btn-animate-mouth');
+    if (btnAnimateMouth) {
+      let isAnimatingMouth = false;
+      btnAnimateMouth.addEventListener('click', () => {
+        if (isAnimatingMouth) return;
+        isAnimatingMouth = true;
+        const originalLabel = btnAnimateMouth.innerHTML;
+        btnAnimateMouth.innerHTML = '🔊 Đang phát mẫu...';
 
-    if (btnTarget && btnVN) {
-      btnTarget.addEventListener('click', () => {
-        currentSagittalMode = 'target';
-        btnTarget.className = 'px-2 py-0.5 rounded text-xs font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 transition';
-        btnVN.className = 'px-2 py-0.5 rounded text-xs font-mono text-slate-400 hover:text-rose-300 transition';
         renderSagittalSound(currentSagittalSound, 'target');
-      });
+        const sampleWords = {
+          '/t/': 'commit',
+          '/d/': 'code',
+          '/θ/': 'auth',
+          '/ð/': 'this',
+          '/s/': 'service',
+          '/z/': 'phase',
+          '/ʃ/': 'cache',
+          '/k/': 'stack',
+          '/ɡ/': 'debug',
+          '/p/': 'push',
+          '/b/': 'job'
+        };
+        speakWord(sampleWords[currentSagittalSound] || 'commit');
 
-      btnVN.addEventListener('click', () => {
-        currentSagittalMode = 'vn';
-        btnVN.className = 'px-2 py-0.5 rounded text-xs font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 transition';
-        btnTarget.className = 'px-2 py-0.5 rounded text-xs font-mono text-slate-400 hover:text-emerald-300 transition';
-        renderSagittalSound(currentSagittalSound, 'vn');
+        setTimeout(() => {
+          btnAnimateMouth.innerHTML = originalLabel;
+          isAnimatingMouth = false;
+        }, 1200);
       });
     }
 
@@ -3882,17 +4118,25 @@
   // ==========================================
   async function refreshAnalyticsData() {
     try {
-      const [burndownRes, heatmapRes, badgesRes, velocityRes] = await Promise.all([
-        fetch('/api/analytics/burndown').then(r => r.json()).catch(() => null),
-        fetch('/api/analytics/heatmap').then(r => r.json()).catch(() => null),
-        fetch('/api/analytics/badges').then(r => r.json()).catch(() => null),
-        fetch('/api/analytics/velocity').then(r => r.json()).catch(() => null)
+      const [burndownRes, heatmapRes, badgesRes, velocityRes, overview, speechSummary, speechHistory, catchupRes] = await Promise.all([
+        fetch('/api/analytics/burndown').then(r => r.ok ? r.json() : null).catch(() => null),
+        fetch('/api/analytics/heatmap').then(r => r.ok ? r.json() : null).catch(() => null),
+        fetch('/api/analytics/badges').then(r => r.ok ? r.json() : null).catch(() => null),
+        fetch('/api/analytics/velocity').then(r => r.ok ? r.json() : null).catch(() => null),
+        fetch('/api/analytics/overview').then(r => r.ok ? r.json() : null).catch(() => null),
+        fetch('/api/speech/scores/summary').then(r => r.ok ? r.json() : null).catch(() => null),
+        fetch('/api/speech/scores/history').then(r => r.ok ? r.json() : null).catch(() => null),
+        fetch('/api/analytics/catchup').then(r => r.ok ? r.json() : null).catch(() => null)
       ]);
 
       if (burndownRes) renderBurndownSvg(burndownRes);
       if (heatmapRes) renderHeatmapGrid(heatmapRes);
       if (badgesRes) renderBadgesShelf(badgesRes);
       if (velocityRes) renderVelocityList(velocityRes);
+
+      renderSpeechScoreAnalytics(speechSummary, speechHistory);
+      renderBlockFrequencyAnalytics(overview?.blockFrequency || burndownRes?.blockFrequency || overview);
+      renderCatchUpPlan(overview?.catchUp || catchupRes);
     } catch (err) {
       console.error('Failed to load analytics data', err);
     }
@@ -4021,6 +4265,333 @@
     });
   }
 
+  function renderSpeechScoreAnalytics(speechSummary, speechHistory) {
+    const barsEl = document.getElementById('analytics-phoneme-bars');
+    const trendEl = document.getElementById('analytics-speech-trend-list');
+
+    if (barsEl) {
+      const avgScore = Math.round(
+        speechSummary?.overallAverageScore ??
+        speechSummary?.averageScore ??
+        speechSummary?.averageAccuracy ??
+        0
+      );
+      const totalDrills = speechSummary?.totalAttempts ?? speechSummary?.totalDrills ?? speechSummary?.totalScored ?? 0;
+
+      // Normalize category accuracy entries
+      const defaultCategories = [
+        { label: '/θ, ð/ (Dental)', score: 0 },
+        { label: '/ʃ, ʒ/ (Palatal)', score: 0 },
+        { label: 'Ending Consonants', score: 0 },
+        { label: 'Word Stress', score: 0 }
+      ];
+
+      let categories = [];
+      const rawCats = speechSummary?.categoryAccuracy || speechSummary?.phonemeCategoryAccuracy || speechSummary?.categories;
+      if (Array.isArray(rawCats) && rawCats.length > 0) {
+        categories = rawCats.map(c => ({
+          label: c.category || c.name || c.phonemeGroup || 'Phoneme',
+          score: Math.round(c.accuracy ?? c.averageScore ?? c.score ?? 0)
+        }));
+      } else if (rawCats && typeof rawCats === 'object' && Object.keys(rawCats).length > 0) {
+        categories = Object.entries(rawCats).map(([k, v]) => ({
+          label: k,
+          score: Math.round(typeof v === 'number' ? v : (v?.accuracy ?? v?.averageScore ?? 0))
+        }));
+      } else {
+        categories = defaultCategories;
+      }
+
+      const weakWords = speechSummary?.weakWords || speechSummary?.weakestWords || speechSummary?.frequentWeakWords || [];
+
+      barsEl.innerHTML = `
+        <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-950 border border-slate-800 font-mono">
+          <span class="text-slate-300">Điểm TB Phát Âm (${totalDrills} lượt):</span>
+          <span class="font-bold text-sm ${avgScore >= 80 ? 'text-emerald-400' : avgScore >= 65 ? 'text-cyan-400' : 'text-amber-400'}">${avgScore}%</span>
+        </div>
+        <div class="space-y-2">
+          ${categories.map(c => {
+            const pct = Math.max(0, Math.min(100, c.score));
+            const barColor = pct >= 80 ? 'bg-emerald-500' : pct >= 65 ? 'bg-cyan-500' : 'bg-amber-500';
+            return `
+              <div class="space-y-1">
+                <div class="flex items-center justify-between font-mono text-xs">
+                  <span class="text-slate-200 font-semibold">${c.label}</span>
+                  <span class="text-cyan-300 font-bold">${pct}%</span>
+                </div>
+                <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
+                  <div class="${barColor} h-full rounded-full transition-all" style="width: ${pct}%"></div>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+        <div class="pt-2 border-t border-slate-800/80 space-y-1.5">
+          <div class="text-xs font-mono text-slate-400">Từ cần rèn thêm (Weak Words):</div>
+          <div class="flex flex-wrap gap-1.5">
+            ${weakWords.length > 0
+              ? weakWords.map(w => {
+                  const wordText = typeof w === 'string' ? w : (w.word || w.targetWord || '');
+                  return `<span class="px-2 py-0.5 rounded bg-rose-950/70 border border-rose-800/80 text-rose-300 font-mono text-xs">${wordText}</span>`;
+                }).join('')
+              : '<span class="text-slate-500 italic text-xs">Chưa có từ yếu nào bị ghi nhận.</span>'}
+          </div>
+        </div>
+      `;
+    }
+
+    if (trendEl) {
+      const list = Array.isArray(speechHistory)
+        ? speechHistory
+        : (speechHistory?.items || speechHistory?.history || []);
+
+      if (!list || list.length === 0) {
+        trendEl.innerHTML = '<div class="p-3 rounded-lg bg-slate-950 border border-slate-800 text-slate-400 italic text-xs">Chưa có lịch sử chấm điểm phát âm. Hãy luyện tập ở Chặng 1 để theo dõi xu hướng!</div>';
+      } else {
+        trendEl.innerHTML = list.slice(0, 15).map(item => {
+          const score = Math.round(item.overallScore ?? item.score ?? item.accuracyScore ?? 0);
+          const word = item.targetWordOrSentence || item.targetWord || item.word || 'Drill';
+          const phoneme = item.expectedPhonemes || item.targetPhoneme || '';
+          const day = item.dayNumber || state.currentDay || 1;
+          const badgeCls = score >= 80
+            ? 'bg-emerald-950 text-emerald-300 border-emerald-800'
+            : score >= 65
+            ? 'bg-cyan-950 text-cyan-300 border-cyan-800'
+            : 'bg-rose-950 text-rose-300 border-rose-800';
+          return `
+            <div class="p-2.5 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-between gap-2">
+              <div class="min-w-0">
+                <div class="font-bold text-slate-200 font-mono truncate">${word}</div>
+                <div class="text-xs text-slate-400 font-mono">Ngày ${day}${phoneme ? ` · ${phoneme}` : ''}</div>
+              </div>
+              <span class="px-2 py-0.5 rounded border font-mono font-bold text-xs shrink-0 ${badgeCls}">${score}%</span>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+  }
+
+  function renderBlockFrequencyAnalytics(blockFrequency) {
+    const container = document.getElementById('analytics-block-frequency');
+    if (!container) return;
+
+    // Fallback computation from state.sessions if blockFrequency is not yet populated
+    const sessionsList = Object.values(state.sessions || {});
+    const fallbackPhonetics = sessionsList.filter(s => s.status === 'Completed' || (s.blocksCompleted || []).includes('Phonetics')).length;
+    const fallbackFrames = sessionsList.filter(s => s.status === 'Completed' || (s.blocksCompleted || []).includes('Frames')).length;
+    const fallbackOutput = sessionsList.filter(s => s.status === 'Completed' || (s.blocksCompleted || []).includes('Output')).length;
+    const fallbackFull = sessionsList.filter(s => s.status === 'Completed' && s.completionMode !== 'AudioOnly').length;
+    const fallbackPartial = sessionsList.filter(s => s.status === 'CompletedPartial').length;
+    const fallbackAudio = sessionsList.filter(s => s.completionMode === 'AudioOnly').length;
+
+    const phoneticsDays = blockFrequency?.phoneticsDays ?? fallbackPhonetics;
+    const framesDays = blockFrequency?.framesDays ?? fallbackFrames;
+    const outputDays = blockFrequency?.outputDays ?? fallbackOutput;
+    const fullCount = blockFrequency?.fullSessionsCount ?? fallbackFull;
+    const partialCount = blockFrequency?.partialSessionsCount ?? fallbackPartial;
+    const audioCount = blockFrequency?.audioOnlySessionsCount ?? fallbackAudio;
+
+    const maxDays = Math.max(1, phoneticsDays, framesDays, outputDays);
+
+    container.innerHTML = `
+      <div class="space-y-2">
+        <div class="text-xs font-mono text-slate-400">Số ngày hoàn thành từng Chặng:</div>
+        <div class="space-y-1.5">
+          <div>
+            <div class="flex justify-between font-mono text-xs mb-0.5">
+              <span class="text-cyan-300">1. Phonetics (Khẩu hình)</span>
+              <span class="font-bold text-slate-200">${phoneticsDays} ngày</span>
+            </div>
+            <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
+              <div class="bg-cyan-500 h-full rounded-full" style="width: ${Math.round((phoneticsDays / maxDays) * 100)}%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between font-mono text-xs mb-0.5">
+              <span class="text-purple-300">2. Frames (Khung câu)</span>
+              <span class="font-bold text-slate-200">${framesDays} ngày</span>
+            </div>
+            <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
+              <div class="bg-purple-500 h-full rounded-full" style="width: ${Math.round((framesDays / maxDays) * 100)}%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between font-mono text-xs mb-0.5">
+              <span class="text-emerald-300">3. Output (Luyện nói AI)</span>
+              <span class="font-bold text-slate-200">${outputDays} ngày</span>
+            </div>
+            <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
+              <div class="bg-emerald-500 h-full rounded-full" style="width: ${Math.round((outputDays / maxDays) * 100)}%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-2.5 border-t border-slate-800/80 space-y-2">
+        <div class="text-xs font-mono text-slate-400">Phân bổ Chế độ Học (Session Modes):</div>
+        <div class="grid grid-cols-3 gap-2 text-center font-mono">
+          <div class="p-2 rounded-lg bg-slate-950 border border-slate-800">
+            <div class="text-emerald-400 font-bold text-sm">${fullCount}</div>
+            <div class="text-[11px] text-slate-400">Full 15m</div>
+          </div>
+          <div class="p-2 rounded-lg bg-slate-950 border border-slate-800">
+            <div class="text-amber-400 font-bold text-sm">${partialCount}</div>
+            <div class="text-[11px] text-slate-400">Partial 5m</div>
+          </div>
+          <div class="p-2 rounded-lg bg-slate-950 border border-slate-800">
+            <div class="text-indigo-400 font-bold text-sm">${audioCount}</div>
+            <div class="text-[11px] text-slate-400">Eyes-Free Audio</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ==========================================
+  // ADAPTIVE CATCH-UP PLAN OPTIMIZER
+  // ==========================================
+  let currentCatchUpStrategy = 'MicroCatchup';
+
+  function renderCatchUpPlan(catchUpData) {
+    const section = document.getElementById('analytics-catchup-section');
+    if (!section) return;
+
+    if (!catchUpData) {
+      catchUpData = {
+        isBehind: false,
+        daysBehind: 0,
+        elapsedDays: 1,
+        completedDays: 1,
+        pacingStatus: 'OnPace',
+        suggestedStrategy: 'Maintenance',
+        catchUpDaysTarget: 0,
+        prioritizedCatchUpDays: [],
+        seniorCoachAdvice: 'Tiến độ học tập đang được duy trì rất tốt!'
+      };
+    }
+
+    const pacingTag = document.getElementById('catchup-pacing-tag');
+    const adviceEl = document.getElementById('catchup-coach-advice');
+    const targetTextEl = document.getElementById('catchup-days-target-text');
+    const queueCountEl = document.getElementById('catchup-queue-count');
+    const queueContainer = document.getElementById('catchup-days-queue');
+    const strategyNameEl = document.getElementById('catchup-active-strategy-name');
+    const strategyDescEl = document.getElementById('catchup-strategy-desc');
+
+    if (pacingTag) {
+      if (catchUpData.pacingStatus === 'Ahead') {
+        pacingTag.textContent = '🚀 Vượt tiến độ';
+        pacingTag.className = 'text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-700';
+      } else if (catchUpData.pacingStatus === 'OnPace') {
+        pacingTag.textContent = '✓ Đúng tiến độ chuẩn';
+        pacingTag.className = 'text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-cyan-950 text-cyan-300 border border-cyan-700';
+      } else if (catchUpData.pacingStatus === 'SlightlyBehind') {
+        pacingTag.textContent = `⚠️ Chậm ${catchUpData.daysBehind} ngày (Cần bù nhẹ)`;
+        pacingTag.className = 'text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-700';
+      } else {
+        pacingTag.textContent = `🚨 Chậm ${catchUpData.daysBehind} ngày (Cần tăng tốc)`;
+        pacingTag.className = 'text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-700';
+      }
+    }
+
+    if (adviceEl) {
+      adviceEl.textContent = `"${catchUpData.seniorCoachAdvice}"`;
+    }
+
+    if (targetTextEl) {
+      targetTextEl.textContent = catchUpData.daysBehind > 0
+        ? `${catchUpData.daysBehind} ngày cần bù`
+        : '0 ngày (Đạt chỉ tiêu)';
+    }
+
+    // Strategies metadata
+    const STRATEGY_INFO = {
+      'MicroCatchup': {
+        name: '⚡ Micro-Catchup (+10m/ngày)',
+        desc: 'Mỗi ngày hoàn thành bài học chính + thêm 1 chặng Micro 10 phút. Bù đắp 1 ngày trễ sau mỗi 2-3 ngày mà không gây kiệt sức.'
+      },
+      'WeekendSprint': {
+        name: '☕ Weekend Sprint (45m cuối tuần)',
+        desc: 'Gom 2-3 bài trễ vào buổi sáng thứ Bảy/Chủ Nhật khi đầu óc thư thái, hoàn thành liền mạch trong 45 phút.'
+      },
+      'FastTrackAudio': {
+        name: '🎧 Fast-Track Audio (Nghe trên đường đi)',
+        desc: 'Bật chế độ Eyes-Free Audio 10m khi commute hoặc đi bộ để hoàn thành phần cốt lõi và duy trì chuỗi phản xạ.'
+      }
+    };
+
+    const stratKey = currentCatchUpStrategy || catchUpData.suggestedStrategy || 'MicroCatchup';
+    const activeInfo = STRATEGY_INFO[stratKey] || STRATEGY_INFO['MicroCatchup'];
+    if (strategyNameEl) strategyNameEl.textContent = activeInfo.name;
+    if (strategyDescEl) strategyDescEl.textContent = activeInfo.desc;
+
+    // Strategy toggle buttons
+    const stratBtns = document.querySelectorAll('.catchup-strat-btn');
+    stratBtns.forEach(btn => {
+      const match = btn.dataset.strategy === stratKey;
+      btn.classList.toggle('bg-amber-950', match);
+      btn.classList.toggle('text-amber-300', match);
+      btn.classList.toggle('border-amber-800', match);
+      btn.classList.toggle('font-semibold', match);
+      btn.classList.toggle('text-slate-400', !match);
+      btn.onclick = () => {
+        currentCatchUpStrategy = btn.dataset.strategy;
+        renderCatchUpPlan(catchUpData);
+      };
+    });
+
+    const missedDays = catchUpData.prioritizedCatchUpDays || [];
+    if (queueCountEl) {
+      queueCountEl.textContent = `${missedDays.length} bài ưu tiên gỡ trễ`;
+    }
+
+    if (queueContainer) {
+      if (missedDays.length === 0) {
+        queueContainer.innerHTML = `
+          <div class="col-span-full p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 text-center space-y-1">
+            <div class="text-emerald-400 font-bold text-sm">🎉 Không có bài học nào bị trễ!</div>
+            <p class="text-xs text-slate-400">Bạn đang duy trì chuỗi học rất tốt. Tiếp tục giữ vững phong độ mỗi ngày nhé.</p>
+          </div>
+        `;
+      } else {
+        queueContainer.innerHTML = missedDays.map(item => `
+          <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 hover:border-amber-500/60 transition flex flex-col justify-between space-y-3 shadow">
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-amber-950/80 text-amber-300 border border-amber-800/70">
+                  DAY ${item.dayNumber} // SPRINT ${item.sprintId}
+                </span>
+                <span class="text-xs font-mono text-cyan-400 font-semibold">${item.phoneticTarget}</span>
+              </div>
+              <div class="font-bold text-slate-100 text-xs sm:text-sm line-clamp-1">${item.title}</div>
+              <p class="text-xs text-slate-400 line-clamp-2 leading-relaxed">${item.focusReason}</p>
+            </div>
+            <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between">
+              <span class="text-[11px] font-mono text-slate-500">⏱️ ~${item.estimatedMinutes}m (${item.recommendedMode})</span>
+              <button type="button" class="btn-catchup-jump px-3 py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg text-xs transition cursor-pointer shadow flex items-center gap-1" data-day="${item.dayNumber}">
+                <span>Bù ngay</span>
+                <span>➔</span>
+              </button>
+            </div>
+          </div>
+        `).join('');
+
+        queueContainer.querySelectorAll('.btn-catchup-jump').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const day = parseInt(btn.dataset.day, 10);
+            if (day && typeof loadDayLesson === 'function') {
+              loadDayLesson(day);
+              if (typeof window.showDevEngToast === 'function') {
+                window.showDevEngToast(`🚀 Đã chuyển sang Ngày ${day} để học bù!`, 'info');
+              }
+            }
+          });
+        });
+      }
+    }
+  }
+
   // ==========================================
   // FEATURE 004: Shadowing Studio & Waveforms
   // ==========================================
@@ -4033,12 +4604,55 @@
     audioChunks: [],
     userAudioBlob: null,
     userAudioUrl: null,
+    userPeaks: [10, 15, 20, 15, 10, 25, 30, 15, 10, 20, 25, 10],
+    refPeaks: [20, 45, 60, 30, 75, 90, 40, 20, 65, 80, 50, 30, 70, 85, 25],
+    userAudioElement: null,
     activeTrack: 'reference'
   };
 
-  async function initShadowingStudio() {
+  async function extractWaveformPeaksFromBlob(blob, barCount = 40) {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx || !blob) {
+      return { peaks: [25, 55, 75, 45, 80, 95, 60, 35, 70, 85, 40, 20], maxAmplitude: 0.5 };
+    }
+    const audioCtx = new AudioCtx();
     try {
-      const refData = await fetch(`/api/shadowing/reference/${state.currentDay}`).then(r => r.json());
+      const arrayBuffer = await blob.arrayBuffer();
+      const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+      const rawData = audioBuffer.getChannelData(0);
+      const blockSize = Math.max(1, Math.floor(rawData.length / barCount));
+      const rawPeaks = [];
+      let maxAmplitude = 0;
+
+      for (let i = 0; i < barCount; i++) {
+        const start = i * blockSize;
+        let sum = 0;
+        let count = 0;
+        for (let j = 0; j < blockSize && (start + j) < rawData.length; j++) {
+          const abs = Math.abs(rawData[start + j]);
+          if (abs > maxAmplitude) maxAmplitude = abs;
+          sum += abs;
+          count++;
+        }
+        rawPeaks.push(count > 0 ? sum / count : 0);
+      }
+
+      const maxAvg = Math.max(...rawPeaks, 0.001);
+      const peaks = rawPeaks.map(p => Math.max(8, Math.min(95, Math.round((p / maxAvg) * 90 + 5))));
+      return { peaks, maxAmplitude };
+    } catch (err) {
+      console.warn('Web Audio decode fallback', err);
+      return { peaks: [25, 55, 75, 45, 80, 95, 60, 35, 70, 85, 40, 20], maxAmplitude: 0.5 };
+    } finally {
+      try {
+        await audioCtx.close();
+      } catch (_) {}
+    }
+  }
+
+  async function loadShadowingExercises(dayNumber = state.currentDay || 1) {
+    try {
+      const refData = await fetch(`/api/shadowing/reference/${dayNumber}`).then(r => r.json());
       if (refData && refData.sentenceFrame) {
         shadowingState.targetSentence = refData.sentenceFrame;
         shadowingState.refDuration = refData.targetDurationSeconds || 3.5;
@@ -4050,14 +4664,33 @@
       console.warn('Fallback reference shadowing data', e);
     }
 
-    drawWaveform(el.canvasShadowRef, '#22d3ee', [20, 45, 60, 30, 75, 90, 40, 20, 65, 80, 50, 30, 70, 85, 25]);
-    drawWaveform(el.canvasShadowUser, '#f59e0b', [10, 15, 20, 15, 10, 25, 30, 15, 10, 20, 25, 10]);
+    drawWaveform(el.canvasShadowRef, '#22d3ee', shadowingState.refPeaks);
+    drawWaveform(el.canvasShadowUser, '#f59e0b', shadowingState.userPeaks);
+
+    const btnPlayBest = document.getElementById('btn-shadow-play-best');
+    if (btnPlayBest) {
+      const savedBest = localStorage.getItem(`deveng_shadow_best_day_${dayNumber}`);
+      if (savedBest) {
+        btnPlayBest.hidden = false;
+        btnPlayBest.classList.remove('hidden');
+      } else {
+        btnPlayBest.hidden = true;
+        btnPlayBest.classList.add('hidden');
+      }
+    }
 
     setupShadowingControls();
   }
 
-  function drawWaveform(canvas, color, samplePoints) {
+  async function initShadowingStudio() {
+    return loadShadowingExercises(state.currentDay || 1);
+  }
+
+  function drawWaveform(canvas, color, samplePoints, playheadRatio = null) {
     if (!canvas) return;
+    const pts = Array.isArray(samplePoints) && samplePoints.length > 0
+      ? samplePoints
+      : [15, 25, 35, 20, 40, 30, 15];
     const ctx = canvas.getContext('2d');
     const w = canvas.width;
     const h = canvas.height;
@@ -4072,16 +4705,32 @@
     ctx.stroke();
 
     // Bars
-    ctx.fillStyle = color;
-    const numBars = samplePoints.length * 3;
+    const numBars = pts.length >= 24 ? pts.length : pts.length * 3;
     const barW = Math.max(2, w / numBars - 2);
 
     for (let i = 0; i < numBars; i++) {
-      const val = samplePoints[i % samplePoints.length];
+      const val = pts[i % pts.length];
       const barH = (val / 100) * (h * 0.8);
       const x = i * (barW + 2);
       const y = (h - barH) / 2;
+      const barRatio = x / w;
+      if (playheadRatio !== null && barRatio <= playheadRatio) {
+        ctx.fillStyle = '#fde047';
+      } else {
+        ctx.fillStyle = color;
+      }
       ctx.fillRect(x, y, barW, barH);
+    }
+
+    // Playhead indicator line
+    if (playheadRatio !== null && playheadRatio >= 0 && playheadRatio <= 1) {
+      const playheadX = Math.round(playheadRatio * w);
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(playheadX, 0);
+      ctx.lineTo(playheadX, h);
+      ctx.stroke();
     }
   }
 
@@ -4119,6 +4768,104 @@
     if (el.btnShadowAiFeedback) {
       el.btnShadowAiFeedback.onclick = () => evaluateShadowingWithAi();
     }
+
+    // Click-to-scrub on user waveform canvas
+    const userCanvas = el.canvasShadowUser || document.getElementById('canvas-shadow-user');
+    if (userCanvas) {
+      userCanvas.style.cursor = 'pointer';
+      userCanvas.onclick = (e) => {
+        const rect = userCanvas.getBoundingClientRect();
+        const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / Math.max(1, rect.width)));
+        drawWaveform(userCanvas, '#f59e0b', shadowingState.userPeaks, ratio);
+
+        if (shadowingState.userAudioUrl) {
+          if (shadowingState.userAudioElement) {
+            shadowingState.userAudioElement.pause();
+          }
+          const audio = new Audio(shadowingState.userAudioUrl);
+          shadowingState.userAudioElement = audio;
+          const playFromRatio = () => {
+            const dur = Number.isFinite(audio.duration) && audio.duration > 0
+              ? audio.duration
+              : (shadowingState.userDuration || 0);
+            if (dur > 0 && Number.isFinite(dur)) {
+              try {
+                audio.currentTime = ratio * dur;
+              } catch (_) {}
+            }
+            audio.play().catch(() => {});
+          };
+          if (audio.readyState >= 1) {
+            playFromRatio();
+          } else {
+            audio.addEventListener('loadedmetadata', playFromRatio, { once: true });
+          }
+        }
+      };
+    }
+
+    // Save Best Recording & Play Best Recording
+    const btnSaveBest = document.getElementById('btn-shadow-save-best');
+    const btnPlayBest = document.getElementById('btn-shadow-play-best');
+
+    if (btnSaveBest) {
+      btnSaveBest.onclick = () => {
+        if (!shadowingState.userAudioBlob) {
+          if (typeof window.showDevEngToast === 'function') {
+            window.showDevEngToast('⚠️ Vui lòng thu âm giọng của bạn trước khi lưu!', 'warning');
+          }
+          return;
+        }
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          try {
+            const dayKey = `deveng_shadow_best_day_${state.currentDay || 1}`;
+            const payload = {
+              dataUrl: reader.result,
+              peaks: shadowingState.userPeaks,
+              savedAt: new Date().toISOString()
+            };
+            localStorage.setItem(dayKey, JSON.stringify(payload));
+            if (btnPlayBest) {
+              btnPlayBest.hidden = false;
+              btnPlayBest.classList.remove('hidden');
+            }
+            if (typeof window.showDevEngToast === 'function') {
+              window.showDevEngToast('⭐ Đã lưu bản thu âm tốt nhất cho bài học hôm nay!', 'success');
+            }
+          } catch (quotaErr) {
+            console.warn('localStorage quota exceeded when saving audio', quotaErr);
+            if (typeof window.showDevEngToast === 'function') {
+              window.showDevEngToast('⚠️ Bộ nhớ trình duyệt đầy, không thể lưu bản thu âm dài.', 'warning');
+            }
+          }
+        };
+        reader.readAsDataURL(shadowingState.userAudioBlob);
+      };
+    }
+
+    if (btnPlayBest) {
+      btnPlayBest.onclick = () => {
+        const dayKey = `deveng_shadow_best_day_${state.currentDay || 1}`;
+        const raw = localStorage.getItem(dayKey);
+        if (!raw) return;
+        try {
+          const saved = JSON.parse(raw);
+          if (saved.peaks && Array.isArray(saved.peaks)) {
+            shadowingState.userPeaks = saved.peaks;
+            drawWaveform(el.canvasShadowUser, '#f59e0b', saved.peaks);
+          }
+          if (saved.dataUrl) {
+            shadowingState.userAudioUrl = saved.dataUrl;
+            const audio = new Audio(saved.dataUrl);
+            shadowingState.userAudioElement = audio;
+            audio.play().catch(() => {});
+          }
+        } catch (err) {
+          console.warn('Failed to play saved best recording', err);
+        }
+      };
+    }
   }
 
   function playShadowingReference() {
@@ -4147,7 +4894,7 @@
         if (e.data.size > 0) shadowingState.audioChunks.push(e.data);
       };
 
-      shadowingState.mediaRecorder.onstop = () => {
+      shadowingState.mediaRecorder.onstop = async () => {
         const duration = Math.round((Date.now() - startTime) / 100) / 10;
         shadowingState.userDuration = duration;
         if (el.shadowUserDuration) el.shadowUserDuration.textContent = `${duration}s`;
@@ -4155,16 +4902,32 @@
         shadowingState.userAudioBlob = new Blob(shadowingState.audioChunks, { type: 'audio/webm' });
         shadowingState.userAudioUrl = URL.createObjectURL(shadowingState.userAudioBlob);
 
-        // Render dynamic wave
-        drawWaveform(el.canvasShadowUser, '#f59e0b', [25, 55, 75, 45, 80, 95, 60, 35, 70, 85, 40, 20]);
         stream.getTracks().forEach(t => t.stop());
+
+        const { peaks, maxAmplitude } = await extractWaveformPeaksFromBlob(shadowingState.userAudioBlob, 28);
+        shadowingState.userPeaks = peaks;
+
+        if (maxAmplitude < 0.02 && typeof window.showDevEngToast === 'function') {
+          window.showDevEngToast('⚠️ Không phát hiện giọng nói (Micro quá nhỏ hoặc im lặng). Vui lòng kiểm tra lại micro!', 'warning');
+        }
+
+        drawWaveform(el.canvasShadowUser, '#f59e0b', peaks);
+
+        const btnSaveBest = document.getElementById('btn-shadow-save-best');
+        if (btnSaveBest) {
+          btnSaveBest.disabled = false;
+        }
       };
 
       shadowingState.mediaRecorder.start();
       if (el.shadowRecordLabel) el.shadowRecordLabel.textContent = 'Đang thu... Bấm để dừng';
     } catch (e) {
       console.warn('Microphone error', e);
-      alert('Không thể truy cập microphone. Vui lòng cấp quyền trong trình duyệt.');
+      if (typeof window.showDevEngToast === 'function') {
+        window.showDevEngToast('⚠️ Không thể truy cập microphone. Vui lòng cấp quyền trong trình duyệt.', 'warning');
+      } else {
+        alert('Không thể truy cập microphone. Vui lòng cấp quyền trong trình duyệt.');
+      }
     }
   }
 
@@ -4302,7 +5065,10 @@
   // --- Feature 006: Vietnamese Mouth-Map Loader ---
   async function loadMouthMap(targetSound) {
     try {
-      const data = await fetch(`/api/mouthmap/${encodeURIComponent(targetSound || '/t/')}`).then(r => r.json());
+      const sound = targetSound || '/t/';
+      const res = await fetch(`/api/mouthmap/${encodeURIComponent(sound)}`);
+      if (!res.ok) return;
+      const data = await res.json();
       if (data) {
         const vnTitle = document.getElementById('mouth-vn-title');
         const vnDesc = document.getElementById('mouth-vn-desc');
@@ -4310,18 +5076,23 @@
         const enDesc = document.getElementById('mouth-en-desc');
         const alertBox = document.getElementById('mouth-alert-box');
 
-        if (vnTitle) vnTitle.textContent = data.vietnameseHabitTitle;
-        if (vnDesc) vnDesc.textContent = data.vietnameseHabitDescription;
-        if (enTitle) enTitle.textContent = data.englishTargetTitle;
-        if (enDesc) enDesc.textContent = data.englishTargetDescription;
-        if (alertBox) alertBox.innerHTML = `${data.commonMistakeAlertVi} <strong>Giải pháp cơ học:</strong> ${data.kinestheticFixInstruction}`;
+        const cleanVnTitle = (data.vietnameseHabitTitle || 'Lỗi Thói Quen Người Việt').replace(/^(🇻🇳\s*)+/u, '').trim();
+        const cleanEnTitle = (data.englishTargetTitle || 'Chuẩn Target Tiếng Anh').replace(/^(🇬🇧\s*)+/u, '').trim();
+
+        if (vnTitle) vnTitle.textContent = `${cleanVnTitle} (${sound})`;
+        if (vnDesc && data.vietnameseHabitDescription) vnDesc.textContent = data.vietnameseHabitDescription;
+        if (enTitle) enTitle.textContent = `${cleanEnTitle} (${sound})`;
+        if (enDesc && data.englishTargetDescription) enDesc.textContent = data.englishTargetDescription;
+        if (alertBox && data.commonMistakeAlertVi) {
+          alertBox.innerHTML = `${data.commonMistakeAlertVi} <strong>Giải pháp cơ học:</strong> ${data.kinestheticFixInstruction || ''}`;
+        }
       }
     } catch (e) {
       console.warn('Mouth map load fallback', e);
     }
   }
 
-  // --- Feature 011: Collapsible Accordion Blocks ---
+  // --- Feature 011: Collapsible Accordion Blocks & Quick Stage Jumpers ---
   function setupCollapsibleBlocks() {
     const btnToggle1 = document.getElementById('btn-toggle-stage-1');
     const btnToggle2 = document.getElementById('btn-toggle-stage-2');
@@ -4332,9 +5103,27 @@
     const card2 = document.getElementById('stage-2-card');
     const card3 = document.getElementById('stage-3-card');
 
+    const syncCardBodyVisibility = (card, isCollapsed) => {
+      if (!card) return;
+      const body = card.querySelector('.stage-body');
+      if (body && !isCollapsed) {
+        body.classList.remove('hidden');
+      }
+    };
+
     const toggle = (card, btn) => {
       if (!card) return;
-      const isCollapsed = card.classList.toggle('collapsed');
+      const body = card.querySelector('.stage-body');
+      const wasHiddenByMode = body && body.classList.contains('hidden');
+      let isCollapsed;
+      if (wasHiddenByMode) {
+        body.classList.remove('hidden');
+        card.classList.remove('collapsed');
+        isCollapsed = false;
+      } else {
+        isCollapsed = card.classList.toggle('collapsed');
+        syncCardBodyVisibility(card, isCollapsed);
+      }
       if (btn) btn.textContent = isCollapsed ? '▶' : '▼';
     };
 
@@ -4342,14 +5131,44 @@
     if (btnToggle2) btnToggle2.onclick = () => toggle(card2, btnToggle2);
     if (btnToggle3) btnToggle3.onclick = () => toggle(card3, btnToggle3);
 
+    // 1-Click Stage Jump Pills (#btn-jump-stage-1, #btn-jump-stage-2, #btn-jump-stage-3)
+    const jumpPills = document.querySelectorAll('.stage-jump-pill');
+    const cardsMap = { '1': { card: card1, btn: btnToggle1 }, '2': { card: card2, btn: btnToggle2 }, '3': { card: card3, btn: btnToggle3 } };
+    jumpPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        const stageId = pill.dataset.jumpStage;
+        const target = cardsMap[stageId];
+        if (!target || !target.card) return;
+
+        // Expand target stage
+        target.card.classList.remove('collapsed');
+        syncCardBodyVisibility(target.card, false);
+        if (target.btn) target.btn.textContent = '▼';
+
+        // Highlight active jump pill
+        jumpPills.forEach(p => {
+          const isMatch = p === pill;
+          p.className = isMatch
+            ? 'stage-jump-pill px-2.5 py-1 rounded-md font-mono font-semibold bg-cyan-950/80 text-cyan-300 border border-cyan-800/70 hover:bg-cyan-900/70 transition cursor-pointer'
+            : 'stage-jump-pill px-2.5 py-1 rounded-md font-mono text-slate-300 hover:text-white hover:bg-slate-800 transition cursor-pointer';
+        });
+
+        target.card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
     let allCollapsed = false;
     if (btnToggleAll) {
       btnToggleAll.onclick = () => {
         allCollapsed = !allCollapsed;
         [card1, card2, card3].forEach(c => {
           if (c) {
-            if (allCollapsed) c.classList.add('collapsed');
-            else c.classList.remove('collapsed');
+            if (allCollapsed) {
+              c.classList.add('collapsed');
+            } else {
+              c.classList.remove('collapsed');
+              syncCardBodyVisibility(c, false);
+            }
           }
         });
         [btnToggle1, btnToggle2, btnToggle3].forEach(b => {
@@ -4389,14 +5208,45 @@
     }
   }
 
-  // --- Feature 005: Micro-Lesson Mode ---
+  // --- Feature 005: Micro-Lesson Mode & Block Recommendation ---
+  async function fetchBlockRecommendation() {
+    try {
+      const res = await fetch('/api/progress/recommendation');
+      if (!res.ok) return null;
+      const rec = await res.json();
+      if (!rec) return null;
+
+      if (rec.recommendedBlock) {
+        document.querySelectorAll('.micro-block-choice').forEach(btn => {
+          const isRec = btn.dataset.block === rec.recommendedBlock;
+          btn.classList.toggle('ring-2', isRec);
+          btn.classList.toggle('ring-cyan-400', isRec);
+        });
+      }
+
+      if (rec.showConsecutivePartialNudge && typeof window.showDevEngToast === 'function') {
+        const nudgeMsg = rec.consecutivePartialNudgeMessage
+          || '💡 Bạn đã học 3 buổi 5 phút liên tiếp! Khi có thời gian, hãy thử trọn vẹn buổi 15 phút để kết nối cả 3 kỹ năng nhé.';
+        window.showDevEngToast(nudgeMsg, 'info');
+      }
+
+      return rec;
+    } catch (err) {
+      console.warn('Block recommendation fallback', err);
+      return null;
+    }
+  }
+
   function setupMicroLesson() {
     const modal = document.getElementById('modal-microlesson');
     const btnOpen1 = document.getElementById('btn-open-microlesson');
     const btnOpen2 = document.getElementById('btn-quick-10m-inline');
     const btnClose = document.getElementById('btn-close-microlesson');
 
-    const open = () => modal?.classList.remove('hidden');
+    const open = () => {
+      modal?.classList.remove('hidden');
+      fetchBlockRecommendation();
+    };
     const close = () => modal?.classList.add('hidden');
 
     if (btnOpen1) btnOpen1.onclick = open;
@@ -4417,7 +5267,11 @@
             })
           });
           const data = await res.json();
-          alert(data.message || `Đã hoàn thành chặng 10m (${block})!`);
+          if (typeof window.showDevEngToast === 'function') {
+            window.showDevEngToast(data.message || `Đã hoàn thành chặng 10m (${block})!`, 'success');
+          } else {
+            alert(data.message || `Đã hoàn thành chặng 10m (${block})!`);
+          }
           close();
           fetchInitialData();
         } catch (e) {
@@ -4429,9 +5283,12 @@
 
   // --- Feature 007: Spaced Repetition 2-Minute Warm-Up ---
   let warmupBatch = [];
+  let warmupFullItems = [];
   let warmupIndex = 0;
   let warmupTimerId = null;
   let warmupSecondsLeft = 120;
+  let warmupCorrectCount = 0;
+  let warmupMissedWords = [];
 
   function setupSrsWarmup() {
     const btnOpen = document.getElementById('btn-open-warmup');
@@ -4440,15 +5297,40 @@
     const btnPass = document.getElementById('btn-warmup-pass');
     const btnFail = document.getElementById('btn-warmup-fail');
     const btnListen = document.getElementById('btn-warmup-listen');
+    const btnQuickMode = document.getElementById('btn-srs-quick-mode');
 
     if (btnOpen) btnOpen.onclick = startWarmupRound;
     if (btnSkip) btnSkip.onclick = closeWarmupModal;
+
+    if (btnQuickMode) {
+      btnQuickMode.onclick = () => {
+        state.srsWarmupQuickMode = !state.srsWarmupQuickMode;
+        btnQuickMode.classList.toggle('bg-amber-500/20', state.srsWarmupQuickMode);
+        btnQuickMode.classList.toggle('border-amber-400', state.srsWarmupQuickMode);
+        btnQuickMode.textContent = state.srsWarmupQuickMode ? '⚡ Đang bật Nhanh 1 Phút (3 từ)' : '⚡ Nhanh 1 Phút (3 từ)';
+        if (warmupFullItems.length > 0) {
+          warmupBatch = state.srsWarmupQuickMode ? warmupFullItems.slice(0, 3) : warmupFullItems.slice();
+          warmupIndex = Math.min(warmupIndex, Math.max(0, warmupBatch.length - 1));
+          warmupSecondsLeft = state.srsWarmupQuickMode ? 60 : 120;
+          renderWarmupCard();
+          startWarmupTimer();
+        }
+        if (typeof window.showDevEngToast === 'function') {
+          window.showDevEngToast(
+            state.srsWarmupQuickMode
+              ? '⚡ Đã chuyển sang chế độ Khởi động Nhanh 1 phút (tối đa 3 từ)!'
+              : '🔄 Đã chuyển về chế độ Khởi động tiêu chuẩn (2 phút).',
+            'info'
+          );
+        }
+      };
+    }
 
     if (btnListen) {
       btnListen.onclick = () => {
         const item = warmupBatch[warmupIndex];
         if (item && window.speechSynthesis) {
-          const u = new SpeechSynthesisUtterance(item.wordOrPhrase);
+          const u = new SpeechSynthesisUtterance(item.wordOrPhrase || item.word || '');
           u.lang = 'en-US';
           window.speechSynthesis.speak(u);
         }
@@ -4456,10 +5338,10 @@
     }
 
     if (btnPass) {
-      btnPass.onclick = () => recordWarmupItem(100);
+      btnPass.onclick = () => submitRating(5);
     }
     if (btnFail) {
-      btnFail.onclick = () => recordWarmupItem(40);
+      btnFail.onclick = () => submitRating(2);
     }
   }
 
@@ -4467,12 +5349,31 @@
     try {
       const batch = await fetch('/api/srs/warmup').then(r => r.json());
       if (batch.shouldSkipWarmup || !batch.items || batch.items.length === 0) {
-        alert('Không có từ vựng cần ôn tập hôm nay! Hệ thống sẵn sàng vào thẳng bài học.');
+        if (typeof window.showDevEngToast === 'function') {
+          window.showDevEngToast('Không có từ vựng cần ôn tập hôm nay! Sẵn sàng vào thẳng bài học.', 'info');
+        } else {
+          alert('Không có từ vựng cần ôn tập hôm nay! Hệ thống sẵn sàng vào thẳng bài học.');
+        }
         return;
       }
-      warmupBatch = batch.items;
+      warmupFullItems = batch.items.slice();
+      warmupBatch = state.srsWarmupQuickMode ? warmupFullItems.slice(0, 3) : warmupFullItems.slice();
       warmupIndex = 0;
-      warmupSecondsLeft = 120;
+      warmupCorrectCount = 0;
+      warmupMissedWords = [];
+      warmupSecondsLeft = state.srsWarmupQuickMode ? 60 : 120;
+
+      const drillView = document.getElementById('srs-card-drill-view');
+      const cardBack = document.getElementById('srs-card-back');
+      const summaryView = document.getElementById('srs-warmup-summary-view');
+      const actionBtns = document.getElementById('warmup-action-buttons');
+      if (drillView) drillView.classList.remove('hidden');
+      if (cardBack) cardBack.classList.remove('hidden');
+      if (summaryView) {
+        summaryView.classList.add('hidden');
+        summaryView.innerHTML = '';
+      }
+      if (actionBtns) actionBtns.classList.remove('hidden');
 
       const modal = document.getElementById('modal-srs-warmup');
       modal?.classList.remove('hidden');
@@ -4486,8 +5387,7 @@
 
   function renderWarmupCard() {
     if (warmupIndex >= warmupBatch.length) {
-      closeWarmupModal();
-      alert('🎯 Hoàn thành khởi động 2 phút! Sẵn sàng vào bài học hôm nay.');
+      finishWarmup();
       return;
     }
     const item = warmupBatch[warmupIndex];
@@ -4496,38 +5396,107 @@
     const contextEl = document.getElementById('warmup-context');
     const stepEl = document.getElementById('warmup-step-indicator');
 
-    if (wordEl) wordEl.textContent = item.wordOrPhrase;
-    if (phonemeEl) phonemeEl.textContent = `Âm mục tiêu: ${item.targetPhoneme}`;
-    if (contextEl) contextEl.textContent = `"${item.contextSentence}"`;
-    if (stepEl) stepEl.textContent = `Từ ${warmupIndex + 1} / ${warmupBatch.length} // Hộp ${item.box}`;
+    if (wordEl) wordEl.textContent = item.wordOrPhrase || item.word || '';
+    if (phonemeEl) phonemeEl.textContent = `Âm mục tiêu: ${item.targetPhoneme || ''}`;
+    if (contextEl) contextEl.textContent = `"${item.contextSentence || ''}"`;
+    if (stepEl) stepEl.textContent = `Từ ${warmupIndex + 1} / ${warmupBatch.length} // Hộp ${item.box || 1}`;
   }
 
-  async function recordWarmupItem(score) {
+  async function submitRating(quality) {
     const item = warmupBatch[warmupIndex];
     if (item) {
+      if (quality >= 3) {
+        warmupCorrectCount++;
+      } else {
+        warmupMissedWords.push(item.wordOrPhrase || item.word || '');
+      }
+      const mappedScore = quality >= 3 ? 100 : 40;
       fetch('/api/srs/review', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ itemId: item.itemId, score: score })
+        body: JSON.stringify({ itemId: item.itemId, score: mappedScore })
       }).catch(() => {});
     }
     warmupIndex++;
     renderWarmupCard();
   }
 
+  async function recordWarmupItem(score) {
+    return submitRating(score >= 70 ? 5 : 2);
+  }
+
+  function finishWarmup() {
+    clearInterval(warmupTimerId);
+    const totalReviewed = Math.min(warmupIndex, warmupBatch.length);
+    if (totalReviewed === 0) {
+      closeWarmupModal();
+      return;
+    }
+
+    const lastWord = warmupBatch[Math.max(0, totalReviewed - 1)];
+    const focusWord = warmupMissedWords.length > 0
+      ? warmupMissedWords[0]
+      : (lastWord?.wordOrPhrase || lastWord?.word || 'pipeline');
+
+    const cardFront = document.getElementById('srs-card-front');
+    const drillView = document.getElementById('srs-card-drill-view');
+    const cardBack = document.getElementById('srs-card-back');
+    const summaryView = document.getElementById('srs-warmup-summary-view');
+    const actionBtns = document.getElementById('warmup-action-buttons');
+
+    if (drillView) drillView.classList.add('hidden');
+    if (cardBack) cardBack.classList.add('hidden');
+    if (actionBtns) actionBtns.classList.add('hidden');
+
+    const summaryHtml = `
+      <div class="space-y-3 py-2 text-center">
+        <div class="text-lg font-bold text-emerald-400">🎉 Hoàn thành Khởi động SRS!</div>
+        <div class="text-sm font-mono font-bold text-white">Đạt ${warmupCorrectCount}/${totalReviewed} từ đúng</div>
+        <div class="p-3 rounded-xl bg-amber-950/30 border border-amber-500/40 text-xs text-amber-200 font-mono">
+          📌 Từ cần chú ý hôm nay: <strong class="text-amber-300">${escapeHtml(focusWord)}</strong>
+        </div>
+        <div class="pt-2">
+          <button type="button" id="btn-srs-summary-done" class="px-5 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs shadow-lg transition cursor-pointer">
+            Vào bài học chính →
+          </button>
+        </div>
+      </div>
+    `;
+
+    if (summaryView) {
+      summaryView.innerHTML = summaryHtml;
+      summaryView.classList.remove('hidden');
+    } else if (cardFront) {
+      cardFront.innerHTML = summaryHtml;
+    }
+
+    const btnDone = document.getElementById('btn-srs-summary-done');
+    if (btnDone) {
+      btnDone.onclick = () => closeWarmupModal();
+    }
+  }
+
   function startWarmupTimer() {
     clearInterval(warmupTimerId);
     const timerEl = document.getElementById('warmup-timer');
+    const updateTimerText = () => {
+      const m = String(Math.floor(warmupSecondsLeft / 60)).padStart(2, '0');
+      const s = String(warmupSecondsLeft % 60).padStart(2, '0');
+      if (timerEl) timerEl.textContent = `${m}:${s}`;
+    };
+    updateTimerText();
+
     warmupTimerId = setInterval(() => {
       warmupSecondsLeft--;
       if (warmupSecondsLeft <= 0) {
         clearInterval(warmupTimerId);
-        closeWarmupModal();
-        alert("⏰ Hết 2 phút khởi động! Hãy bắt đầu buổi học chính.");
+        if (warmupIndex > 0) {
+          finishWarmup();
+        } else {
+          closeWarmupModal();
+        }
       } else {
-        const m = String(Math.floor(warmupSecondsLeft / 60)).padStart(2, '0');
-        const s = String(warmupSecondsLeft % 60).padStart(2, '0');
-        if (timerEl) timerEl.textContent = `${m}:${s}`;
+        updateTimerText();
       }
     }, 1000);
   }
@@ -4584,10 +5553,10 @@
   }
 
   function renderCheatSheetBody(sheet) {
-    const body = document.getElementById('cheatsheet-printable-body');
-    if (!body) return;
+    const cheatSheetBody = document.getElementById('cheatsheet-printable-body');
+    if (!cheatSheetBody) return;
 
-    body.innerHTML = `
+    cheatSheetBody.innerHTML = `
       <div class="border-b-2 border-cyan-500 pb-3">
         <h1 class="text-xl font-bold text-white uppercase">${sheet.sprintTitle}</h1>
         <p class="text-sm text-cyan-300 font-semibold mt-1">🎯 Mục tiêu: ${sheet.focusObjective}</p>
@@ -4597,12 +5566,21 @@
       <div class="space-y-2.5">
         <h3 class="text-sm font-bold font-mono text-cyan-400 uppercase tracking-wider">1. Khung Câu Standup & Demo Tiêu Biểu (10 Frames):</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-          ${sheet.sentenceFrames.map(f => `
-            <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
-              <div class="font-bold text-slate-100 font-mono text-sm">${f.number}. ${f.templatePattern}</div>
-              <div class="text-sm text-slate-200 italic font-sans">${f.translationVi}</div>
+          ${(sheet.sentenceFrames || []).map(f => {
+            const patternText = f.templatePattern || String(f);
+            const escapedAttr = patternText.replace(/"/g, '&quot;');
+            return `
+            <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5 flex flex-col justify-between">
+              <div class="space-y-1">
+                <div class="font-bold text-slate-100 font-mono text-sm">${f.number ? `${f.number}. ` : ''}${escapeHtml(patternText)}</div>
+                ${f.translationVi ? `<div class="text-sm text-slate-200 italic font-sans">${escapeHtml(f.translationVi)}</div>` : ''}
+              </div>
+              <div class="pt-1 flex justify-end no-print">
+                <button type="button" class="btn-secondary btn-small btn-copy-frame px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-cyan-300 text-xs font-mono transition cursor-pointer" data-frame="${escapedAttr}">📋 Sao chép</button>
+              </div>
             </div>
-          `).join('')}
+          `;
+          }).join('')}
         </div>
       </div>
 
@@ -4619,11 +5597,11 @@
               </tr>
             </thead>
             <tbody>
-              ${sheet.targetPhonemes.map(p => `
+              ${(sheet.targetPhonemes || []).map(p => `
                 <tr class="border-b border-slate-800/60">
                   <td class="py-2 px-3 font-mono font-bold text-cyan-400">${p.symbol}</td>
                   <td class="py-2 px-3 text-slate-200">${p.mouthPlacementCueVi}</td>
-                  <td class="py-2 px-3 font-mono text-amber-300">${p.devWords.join(', ')}</td>
+                  <td class="py-2 px-3 font-mono text-amber-300">${(p.devWords || []).join(', ')}</td>
                 </tr>
               `).join('')}
             </tbody>
@@ -4635,7 +5613,7 @@
       <div class="space-y-2.5">
         <h3 class="text-sm font-bold font-mono text-purple-400 uppercase tracking-wider">3. Từ Vựng Kỹ Thuật Trọng Tâm:</h3>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm font-mono">
-          ${sheet.essentialVocabulary.map(v => `
+          ${(sheet.essentialVocabulary || []).map(v => `
             <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 space-y-0.5">
               <div class="font-bold text-cyan-300 text-sm">${v.word}</div>
               <div class="text-slate-300 text-sm">${v.ipa}</div>
@@ -4645,37 +5623,152 @@
         </div>
       </div>
     `;
+
+    cheatSheetBody.querySelectorAll('.btn-copy-frame').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const frameText = btn.dataset.frame || '';
+        try {
+          await navigator.clipboard.writeText(frameText);
+          const originalLabel = btn.textContent;
+          btn.textContent = '✓ Đã chép';
+          if (typeof window.showDevEngToast === 'function') {
+            window.showDevEngToast('📋 Đã sao chép mẫu câu vào clipboard!', 'success');
+          }
+          setTimeout(() => {
+            btn.textContent = originalLabel || '📋 Sao chép';
+          }, 1800);
+        } catch (err) {
+          console.warn('Clipboard copy failed', err);
+        }
+      });
+    });
   }
 
-  // --- Feature 009: 70% Good Enough Auto-Complete Checker ---
-  async function checkAutoCompleteThreshold(totalWords, correctWords, failedWords, targetPhoneme) {
+  // --- Feature 009: Configurable 60-90% Good Enough Auto-Complete Checker ---
+  function setupAutoCompleteThreshold() {
+    const selectEl = document.getElementById('select-autocomplete-threshold');
+    if (!selectEl) return;
+
+    const savedThreshold = localStorage.getItem('deveng_autocomplete_threshold') || '70';
+    selectEl.value = savedThreshold;
+
+    selectEl.addEventListener('change', () => {
+      const val = selectEl.value || '70';
+      localStorage.setItem('deveng_autocomplete_threshold', val);
+      if (typeof window.showDevEngToast === 'function') {
+        window.showDevEngToast(`🎯 Đã đặt ngưỡng tự động hoàn thành ở mức ${val}%!`, 'success');
+      }
+      const targetWords = state.currentLesson?.phonetics?.targetWords || [];
+      const totalWords = targetWords.length || 6;
+      const correctCount = drillWordAttempts.firstAttemptSuccess.size;
+      const progressTextEl = document.getElementById('drill-progress-text');
+      if (progressTextEl) {
+        progressTextEl.textContent = `${correctCount}/${totalWords} từ đúng lần đầu (Mục tiêu ${val}%)`;
+      }
+    });
+  }
+
+  async function checkAutoCompleteThreshold(totalWordsArg, correctWordsCountArg, failedWordsArg, targetPhonemeArg) {
     try {
+      const thresholdPct = parseInt(localStorage.getItem('deveng_autocomplete_threshold') || '70', 10);
+      const targetWords = state.currentLesson?.phonetics?.targetWords || [];
+      const totalWords = targetWords.length > 0 ? targetWords.length : (totalWordsArg || 6);
+
+      const correctWords = [];
+      const reviewWords = [];
+      targetWords.forEach((w, idx) => {
+        const wordStr = typeof w === 'string' ? w : (w.word || '');
+        if (!wordStr) return;
+        if (drillWordAttempts.firstAttemptSuccess.has(idx)) {
+          correctWords.push(wordStr);
+        } else {
+          reviewWords.push(wordStr);
+        }
+      });
+
+      const correctCount = correctWords.length > 0 || drillWordAttempts.firstAttemptSuccess.size > 0
+        ? drillWordAttempts.firstAttemptSuccess.size
+        : (typeof correctWordsCountArg === 'number' ? correctWordsCountArg : 0);
+
+      const failedWords = Array.isArray(failedWordsArg) && failedWordsArg.length > 0
+        ? failedWordsArg
+        : Array.from(drillWordAttempts.failedWords);
+
+      const progressTextEl = document.getElementById('drill-progress-text');
+      if (progressTextEl) {
+        progressTextEl.textContent = `${correctCount}/${totalWords} từ đúng lần đầu (Mục tiêu ${thresholdPct}%)`;
+      }
+
       const res = await fetch('/api/drill/check-threshold', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           dayNumber: state.currentDay,
           totalWordsCount: totalWords,
-          correctWordsCount: correctWords,
-          failedWords: failedWords,
-          targetPhoneme: targetPhoneme
+          correctWordsCount: correctCount,
+          thresholdPercentage: thresholdPct,
+          correctWords: correctWords,
+          failedWords: failedWords.length > 0 ? failedWords : reviewWords,
+          targetPhoneme: targetPhonemeArg || state.currentLesson?.phonetics?.soundFocus || '/t/'
         })
       });
 
-      const data = await res.json();
-      if (data.thresholdReached) {
+      const result = await res.json();
+      if (result.thresholdReached) {
         const celebration = document.getElementById('autocomplete-celebration');
         const msg = document.getElementById('autocomplete-msg');
+        const summaryCard = document.getElementById('autocomplete-summary-card');
+
         if (celebration && msg) {
-          msg.textContent = data.celebrationMessage;
+          msg.textContent = result.celebrationMessage;
+
+          if (summaryCard) {
+            const isPerfect = result.completionMode === 'Perfect' || correctCount >= totalWords;
+            const modeBadgeText = isPerfect
+              ? '🏆 Tuyệt đối 100%'
+              : `⚡ Tự động hoàn thành (${thresholdPct}%)`;
+            const streakDays = result.currentStreakDays || state.progress?.currentStreakDays || state.summary?.currentStreak || 1;
+            const nailedList = (result.nailedWords && result.nailedWords.length > 0) ? result.nailedWords : correctWords;
+            const reviewList = (result.queuedSrsWords && result.queuedSrsWords.length > 0) ? result.queuedSrsWords : reviewWords;
+
+            summaryCard.innerHTML = `
+              <div class="flex flex-wrap items-center justify-between gap-2 pb-1.5 border-b border-emerald-500/20">
+                <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/50 text-emerald-200 font-mono font-bold text-xs">${modeBadgeText}</span>
+                <span class="font-mono font-bold text-amber-300 text-xs">🔥 Chuỗi ngày học: ${streakDays} ngày</span>
+              </div>
+              <div class="space-y-1 pt-1">
+                <div class="text-emerald-300 font-semibold text-xs">✅ Đã nắm vững:</div>
+                <div class="flex flex-wrap gap-1.5">
+                  ${nailedList.length > 0
+                    ? nailedList.map(w => `<span class="px-2 py-0.5 rounded bg-emerald-950/80 border border-emerald-500/40 text-emerald-200 font-mono text-xs">${escapeHtml(w)}</span>`).join('')
+                    : '<span class="text-slate-400 text-xs italic">Đang cập nhật...</span>'}
+                </div>
+              </div>
+              <div class="space-y-1 pt-1">
+                <div class="text-amber-300 font-semibold text-xs">📌 Cần ôn lại ngày mai:</div>
+                <div class="flex flex-wrap gap-1.5">
+                  ${reviewList.length > 0
+                    ? reviewList.map(w => `<span class="px-2 py-0.5 rounded bg-amber-950/80 border border-amber-500/40 text-amber-200 font-mono text-xs">${escapeHtml(w)}</span>`).join('')
+                    : '<span class="text-emerald-300 text-xs font-medium">Tất cả các từ đều đạt ngay lần đầu!</span>'}
+                </div>
+              </div>
+            `;
+          }
+
           celebration.classList.remove('hidden');
 
-          document.getElementById('btn-close-autocomplete').onclick = () => celebration.classList.add('hidden');
-          document.getElementById('btn-finish-now').onclick = () => {
-            celebration.classList.add('hidden');
-            fetchInitialData();
-          };
-          document.getElementById('btn-keep-going').onclick = () => celebration.classList.add('hidden');
+          const btnClose = document.getElementById('btn-close-autocomplete');
+          const btnFinish = document.getElementById('btn-finish-now');
+          const btnKeep = document.getElementById('btn-keep-going');
+
+          if (btnClose) btnClose.onclick = () => celebration.classList.add('hidden');
+          if (btnFinish) {
+            btnFinish.onclick = () => {
+              celebration.classList.add('hidden');
+              fetchInitialData();
+            };
+          }
+          if (btnKeep) btnKeep.onclick = () => celebration.classList.add('hidden');
         }
       }
     } catch (e) {
@@ -4800,16 +5893,15 @@
 
     function checkMilestoneDay() {
       const day = state.currentDay;
-      if (day === 30 || day === 60 || day === 90) {
-        if (btnOpen) {
-          btnOpen.classList.remove('hidden');
-          const badgeLabel = document.getElementById('label-capstone-badge');
-          if (badgeLabel) {
-            badgeLabel.textContent = day === 30 ? 'Sát Hạch D30' : (day === 60 ? 'Sát Hạch D60' : 'Sát Hạch Master D90');
-          }
+      if (btnOpen) {
+        btnOpen.classList.remove('hidden');
+        const badgeLabel = document.getElementById('label-capstone-badge');
+        if (badgeLabel) {
+          if (day === 30) badgeLabel.textContent = 'Sát Hạch D30';
+          else if (day === 60) badgeLabel.textContent = 'Sát Hạch D60';
+          else if (day === 90) badgeLabel.textContent = 'Sát Hạch Master D90';
+          else badgeLabel.textContent = 'Thi Sát Hạch Capstone';
         }
-      } else {
-        if (btnOpen) btnOpen.classList.add('hidden');
       }
     }
 
@@ -5015,6 +6107,7 @@
     setupMicroLesson();
     setupSrsWarmup();
     setupCheatSheet();
+    setupAutoCompleteThreshold();
     setupSagittalVocalTract();
     setupBackupManager();
     setupCapstoneAssessment();

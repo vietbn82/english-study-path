@@ -17,7 +17,7 @@ public interface ISrsService
 public sealed class SrsService : ISrsService
 {
     private readonly string _filePath;
-    private readonly object _lock = new();
+    private static readonly object _lock = new();
     private readonly List<SrsItem> _items = [];
     private static readonly JsonSerializerOptions JsonOptions = new()
     {

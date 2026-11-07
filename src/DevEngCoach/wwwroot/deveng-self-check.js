@@ -471,8 +471,9 @@
       }
       #${REOPEN_CHIP_ID} {
         position: fixed;
-        bottom: 24px;
-        right: 24px;
+        bottom: 20px;
+        left: 20px;
+        right: auto;
         background: rgba(15, 23, 42, 0.92);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
@@ -483,7 +484,7 @@
         font-size: 12.5px;
         font-weight: 600;
         cursor: pointer;
-        z-index: 99998;
+        z-index: 48;
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 15px rgba(6, 182, 212, 0.25);
         display: none;
         align-items: center;
@@ -514,7 +515,8 @@
         }
         #${REOPEN_CHIP_ID} {
           bottom: 16px;
-          right: 16px;
+          left: 16px;
+          right: auto;
         }
       }
     `;
@@ -871,29 +873,13 @@
       };
     }
 
-    // 2. DOM Event Delegation for speech drill practice buttons
+    // 2. DOM Event Delegation for speech drill context tracking (without blocking modal on open)
     if (typeof document !== 'undefined') {
       document.addEventListener('click', (e) => {
-        // A. Drill Practice Button (.drill-practice-btn)
         const practiceBtn = e.target.closest('.drill-practice-btn');
         if (practiceBtn) {
-          const word = practiceBtn.dataset.word || '';
-          const ipa = practiceBtn.dataset.ipa || '';
-          setTimeout(() => {
-            showTactileCheck(ipa, word);
-          }, 350);
-          return;
-        }
-
-        // B. Modal sound listen button (.modal-sound-btn-listen)
-        const soundModalListen = e.target.closest('#modal-sound-btn-listen');
-        if (soundModalListen && soundModalListen.dataset.word) {
-          const word = soundModalListen.dataset.word;
-          const targetDesc = document.getElementById('modal-sound-target-desc');
-          const targetPhone = targetDesc ? targetDesc.textContent.replace('Mục tiêu âm:', '').trim() : '';
-          setTimeout(() => {
-            showTactileCheck(targetPhone, word);
-          }, 400);
+          activeWord = practiceBtn.dataset.word || '';
+          activePhoneme = practiceBtn.dataset.ipa || '';
           return;
         }
       });

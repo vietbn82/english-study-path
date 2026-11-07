@@ -28,7 +28,7 @@
       }
     };
   </script>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=5">
   <link rel="manifest" href="/manifest.json">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,18 +37,18 @@
 <body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased selection:bg-cyan-500 selection:text-slate-950">
 
   <!-- Top Sticky Navigation -->
-    <!-- ========================================================================= -->
-  <!-- MODERN 2-TIER ARCHITECTURAL HEADER                                        -->
   <!-- ========================================================================= -->
-  <header class="border-b border-slate-800/90 bg-slate-950/90 backdrop-blur-md sticky top-0 z-50 shadow-2xl overflow-x-clip">
+  <!-- MODERN 2-TIER ARCHITECTURAL HEADER (UNCLIPPED VIBE-CODING NAVIGATION)     -->
+  <!-- ========================================================================= -->
+  <header class="border-b border-slate-800/80 bg-slate-950/85 backdrop-blur-xl sticky top-0 z-50 shadow-2xl">
     
     <!-- Tier 1: Brand, Core Navigation, Sticky Session Timer, Telemetry Badges -->
     <div class="border-b border-slate-800/60">
-      <div class="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-4">
+      <div class="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-3">
         
-        <!-- Left: Brand + Primary Tabs -->
-        <div class="flex items-center gap-2 sm:gap-4 shrink-0">
-          <a href="/" id="brand-logo-home" class="flex items-center gap-2 group cursor-pointer" title="Quay về trang chủ">
+        <!-- Left: Brand + Primary Views -->
+        <div class="flex items-center gap-2 sm:gap-3.5 shrink-0">
+          <a href="/" id="brand-logo-home" class="flex items-center gap-2.5 group cursor-pointer" title="Quay về trang chủ (Ngày hiện tại)">
             <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-400 via-cyan-500 to-blue-600 flex items-center justify-center font-mono font-black text-slate-950 text-xs shadow-md shadow-cyan-500/25 group-hover:scale-105 transition-transform">
               DE
             </div>
@@ -56,43 +56,42 @@
               <span class="font-extrabold text-sm tracking-tight text-white group-hover:text-cyan-400 transition-colors">
                 DevEng<span class="text-cyan-400 font-normal ml-0.5">Coach</span>
               </span>
-              <span class="text-xs font-mono px-1.5 py-0.2 rounded bg-cyan-950/80 text-cyan-400 border border-cyan-800/50 uppercase tracking-wider font-semibold">Pro</span>
+              <span class="text-xs font-mono px-1.5 py-0.5 rounded bg-cyan-950/90 text-cyan-300 border border-cyan-800/60 uppercase tracking-wider font-semibold">Pro</span>
             </div>
           </a>
 
           <div class="h-4 w-px bg-slate-800 hidden md:block"></div>
 
           <!-- Primary View Links -->
-          <nav class="flex items-center gap-1">
-            <button id="nav-workspace" class="px-2.5 sm:px-3 py-1 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950 shadow-sm transition flex items-center gap-1.5 cursor-pointer">
+          <nav class="flex items-center gap-1 bg-slate-900/70 p-1 rounded-xl border border-slate-800/80" aria-label="Điều hướng chính">
+            <button id="nav-workspace" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950 shadow-sm transition flex items-center gap-1.5 cursor-pointer">
               <span>💻</span>
-              <span class="hidden sm:inline">Buổi học</span>
+              <span>Buổi học</span>
             </button>
-            <button id="nav-curriculum" class="px-2.5 sm:px-3 py-1 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 cursor-pointer">
+            <button id="nav-curriculum" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 cursor-pointer">
               <span>🗺️</span>
-              <span class="hidden sm:inline">90 ngày</span>
+              <span>90 ngày</span>
             </button>
-            <a href="fundamentals.html" target="_blank" class="px-2.5 sm:px-3 py-1 rounded-lg text-xs font-medium text-slate-300 hover:text-cyan-300 hover:bg-cyan-950/40 border border-transparent hover:border-cyan-800/40 transition flex items-center gap-1.5">
+            <a href="fundamentals.html" class="px-3 py-1.5 rounded-lg text-xs font-medium text-cyan-300 hover:text-white hover:bg-cyan-950/60 border border-transparent hover:border-cyan-800/50 transition flex items-center gap-1.5 cursor-pointer" title="Mở Cẩm Nang Cấu Âm Cơ Học">
               <span>📖</span>
               <span class="hidden sm:inline">Cẩm nang</span>
-              <span class="text-xs text-slate-500">↗</span>
             </a>
           </nav>
         </div>
 
         <!-- Center: Sleek Glow Session Timer Widget -->
         <div class="flex items-center">
-          <div id="sticky-header-timer" class="flex items-center gap-2.5 px-3 py-1 rounded-full bg-slate-900/90 border border-cyan-500/30 hover:border-cyan-500/60 shadow-lg shadow-cyan-950/40 font-mono text-xs transition">
+          <div id="sticky-header-timer" class="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-slate-900/95 border border-cyan-500/35 hover:border-cyan-400/70 shadow-lg shadow-cyan-950/40 font-mono text-xs transition">
             <div class="flex items-center gap-1.5">
               <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
-              <span class="text-slate-400 text-xs uppercase font-bold tracking-wider">Session</span>
+              <span class="text-slate-300 text-xs uppercase font-bold tracking-wider hidden sm:inline">Pomodoro</span>
             </div>
             <span id="header-timer-display" class="font-bold text-cyan-300 text-sm tracking-wider">30:00</span>
-            <span class="text-slate-700">|</span>
-            <span id="header-timer-phase" class="hidden md:inline text-xs text-slate-400 max-w-[100px] truncate">1. Khẩu Hình</span>
+            <span class="text-slate-700 hidden md:inline">|</span>
+            <span id="header-timer-phase" class="hidden md:inline text-xs text-slate-300 max-w-[115px] truncate">1. Khẩu Hình</span>
             <div class="flex items-center gap-1 ml-0.5">
-              <button id="btn-header-timer-toggle" class="px-2.5 py-0.5 rounded-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs transition cursor-pointer shadow-sm" title="Bắt đầu / Tạm dừng">Start</button>
-              <button id="btn-header-timer-reset" class="w-5 h-5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white text-xs flex items-center justify-center transition cursor-pointer" title="Đặt lại 30 phút">↺</button>
+              <button id="btn-header-timer-toggle" class="px-2.5 py-0.5 rounded-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs transition cursor-pointer shadow-sm" title="Bắt đầu / Tạm dừng đồng hồ 30m">Start</button>
+              <button id="btn-header-timer-reset" class="w-6 h-6 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs flex items-center justify-center transition cursor-pointer" title="Đặt lại 30 phút">↺</button>
             </div>
           </div>
         </div>
@@ -100,132 +99,132 @@
         <!-- Right: Modern Telemetry Capsule Cluster -->
         <div class="hidden lg:flex items-center gap-2 text-xs font-mono">
           <!-- Unified Stats Capsule -->
-          <div class="flex items-center rounded-lg bg-slate-900/80 border border-slate-800 p-0.5 text-xs">
+          <div class="flex items-center rounded-xl bg-slate-900/90 border border-slate-800 p-0.5 text-xs shadow-inner">
             <!-- Streak -->
-            <div class="flex items-center gap-1.5 px-2.5 py-1 text-slate-300 border-r border-slate-800/80" title="Chuỗi ngày học liên tục">
+            <div class="flex items-center gap-1.5 px-2.5 py-1 text-slate-200 border-r border-slate-800/80" title="Chuỗi ngày học liên tục">
               <span class="text-orange-400">🔥</span>
               <span class="font-bold text-orange-400" id="stat-streak">0d</span>
             </div>
 
             <!-- Variance Plan -->
-            <div class="flex items-center gap-1.5 px-2.5 py-1 text-slate-300 border-r border-slate-800/80" title="Thời gian học thực tế / kế hoạch">
+            <div class="flex items-center gap-1.5 px-2.5 py-1 text-slate-200 border-r border-slate-800/80" title="Thời gian học thực tế / kế hoạch">
               <span class="text-blue-400">⏱️</span>
               <span class="font-semibold text-slate-200" id="stat-variance">0m/0m</span>
             </div>
 
             <!-- Progress -->
-            <div class="flex items-center gap-1.5 px-2.5 py-1 text-slate-300 border-r border-slate-800/80" title="Tiến độ hoàn thành 90 ngày">
+            <div class="flex items-center gap-1.5 px-2.5 py-1 text-slate-200 border-r border-slate-800/80" title="Tiến độ hoàn thành 90 ngày">
               <span class="text-cyan-400">🎯</span>
               <span class="font-bold text-cyan-400" id="stat-progress">0%</span>
             </div>
 
             <!-- SRS Due -->
-            <div class="flex items-center gap-1.5 px-2.5 py-1 text-slate-300 cursor-pointer hover:bg-slate-800/60 rounded transition" id="stat-srs-badge" title="Từ vựng cần ôn tập hôm nay (Click để mở SRS Vault)">
+            <button type="button" class="flex items-center gap-1.5 px-2.5 py-1 text-slate-200 cursor-pointer hover:bg-slate-800 rounded-lg transition" id="stat-srs-badge" title="Từ vựng cần ôn tập hôm nay (Click để mở SRS Vault)">
               <span class="text-amber-400">🧠</span>
               <span class="font-bold text-amber-400" id="stat-srs-due">0</span>
-            </div>
+            </button>
           </div>
 
           <!-- Notification Reminder Icon Pill -->
-          <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900/80 border border-slate-800 text-xs text-slate-400">
+          <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-slate-300">
             <span class="text-amber-400">⏰</span>
-            <span class="font-semibold text-slate-300" id="stat-reminder-time">22:00</span>
-            <button id="btn-test-notification" title="Test thông báo màn hình" class="hover:text-cyan-400 transition cursor-pointer ml-0.5">🔔</button>
+            <span class="font-semibold text-slate-200" id="stat-reminder-time">22:00</span>
+            <button id="btn-test-notification" title="Test thông báo nhắc học" class="hover:text-cyan-400 transition cursor-pointer ml-0.5">🔔</button>
           </div>
         </div>
 
       </div>
     </div>
 
-    <!-- Tier 2: Specialized Practice Studios & Quick Utility Actions Bar -->
-    <div id="header-tier-2" class="bg-slate-900/40 border-b border-slate-800/40 relative z-40">
-      <div class="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-8 h-10 flex items-center justify-between gap-3 text-xs">
+    <!-- Tier 2: Direct 1-Click Practice Studios & Fast-Action Utilities Bar (Unclipped) -->
+    <div id="header-tier-2" class="bg-slate-900/65 border-b border-slate-800/60 relative z-40">
+      <div class="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-8 py-1.5 flex items-center justify-between gap-3 text-xs flex-wrap sm:flex-nowrap">
         
-        <!-- Left: Practice Studios Segment -->
-        <div class="flex items-center gap-1.5 shrink-0">
-          <span class="text-xs font-mono uppercase font-bold text-slate-500 mr-1 hidden xl:inline">Phòng luyện:</span>
+        <!-- Left: All Practice Studios Directly Clickable (Zero Hidden Studios) -->
+        <div class="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5" role="tablist" aria-label="Phòng luyện chuyên sâu">
+          <span class="text-xs font-mono uppercase font-bold text-slate-400 mr-1.5 hidden 2xl:inline shrink-0">Studios:</span>
           <button id="nav-simulators" class="px-2.5 py-1 rounded-md text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
             <span>🎙️</span>
-            <span class="hidden sm:inline">Standup/Demo</span>
+            <span>Standup/Demo</span>
           </button>
           <button id="nav-shadowing" class="px-2.5 py-1 rounded-md text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
-            <span>🎙️</span>
-            <span class="hidden md:inline">Shadowing</span>
+            <span>🌊</span>
+            <span>Shadowing</span>
+          </button>
+          <button id="nav-sparring" class="px-2.5 py-1 rounded-md text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+            <span>⚔️</span>
+            <span>Sparring Arena</span>
+          </button>
+          <button id="nav-prpolish" class="px-2.5 py-1 rounded-md text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+            <span>🛠️</span>
+            <span>PR Studio</span>
           </button>
           <button id="nav-srs" class="px-2.5 py-1 rounded-md text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
             <span>🧠</span>
-            <span class="hidden sm:inline">SRS Vault</span>
+            <span>SRS Vault</span>
+          </button>
+          <button id="nav-analytics" class="px-2.5 py-1 rounded-md text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+            <span>📊</span>
+            <span>Analytics</span>
+          </button>
+          <button id="nav-audio-only" class="px-2.5 py-1 rounded-md text-xs font-semibold text-indigo-300 hover:text-white bg-indigo-950/50 hover:bg-indigo-900/70 border border-indigo-800/60 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer" title="Luyện nghe nhắm mắt (Audio-Only Mode)">
+            <span>🎧</span>
+            <span class="hidden md:inline">Audio-Only</span>
           </button>
 
-          <!-- Grouped Studios Dropdown -->
-          <div class="relative inline-block text-left" id="studios-dropdown-container">
-            <button id="btn-toggle-studios-menu" type="button" class="px-2.5 py-1 rounded-md text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1 whitespace-nowrap cursor-pointer">
-              <span>Phòng khác</span>
-              <span class="text-xs text-slate-500">▾</span>
-            </button>
-            <div id="menu-more-studios" class="hidden absolute left-0 mt-1.5 w-48 rounded-xl bg-slate-900/95 border border-slate-800 shadow-2xl p-1.5 z-50 flex flex-col gap-1 backdrop-blur-md">
-              <button id="nav-sparring" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-2 whitespace-nowrap cursor-pointer text-left w-full">
-                <span>⚔️</span>
-                <span>Sparring Arena</span>
-              </button>
-              <button id="nav-prpolish" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-2 whitespace-nowrap cursor-pointer text-left w-full">
-                <span>🛠️</span>
-                <span>PR Studio</span>
-              </button>
-              <button id="nav-analytics" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-2 whitespace-nowrap cursor-pointer text-left w-full">
-                <span>📊</span>
-                <span>Burndown Chart</span>
-              </button>
-              <button id="nav-audio-only" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-indigo-300 hover:text-white hover:bg-indigo-950/80 border border-indigo-800/60 transition flex items-center gap-2 whitespace-nowrap cursor-pointer text-left w-full" title="Luyện nghe nhắm mắt">
-                <span>🎧</span>
-                <span>Audio-Only Mode</span>
-              </button>
-            </div>
+          <!-- Legacy dropdown container preserved for backward compatibility -->
+          <div class="hidden" id="studios-dropdown-container">
+            <button id="btn-toggle-studios-menu" type="button">Phòng khác</button>
+            <div id="menu-more-studios"></div>
           </div>
         </div>
 
         <!-- Right: Fast-Action Utility Accelerators -->
-        <div class="flex items-center gap-1.5 shrink-0">
+        <div class="flex items-center gap-1.5 shrink-0 ml-auto">
           <div id="speed-badge-mount" class="flex items-center"></div>
-          <button id="btn-open-warmup" class="px-2.5 py-1 rounded-md text-xs font-semibold text-amber-300 bg-amber-950/40 border border-amber-800/60 hover:bg-amber-900/50 transition flex items-center gap-1 whitespace-nowrap shadow-sm cursor-pointer" title="Khởi động 2 phút với 5 từ yếu">
-            <span>⚡</span>
+
+          <button id="btn-open-warmup" class="px-2.5 py-1 rounded-lg text-xs font-semibold text-amber-300 bg-amber-950/50 border border-amber-800/60 hover:bg-amber-900/60 transition flex items-center gap-1 whitespace-nowrap shadow-sm cursor-pointer" title="Khởi động 2 phút với 5 từ yếu">
+            <span>🔥</span>
             <span class="hidden sm:inline">2m Warm-Up</span>
           </button>
-          <button id="btn-open-palette" onclick="window.toggleDevEngCommandPalette()" class="px-2.5 py-1 rounded-md text-xs font-mono font-semibold text-cyan-300 bg-slate-800/90 border border-slate-700 hover:border-cyan-500 transition flex items-center gap-1.5 shadow-sm cursor-pointer" title="Mở Developer Command Palette (Ctrl+K)">
+
+          <button id="btn-open-recorder-dock" class="px-2.5 py-1 rounded-lg text-xs font-semibold text-rose-300 bg-rose-950/50 border border-rose-800/60 hover:bg-rose-900/60 transition flex items-center gap-1 whitespace-nowrap shadow-sm cursor-pointer" title="Mở bàn thu âm & nghe lại giọng nói">
+            <span>🎙️</span>
+            <span class="hidden xl:inline">Mic Thu Âm</span>
+          </button>
+
+          <button id="btn-open-palette" onclick="window.toggleDevEngCommandPalette()" class="px-2.5 py-1 rounded-lg text-xs font-mono font-semibold text-cyan-300 bg-slate-800/90 border border-slate-700 hover:border-cyan-500 transition flex items-center gap-1.5 shadow-sm cursor-pointer" title="Mở Developer Command Palette (Ctrl+K)">
             <span class="text-cyan-400">⌘</span>
             <span class="hidden md:inline">Ctrl+K</span>
           </button>
 
-          <!-- Grouped Utilities Dropdown -->
+          <!-- Grouped Utilities Dropdown (Unclipped & Elevated) -->
           <div class="relative inline-block text-right" id="utils-dropdown-container">
-            <button id="btn-toggle-utils-menu" type="button" class="px-2.5 py-1 rounded-md text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1 whitespace-nowrap cursor-pointer">
-              <span>⚡</span>
+            <button id="btn-toggle-utils-menu" type="button" class="px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-200 bg-slate-800/80 border border-slate-700/80 hover:border-cyan-500/60 hover:text-white transition flex items-center gap-1 whitespace-nowrap cursor-pointer">
+              <span>🧰</span>
               <span class="hidden sm:inline">Tiện ích</span>
-              <span class="text-xs text-slate-500">▾</span>
+              <span class="text-xs text-cyan-400">▾</span>
             </button>
-            <div id="menu-more-utils" class="hidden absolute right-0 mt-1.5 w-52 rounded-xl bg-slate-900/95 border border-slate-800 shadow-2xl p-1.5 z-50 flex flex-col gap-1 backdrop-blur-md">
-              <button id="btn-open-microlesson" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-orange-300 hover:text-orange-200 hover:bg-orange-950/60 transition flex items-center gap-2 whitespace-nowrap cursor-pointer text-left w-full">
+            <div id="menu-more-utils" class="hidden absolute right-0 mt-2 w-56 rounded-xl bg-slate-900/95 border border-slate-700 shadow-2xl p-1.5 z-[120] flex flex-col gap-1 backdrop-blur-xl">
+              <button id="btn-open-microlesson" class="px-3 py-2 rounded-lg text-xs font-semibold text-orange-300 hover:text-orange-200 hover:bg-orange-950/60 transition flex items-center gap-2.5 whitespace-nowrap cursor-pointer text-left w-full">
                 <span>⚡</span>
                 <span>Chế độ Quick 10m</span>
               </button>
-              <button id="btn-open-cheatsheet" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-cyan-300 hover:text-cyan-200 hover:bg-cyan-950/60 transition flex items-center gap-2 whitespace-nowrap cursor-pointer text-left w-full">
+              <button id="btn-open-cheatsheet" class="px-3 py-2 rounded-lg text-xs font-semibold text-cyan-300 hover:text-cyan-200 hover:bg-cyan-950/60 transition flex items-center gap-2.5 whitespace-nowrap cursor-pointer text-left w-full">
                 <span>📋</span>
                 <span>In Cheat Sheet (A4)</span>
               </button>
-              <button id="btn-open-backup-modal" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-emerald-300 hover:text-emerald-200 hover:bg-emerald-950/60 transition flex items-center gap-2 whitespace-nowrap cursor-pointer text-left w-full">
+              <button id="btn-open-backup-modal" class="px-3 py-2 rounded-lg text-xs font-semibold text-emerald-300 hover:text-emerald-200 hover:bg-emerald-950/60 transition flex items-center gap-2.5 whitespace-nowrap cursor-pointer text-left w-full">
                 <span>📦</span>
-                <span>Sao lưu & Khôi phục</span>
+                <span>Sao lưu &amp; Khôi phục</span>
               </button>
-              <button id="btn-open-capstone-modal" class="hidden px-2.5 py-1.5 rounded-lg text-xs font-semibold text-purple-300 hover:text-purple-200 hover:bg-purple-950/60 transition flex items-center gap-2 whitespace-nowrap cursor-pointer text-left w-full animate-pulse">
+              <button id="btn-open-capstone-modal" class="px-3 py-2 rounded-lg text-xs font-semibold text-purple-300 hover:text-purple-200 hover:bg-purple-950/60 transition flex items-center gap-2.5 whitespace-nowrap cursor-pointer text-left w-full">
                 <span>🎓</span>
-                <span id="label-capstone-badge">Thi Capstone</span>
+                <span id="label-capstone-badge">Thi Sát Hạch Capstone</span>
               </button>
             </div>
           </div>
         </div>
-
-      </div>
-    </div>
 
       </div>
     </div>
@@ -274,22 +273,32 @@
         </div>
       </div>
 
-      <!-- 3-Phase Accordion / Tabs -->
-      <!-- Expand All / Collapse All bar (Feature 011) -->
-      <div class="flex items-center justify-between bg-slate-900/80 border border-slate-800 px-4 py-2 rounded-xl text-xs">
-        <div class="flex items-center gap-2">
-          <span class="font-mono text-slate-400">⏱️ Điều hướng các chặng học (Pomodoro 30m):</span>
-          <span class="text-xs text-cyan-400 font-semibold" id="active-phase-indicator">Chặng 1: 0-10m Cơ học</span>
+      <!-- 3-Phase Accordion / Quick Stage Switcher Bar (Feature 011) -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-2.5 bg-slate-900/90 border border-slate-800 px-4 py-2.5 rounded-xl text-xs shadow-md">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="font-mono text-slate-300 font-semibold">⏱️ Chặng học:</span>
+          <div class="inline-flex items-center gap-1 bg-slate-950/90 p-1 rounded-lg border border-slate-800">
+            <button type="button" id="btn-jump-stage-1" data-jump-stage="1" class="stage-jump-pill px-2.5 py-1 rounded-md font-mono font-semibold bg-cyan-950/80 text-cyan-300 border border-cyan-800/70 hover:bg-cyan-900/70 transition cursor-pointer">
+              1. Khẩu Hình (10m)
+            </button>
+            <button type="button" id="btn-jump-stage-2" data-jump-stage="2" class="stage-jump-pill px-2.5 py-1 rounded-md font-mono text-slate-300 hover:text-white hover:bg-slate-800 transition cursor-pointer">
+              2. Khung Câu (10m)
+            </button>
+            <button type="button" id="btn-jump-stage-3" data-jump-stage="3" class="stage-jump-pill px-2.5 py-1 rounded-md font-mono text-slate-300 hover:text-white hover:bg-slate-800 transition cursor-pointer">
+              3. Luyện Nói AI (10m)
+            </button>
+          </div>
+          <span class="text-xs text-cyan-400 font-mono hidden xl:inline" id="active-phase-indicator">Chặng 1: 0-10m Cơ học</span>
         </div>
-        <div class="flex items-center gap-2">
-          <button id="btn-audio-only-mode" class="px-2.5 py-1 rounded bg-indigo-950 border border-indigo-700/80 text-indigo-300 font-semibold hover:bg-indigo-900 transition text-xs flex items-center gap-1.5 cursor-pointer" title="Luyện nghe nhắm mắt (Eyes-Free Audio Only Mode)">
+        <div class="flex items-center gap-2 flex-wrap">
+          <button id="btn-audio-only-mode" class="px-2.5 py-1 rounded-lg bg-indigo-950/80 border border-indigo-700/80 text-indigo-200 font-semibold hover:bg-indigo-900 transition text-xs flex items-center gap-1.5 cursor-pointer" title="Luyện nghe nhắm mắt (Eyes-Free Audio Only Mode)">
             <span>🎧</span>
             <span>Chế độ Nghe</span>
           </button>
-          <button id="btn-quick-10m-inline" class="px-2.5 py-1 rounded bg-orange-950 border border-orange-800 text-orange-300 font-semibold hover:bg-orange-900 transition text-xs">
+          <button id="btn-quick-10m-inline" class="px-2.5 py-1 rounded-lg bg-orange-950/80 border border-orange-800/80 text-orange-200 font-semibold hover:bg-orange-900 transition text-xs cursor-pointer">
             ⚡ Chọn 1 Block 10m
           </button>
-          <button id="btn-toggle-all-blocks" class="px-2.5 py-1 rounded bg-slate-800 border border-slate-700 text-slate-300 hover:text-white transition text-xs">
+          <button id="btn-toggle-all-blocks" class="px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 hover:text-white hover:bg-slate-700 transition text-xs cursor-pointer">
             Thu gọn / Mở tất cả ↕
           </button>
         </div>
@@ -338,22 +347,15 @@
               
               <!-- Left Column: High-Fidelity Sagittal Section Vocal Tract -->
               <div class="xl:col-span-6 bg-slate-950/90 border border-slate-800 rounded-xl p-4 flex flex-col items-center shadow-lg space-y-3">
-                <!-- Header Controls: Title & Comparison Toggle -->
+                <!-- Header Controls: Title & Active Sound Mode -->
                 <div class="flex items-center justify-between w-full flex-wrap gap-2">
                   <div class="flex items-center gap-2">
                     <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></span>
                     <span class="text-xs font-bold text-cyan-400 font-mono uppercase tracking-wide">Giải Phẫu Cấu Âm (Sagittal Tract)</span>
                   </div>
-                  
-                  <!-- Target 🇬🇧 vs Habit 🇻🇳 Toggle -->
-                  <div class="flex items-center gap-1 bg-slate-900 border border-slate-800 rounded-lg p-0.5" id="sagittal-mode-toggle">
-                    <button id="btn-sagittal-target" class="px-2.5 py-1 rounded text-xs font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 transition">
-                      🇬🇧 Chuẩn Target
-                    </button>
-                    <button id="btn-sagittal-vn" class="px-2.5 py-1 rounded text-xs font-mono text-slate-400 hover:text-rose-300 transition">
-                      🇻🇳 Lỗi Người Việt
-                    </button>
-                  </div>
+                  <span class="px-2.5 py-1 rounded-lg text-xs font-mono font-semibold bg-emerald-950/70 text-emerald-300 border border-emerald-700/60">
+                    🇬🇧 Mô phỏng Khẩu Hình Chuẩn & Đường Khí
+                  </span>
                 </div>
 
                 <!-- Quick Sound Articulation Selector Pills -->
@@ -558,141 +560,103 @@
                 </div>
               </div>
 
-              <!-- Right Column: Mouth-Map Contrast Card, Specs & Guidance -->
+              <!-- Right Column: Unified IPA Technical Coordinates + Direct Contrastive Blueprint -->
               <div class="xl:col-span-6 space-y-4">
-                
-                <!-- Side-by-Side Vietnamese vs English Mouth-Map -->
-                <div id="mouth-map-card" class="bg-slate-950 border border-cyan-900/60 rounded-xl p-4 space-y-3.5 shadow-lg">
-                  <div class="flex items-center justify-between border-b border-slate-800 pb-2.5 flex-wrap gap-2">
-                    <div class="flex items-center gap-2">
-                      <span class="text-xs font-mono font-bold text-cyan-400">ĐỐI CHIẾU CƠ HỌC: 🇻🇳 THÓI QUEN VS 🇬🇧 TIẾNG ANH</span>
+
+                <!-- Card 1: Unified Sound Header & 4-Pillar IPA Technical Coordinates -->
+                <div id="sagittal-info-panel" class="bg-slate-950/90 border border-slate-800 rounded-xl p-4 space-y-3.5 shadow-lg">
+                  <div class="flex items-center justify-between border-b border-slate-800 pb-3 flex-wrap gap-2">
+                    <div>
+                      <div class="text-[11px] font-mono uppercase tracking-wider text-slate-400">📋 Tọa Độ Cấu Âm Học (IPA Technical Coordinates)</div>
+                      <div class="font-bold text-cyan-300 font-mono text-base mt-0.5" id="sagittal-status-sound">/t/ — Voiceless Alveolar Stop (Bật Gió Không Rung)</div>
                     </div>
                     <div class="flex items-center gap-2">
-                      <div class="flex items-center gap-1" id="mouth-map-pills">
-                        <button data-sound="/t/" class="mouth-pill-btn px-2.5 py-1 rounded text-xs font-mono font-bold bg-cyan-950 text-cyan-300 border border-cyan-700 shadow-sm transition active">
+                      <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-lg border border-slate-800" id="mouth-map-pills">
+                        <button type="button" data-sound="/t/" class="mouth-pill-btn px-2.5 py-1 rounded text-xs font-mono font-bold bg-cyan-950 text-cyan-300 border border-cyan-700 shadow-sm transition active cursor-pointer">
                           /t/ (Vô thanh)
                         </button>
-                        <button data-sound="/d/" class="mouth-pill-btn px-2.5 py-1 rounded text-xs font-mono text-slate-300 border border-slate-800 hover:text-cyan-300 transition">
+                        <button type="button" data-sound="/d/" class="mouth-pill-btn px-2.5 py-1 rounded text-xs font-mono text-slate-300 border border-slate-800 hover:text-cyan-300 transition cursor-pointer">
                           /d/ (Hữu thanh)
                         </button>
                       </div>
-                      <button id="btn-animate-mouth" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-xs text-cyan-300 font-mono rounded border border-slate-700 transition">
-                        ▶️ Chuyển động
+                      <button type="button" id="btn-animate-mouth" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs text-cyan-300 font-mono rounded-lg border border-slate-700 transition cursor-pointer">
+                        🔊 Nghe mẫu
                       </button>
                     </div>
                   </div>
 
-                  <!-- 2-Column Direct Comparison Table (Bảng So Sánh 2 Cột Trực Diện) -->
-                  <div class="overflow-hidden rounded-xl border border-slate-800 bg-slate-900/60 shadow">
-                    <table class="w-full text-left border-collapse">
-                      <thead>
-                        <tr class="bg-slate-900 border-b border-slate-800 text-xs font-mono font-bold">
-                          <th class="p-3 text-rose-300 border-r border-slate-800 w-1/2">
-                            <span class="flex items-center gap-1.5">
-                              <span>🇻🇳</span>
-                              <span id="mouth-vn-title">Thói quen của bạn</span>
-                            </span>
-                          </th>
-                          <th class="p-3 text-emerald-300 w-1/2">
-                            <span class="flex items-center gap-1.5">
-                              <span>🇬🇧</span>
-                              <span id="mouth-en-title">Chuẩn tiếng Anh</span>
-                            </span>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody class="divide-y divide-slate-800 text-sm md:text-base">
-                        <tr>
-                          <td class="p-3.5 text-slate-100 leading-relaxed border-r border-slate-800 bg-rose-950/20" id="mouth-vn-desc">
-                            Ngậm miệng lại (unreleased coda). Đầu lưỡi chạm ngạc nhưng chặn đứng luồng khí, không nhả hơi ra.
-                          </td>
-                          <td class="p-3.5 text-slate-100 leading-relaxed bg-emerald-950/20" id="mouth-en-desc">
-                            Đầu lưỡi dán chặt gờ lợi, nén áp suất rồi giật dứt khoát giải phóng tiếng nổ (Pop).
-                          </td>
-                        </tr>
-                        <tr class="bg-slate-950/60 text-xs font-sans text-slate-200">
-                          <td class="p-2.5 border-r border-slate-800">
-                            <span class="text-rose-400 font-bold">Lỗi phổ biến:</span> Nuốt âm đuôi, đập lưỡi vào mặt sau răng cửa
-                          </td>
-                          <td class="p-2.5">
-                            <span class="text-emerald-400 font-bold">Cơ chế chuẩn:</span> Dán gờ lợi sau răng ➜ Giật nhả áp suất nổ sắc nét
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-
-                  <div class="p-2.5 rounded-lg bg-amber-950/30 border border-amber-900/50 text-xs text-amber-200" id="mouth-alert-box">
-                    ⚠️ <strong>Lỗi phổ biến:</strong> Đọc commit thành côm-mít ngậm miệng, nuốt mất âm /t/.
-                  </div>
-                </div>
-
-                <!-- Articulatory Specs Card (2x2 Grid) -->
-                <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-4 space-y-3 shadow-lg">
-                  <div class="text-sm font-mono font-bold text-slate-100 uppercase tracking-wider flex items-center gap-2">
-                    <span>📋 Tọa độ cấu âm học (IPA Technical Coordinates):</span>
-                  </div>
-                  <div class="grid grid-cols-2 gap-3 text-sm font-mono">
-                    <div class="p-3 rounded-lg bg-slate-900 border border-slate-800">
-                      <div class="text-slate-200 text-xs font-semibold uppercase">Cơ quan chủ động:</div>
-                      <div class="text-cyan-300 font-bold mt-1 text-base" id="phonetics-active">-</div>
+                  <!-- 2x2 IPA Coordinate Grid (Dynamically updated for every selected sound) -->
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm font-mono">
+                    <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800">
+                      <div class="text-slate-400 text-xs font-semibold uppercase">1. Cơ quan chủ động (Active):</div>
+                      <div class="text-cyan-300 font-bold mt-1 text-sm" id="phonetics-active">Đầu lưỡi (Tongue Tip)</div>
+                      <span id="sagittal-status-organ" class="hidden"></span>
                     </div>
-                    <div class="p-3 rounded-lg bg-slate-900 border border-slate-800">
-                      <div class="text-slate-200 text-xs font-semibold uppercase">Điểm tiếp xúc:</div>
-                      <div class="text-cyan-300 font-bold mt-1 text-base" id="phonetics-passive">-</div>
+                    <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800">
+                      <div class="text-slate-400 text-xs font-semibold uppercase">2. Điểm tiếp xúc (Target):</div>
+                      <div class="text-cyan-300 font-bold mt-1 text-sm" id="phonetics-passive">Gờ lợi sau răng trên (Alveolar Ridge)</div>
                     </div>
-                    <div class="p-3 rounded-lg bg-slate-900 border border-slate-800">
-                      <div class="text-slate-200 text-xs font-semibold uppercase">Cách thoát khí:</div>
-                      <div class="text-cyan-300 font-bold mt-1 text-base" id="phonetics-manner">-</div>
+                    <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800">
+                      <div class="text-slate-400 text-xs font-semibold uppercase">3. Cách thoát khí (Manner):</div>
+                      <div class="text-cyan-300 font-bold mt-1 text-sm" id="phonetics-manner">Plosive — Nén khí & Bật hơi nổ</div>
                     </div>
-                    <div class="p-3 rounded-lg bg-slate-900 border border-slate-800">
-                      <div class="text-slate-200 text-xs font-semibold uppercase">Dây thanh âm:</div>
-                      <div class="text-cyan-300 font-bold mt-1 text-base" id="phonetics-voiced">-</div>
+                    <div id="phonetics-voiced-card" class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 transition-colors">
+                      <div class="text-slate-400 text-xs font-semibold uppercase">4. Dây thanh âm (Voicing):</div>
+                      <div class="text-cyan-300 font-bold mt-1 text-sm" id="phonetics-voiced">❌ Vô thanh (Voiceless) — Không rung</div>
+                      <span id="sagittal-status-voicing" class="hidden"></span>
                     </div>
                   </div>
                 </div>
 
-                <!-- Dynamic Educational Articulator Status & Guidance Panel -->
-                <div id="sagittal-info-panel" class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 text-sm space-y-3 shadow-lg">
+                <!-- Card 2: Direct Side-by-Side Comparison (Always shows BOTH Chuẩn Target & Lỗi Người Việt) -->
+                <div id="mouth-map-card" class="bg-slate-950 border border-cyan-900/60 rounded-xl p-4 space-y-3.5 shadow-lg">
                   <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-                    <span class="font-bold text-cyan-300 font-mono text-base" id="sagittal-status-sound">/t/ - Voiceless Alveolar Stop</span>
-                    <span class="text-xs px-2.5 py-1 rounded font-mono font-bold bg-emerald-950 text-emerald-300 border border-emerald-800">
-                      🇬🇧 Chuẩn Target
+                    <span class="text-xs font-mono font-bold text-cyan-400 uppercase tracking-wide">
+                      ⚖️ Đối Chiếu Trực Diện: 🇬🇧 Chuẩn Target vs 🇻🇳 Lỗi Thói Quen Việt
                     </span>
+                    <span class="text-xs font-mono text-slate-400">Hiển thị song song</span>
                   </div>
 
-                  <p class="text-slate-100 text-sm leading-relaxed" id="sagittal-status-desc">
-                    Đầu lưỡi dán chặt gờ lợi sau răng trên, nén áp suất khí rồi giật lưỡi dứt khoát giải phóng tiếng bật hơi sắc nét (Pop).
-                  </p>
-
-                  <div class="grid grid-cols-2 gap-2 text-sm font-mono border-t border-slate-800/80 pt-2 text-slate-200">
-                    <div>
-                      <span class="text-slate-200 font-semibold">Cơ quan:</span> <span class="text-cyan-300 font-bold" id="sagittal-status-organ">Đầu lưỡi ➜ Gờ lợi trên</span>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                    <!-- Column 1: English Target (Chuẩn Target) -->
+                    <div class="p-3.5 rounded-xl bg-emerald-950/20 border border-emerald-800/60 space-y-2.5 flex flex-col justify-between">
+                      <div class="space-y-2">
+                        <div class="flex items-center gap-1.5 text-xs font-mono font-bold text-emerald-300 border-b border-emerald-900/60 pb-1.5">
+                          <span>🇬🇧</span>
+                          <span id="mouth-en-title">Chuẩn Target Tiếng Anh</span>
+                        </div>
+                        <p class="text-sm text-slate-100 leading-relaxed" id="mouth-en-desc">
+                          Đầu lưỡi dán chặt gờ lợi sau răng trên, nén áp suất khí rồi giật lưỡi dứt khoát giải phóng tiếng bật hơi sắc nét (Pop).
+                        </p>
+                        <p id="sagittal-status-desc" class="hidden"></p>
+                      </div>
+                      <div class="p-2.5 rounded-lg bg-slate-950/80 border border-emerald-900/50 text-xs text-emerald-200 leading-relaxed">
+                        <span class="font-bold text-emerald-400">⚙️ Công thức chuẩn:</span>
+                        <span id="phonetics-instruction">Dán đầu lưỡi gờ lợi ➜ Nén khí (không rung họng) ➜ Giật lưỡi bật hơi Pop sắc nét.</span>
+                      </div>
                     </div>
-                    <div>
-                      <span class="text-slate-200 font-semibold">Dây thanh âm:</span> <span class="text-cyan-300 font-bold" id="sagittal-status-voicing">Vô thanh (Không rung)</span>
+
+                    <!-- Column 2: Vietnamese Habit (Lỗi Người Việt) -->
+                    <div class="p-3.5 rounded-xl bg-rose-950/20 border border-rose-800/60 space-y-2.5 flex flex-col justify-between">
+                      <div class="space-y-2">
+                        <div class="flex items-center gap-1.5 text-xs font-mono font-bold text-rose-300 border-b border-rose-900/60 pb-1.5">
+                          <span>🇻🇳</span>
+                          <span id="mouth-vn-title">Lỗi Thói Quen Người Việt</span>
+                        </div>
+                        <p class="text-sm text-slate-100 leading-relaxed" id="mouth-vn-desc">
+                          Đầu lưỡi đập vào mặt sau răng cửa hoặc ngậm miệng chặn đứng luồng khí (unreleased coda), không có pha bật nhả hơi.
+                        </p>
+                      </div>
+                      <div class="p-2.5 rounded-lg bg-slate-950/80 border border-rose-900/50 text-xs text-rose-200 leading-relaxed">
+                        <span class="font-bold text-rose-400">⚠️ Lỗi thường gặp:</span>
+                        <span id="phonetics-mistake">Đọc "commit" thành "côm-mít" cụt ngủn, nuốt mất âm đuôi /t/.</span>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <!-- Mechanical Instructions & Vietnamese Mistake Box -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800 space-y-1.5">
-                    <div class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                      <span>⚙️ Cơ chế vật lý:</span>
-                    </div>
-                    <p class="text-xs text-slate-300 leading-relaxed" id="phonetics-instruction">
-                      ...
-                    </p>
-                  </div>
-
-                  <div class="p-3 rounded-xl bg-amber-950/30 border border-amber-900/60 space-y-1.5">
-                    <div class="text-xs font-semibold text-amber-400 flex items-center gap-1.5">
-                      <span>⚠️ Bẫy phát âm người Việt:</span>
-                    </div>
-                    <p class="text-xs text-amber-200/90 leading-relaxed" id="phonetics-mistake">
-                      ...
-                    </p>
+                  <!-- Physical Self-Test / Actionable Fix Callout -->
+                  <div class="p-3 rounded-lg bg-amber-950/30 border border-amber-800/60 text-xs text-amber-200 leading-relaxed" id="mouth-alert-box">
+                    💡 <strong>Bài test vật lý kiểm chứng:</strong> Đặt tờ giấy cách miệng 5cm — khi bật âm <strong>/t/</strong> (commit, test), luồng gió nổ phải làm tờ giấy bay nhẹ.
                   </div>
                 </div>
 
@@ -719,12 +683,20 @@
               </div>
 
               <!-- Right Column: Target Words Technical Drills -->
-              <div class="lg:col-span-5 bg-slate-950/80 border border-slate-800 rounded-xl p-4 space-y-3 shadow-lg">
-                <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+              <div id="block-phonetics" class="lg:col-span-5 bg-slate-950/80 border border-slate-800 rounded-xl p-4 space-y-3 shadow-lg">
+                <div class="block-header flex items-center justify-between border-b border-slate-800 pb-2.5 flex-wrap gap-2">
                   <div class="text-xs font-bold text-slate-200 flex items-center gap-1.5">
                     <span>🎯 Từ vựng kỹ thuật trong ngày (20 từ):</span>
                   </div>
-                  <span class="text-xs text-cyan-400 font-mono">🔊 Nghe // 🎤 Luyện</span>
+                  <div id="drill-progress-badge" class="flex items-center gap-2 text-xs font-mono">
+                    <span id="drill-progress-text" class="px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-800/70">0/20 từ đúng lần đầu (Mục tiêu 70%)</span>
+                    <select id="select-autocomplete-threshold" class="threshold-select bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-xs font-mono text-cyan-300 focus:outline-none focus:border-cyan-500 cursor-pointer" title="Ngưỡng tự động hoàn thành bài tập phát âm">
+                      <option value="60">Ngưỡng 60%</option>
+                      <option value="70" selected>Ngưỡng 70%</option>
+                      <option value="80">Ngưỡng 80%</option>
+                      <option value="90">Ngưỡng 90%</option>
+                    </select>
+                  </div>
                 </div>
                 <!-- Quick Vocab Search & Sound Filter -->
                 <div>
@@ -1802,8 +1774,83 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
         </div>
       </div>
 
+      <!-- Adaptive Catch-Up Plan Section (Feature: Catch-Up Optimizer) -->
+      <div id="analytics-catchup-section" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 space-y-5 shadow-xl transition-all">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+          <div class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-lg bg-amber-950 text-amber-400 border border-amber-800/80 flex items-center justify-center font-mono text-sm font-bold shadow-inner">⚡</span>
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <h3 class="font-bold text-slate-100 text-base tracking-wide">Kế Hoạch Bắt Kịp Tiến Độ (Catch-Up Optimizer)</h3>
+                <span id="catchup-pacing-tag" class="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+                  Đang phân tích...
+                </span>
+              </div>
+              <p class="text-xs text-slate-400 mt-0.5">Tự động phân bổ khối lượng học bù thông minh dựa trên quỹ thời gian thực tế của Software Engineer</p>
+            </div>
+          </div>
+          <!-- Strategy Pills Toggle -->
+          <div class="inline-flex items-center gap-1 bg-slate-950/90 p-1 rounded-lg border border-slate-800 text-xs font-mono" id="catchup-strategy-toggles">
+            <button type="button" class="catchup-strat-btn px-2.5 py-1 rounded-md font-semibold bg-amber-950 text-amber-300 border border-amber-800 cursor-pointer active" data-strategy="MicroCatchup">
+              ⚡ Micro +10m
+            </button>
+            <button type="button" class="catchup-strat-btn px-2.5 py-1 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer" data-strategy="WeekendSprint">
+              ☕ Weekend 45m
+            </button>
+            <button type="button" class="catchup-strat-btn px-2.5 py-1 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer" data-strategy="FastTrackAudio">
+              🎧 Audio Commute
+            </button>
+          </div>
+        </div>
+
+        <!-- Strategy Details & Coach Advice Banner -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+          <!-- Left: Strategy Explainer & Metrics -->
+          <div class="lg:col-span-4 bg-slate-950/80 border border-slate-800 rounded-xl p-4 space-y-3">
+            <div class="flex items-center justify-between text-xs font-mono">
+              <span class="text-slate-400">Chiến lược áp dụng:</span>
+              <span id="catchup-active-strategy-name" class="font-bold text-amber-400">Micro-Catchup (+10m/ngày)</span>
+            </div>
+            <div id="catchup-strategy-desc" class="text-xs text-slate-300 leading-relaxed">
+              Mỗi ngày hoàn thành bài học chính + thêm 1 chặng Micro 10 phút. Bù đắp 1 ngày trễ sau mỗi 2-3 ngày mà không gây kiệt sức.
+            </div>
+            <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between text-xs font-mono text-slate-400">
+              <span>Mục tiêu gỡ trễ:</span>
+              <span id="catchup-days-target-text" class="font-bold text-emerald-400">0 ngày</span>
+            </div>
+          </div>
+
+          <!-- Right: Senior Tech Lead Coaching Advice -->
+          <div class="lg:col-span-8 bg-gradient-to-r from-amber-950/30 via-slate-950 to-slate-900 border border-amber-900/40 rounded-xl p-4 flex items-start gap-3.5">
+            <div class="text-2xl shrink-0">🧑‍💻</div>
+            <div class="space-y-1.5 flex-1">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-mono font-bold text-amber-300 uppercase tracking-wide">Lời khuyên từ Senior Tech Lead:</span>
+                <span class="text-[11px] font-mono text-slate-500">Agile Learning</span>
+              </div>
+              <p id="catchup-coach-advice" class="text-xs sm:text-sm text-slate-200 leading-relaxed italic">
+                "Đang phân tích tiến độ học tập..."
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Prioritized Catch-up Days Queue -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between text-xs font-mono">
+            <span class="font-bold text-slate-300 flex items-center gap-1.5">
+              <span>📋</span> DANH SÁCH BÀI HỌC CẦN BÙ (ƯU TIÊN THEO ÂM CỐT LÕI & KHUNG CÂU):
+            </span>
+            <span id="catchup-queue-count" class="text-slate-400">0 bài cần bù</span>
+          </div>
+          <div id="catchup-days-queue" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+            <!-- Rendered dynamically by app.js -->
+          </div>
+        </div>
+      </div>
+
       <!-- Bottom Row: Badges Trophy Shelf & Weekly Velocity -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div class="analytics-charts-grid grid grid-cols-1 lg:grid-cols-12 gap-6">
         <!-- Badges Shelf -->
         <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
           <h3 class="text-xs font-mono font-bold text-amber-400 border-b border-slate-800 pb-2">🏆 HUY HIỆU THÀNH TÍCH VĨNH VIỄN (GAMIFICATION):</h3>
@@ -1817,6 +1864,42 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
           <h3 class="text-xs font-mono font-bold text-purple-400 border-b border-slate-800 pb-2">⚡ WEEKLY VELOCITY (13 TUẦN):</h3>
           <div id="velocity-container" class="space-y-2 max-h-56 overflow-y-auto pr-1 text-xs">
             <!-- Velocity bars rendered dynamically -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 3: Pronunciation Score Trends & Block Completion Frequency (Specs 002, 003, 005) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Phoneme Category Accuracy & Weak Words -->
+        <div class="lg:col-span-4 bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+            <h3 class="text-xs font-mono font-bold text-cyan-400">🗣️ ĐỘ CHÍNH XÁC THEO NHÓM ÂM VỊ:</h3>
+            <span class="text-xs font-mono text-slate-400">Spec 002</span>
+          </div>
+          <div id="analytics-phoneme-bars" class="space-y-3 text-xs">
+            <!-- Phoneme Category Accuracy progress bars & weak words rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Recent Speech Drill Score History Trend -->
+        <div class="lg:col-span-4 bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+            <h3 class="text-xs font-mono font-bold text-emerald-400">📈 LỊCH SỬ ĐIỂM PHÁT ÂM GẦN ĐÂY:</h3>
+            <span class="text-xs font-mono text-slate-400">Drill History</span>
+          </div>
+          <div id="analytics-speech-trend-list" class="space-y-2 max-h-64 overflow-y-auto pr-1 text-xs">
+            <!-- Recent speech drill score history items rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Block Completion Frequency & Session Mode Breakdown -->
+        <div class="lg:col-span-4 bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+            <h3 class="text-xs font-mono font-bold text-amber-400">🧩 TẦN SUẤT CHẶNG HỌC & CHẾ ĐỘ:</h3>
+            <span class="text-xs font-mono text-slate-400">Specs 003 &amp; 005</span>
+          </div>
+          <div id="analytics-block-frequency" class="space-y-3 text-xs">
+            <!-- Block Completion Frequency & Session Mode breakdown rendered by JS -->
           </div>
         </div>
       </div>
@@ -1852,7 +1935,7 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
           </div>
 
           <!-- Action Control Bar -->
-          <div class="flex flex-wrap items-center gap-2.5 pt-1">
+          <div class="shadowing-controls flex flex-wrap items-center gap-2.5 pt-1">
             <button id="btn-shadow-ref-play" class="px-3.5 py-2 bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-800 rounded-lg text-xs font-bold flex items-center gap-1.5 transition">
               🔊 Nghe câu mẫu
             </button>
@@ -1864,6 +1947,12 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
             </button>
             <button id="btn-shadow-toggle-ab" class="px-3.5 py-2 bg-indigo-950 hover:bg-indigo-900 text-indigo-300 border border-indigo-800 rounded-lg text-xs font-bold flex items-center gap-1.5 transition">
               🔀 Toggle A/B: <span id="shadow-active-track" class="text-cyan-400 font-mono ml-1">Mẫu 🔊</span>
+            </button>
+            <button id="btn-shadow-save-best" disabled class="px-3.5 py-2 bg-amber-950/80 hover:bg-amber-900 text-amber-300 border border-amber-800 rounded-lg text-xs font-bold flex items-center gap-1.5 transition disabled:opacity-40 disabled:cursor-not-allowed">
+              ⭐ Lưu Bản Tốt Nhất
+            </button>
+            <button id="btn-shadow-play-best" class="hidden px-3.5 py-2 bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-800 rounded-lg text-xs font-bold flex items-center gap-1.5 transition">
+              ▶ Nghe Bản Tốt Nhất
             </button>
           </div>
 
@@ -1928,18 +2017,20 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
   <deveng-recorder-dock></deveng-recorder-dock>
   <deveng-command-palette></deveng-command-palette>
 
-  <script src="deveng-components.js"></script>
-  <script src="deveng-command-palette.js"></script>
-  <script src="deveng-kinematic-tract.js"></script>
-  <script src="deveng-slow-audio.js"></script>
-  <script src="deveng-self-check.js"></script>
-  <script src="deveng-one-tap-start.js"></script>
-  <script src="deveng-audio-only.js"></script>
-  <script src="app.js"></script>
+  <script src="deveng-components.js?v=5"></script>
+  <script src="deveng-command-palette.js?v=5"></script>
+  <script src="deveng-kinematic-tract.js?v=5"></script>
+  <script src="deveng-slow-audio.js?v=5"></script>
+  <script src="deveng-self-check.js?v=5"></script>
+  <script src="deveng-one-tap-start.js?v=5"></script>
+  <script src="deveng-audio-only.js?v=5"></script>
+  <script src="app.js?v=5"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch(() => {});
+        navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' })
+          .then((reg) => reg.update())
+          .catch(() => {});
       });
     }
   </script>
@@ -1952,9 +2043,10 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
       </span>
       <button id="btn-close-autocomplete" class="text-slate-400 hover:text-white text-sm font-mono p-1">✕</button>
     </div>
-    <p class="text-sm text-slate-100 leading-relaxed font-sans" id="autocomplete-msg">
+    <p class="celebration-text text-sm text-slate-100 leading-relaxed font-sans" id="autocomplete-msg">
       Bạn đã phát âm chính xác 7/10 từ (70%). Buổi học hôm nay được đánh dấu HOÀN THÀNH! 3 từ còn lại đã được tự động lưu vào SRS ngày mai.
     </p>
+    <div id="autocomplete-summary-card" class="autocomplete-summary-card space-y-2 text-xs"></div>
     <div class="flex items-center gap-2.5 pt-1">
       <button id="btn-keep-going" class="flex-1 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-xl text-sm transition">
         Tiếp tục luyện tập 💪
@@ -2024,22 +2116,30 @@ Nhập nhận xét ở cột bên trái và bấm Refactor để xem phiên bả
             <div class="text-sm text-amber-300 font-mono" id="warmup-step-indicator">Từ 1 / 5 // Hộp 1</div>
           </div>
         </div>
-        <div class="text-base font-mono font-bold text-amber-400 px-3 py-1.5 rounded-lg bg-amber-950 border border-amber-800" id="warmup-timer">
-          02:00
+        <div class="flex items-center gap-2">
+          <button type="button" id="btn-srs-quick-mode" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 text-xs font-mono font-semibold transition cursor-pointer" title="Chuyển sang chế độ Nhanh 1 Phút (Tối đa 3 từ)">
+            ⚡ Quick 1m (3 từ)
+          </button>
+          <div class="text-base font-mono font-bold text-amber-400 px-3 py-1.5 rounded-lg bg-amber-950 border border-amber-800" id="warmup-timer">
+            02:00
+          </div>
         </div>
       </div>
 
       <!-- Word Drill Display -->
-      <div class="bg-slate-950 border border-slate-800 p-5 rounded-xl space-y-3.5 text-center">
-        <div class="text-3xl font-bold font-mono text-cyan-400" id="warmup-word">throughput</div>
-        <div class="text-sm font-mono text-amber-300 font-bold" id="warmup-phoneme">Âm mục tiêu: /θ/ (Dental fricative)</div>
-        <div class="text-sm text-slate-100 font-sans italic p-3 rounded-xl bg-slate-900 border border-slate-800 leading-relaxed" id="warmup-context">
-          "We must benchmark throughput under peak traffic."
+      <div id="srs-card-front" class="bg-slate-950 border border-slate-800 p-5 rounded-xl space-y-3.5 text-center">
+        <div id="srs-card-drill-view" class="space-y-3.5">
+          <div class="text-3xl font-bold font-mono text-cyan-400" id="warmup-word">throughput</div>
+          <div class="text-sm font-mono text-amber-300 font-bold" id="warmup-phoneme">Âm mục tiêu: /θ/ (Dental fricative)</div>
+          <div id="srs-card-back" class="text-sm text-slate-100 font-sans italic p-3 rounded-xl bg-slate-900 border border-slate-800 leading-relaxed">
+            <span id="warmup-context">"We must benchmark throughput under peak traffic."</span>
+          </div>
         </div>
+        <div id="srs-warmup-summary-view" class="hidden space-y-3"></div>
       </div>
 
       <!-- Quick Action Buttons -->
-      <div class="grid grid-cols-3 gap-3 pt-1">
+      <div id="warmup-action-buttons" class="grid grid-cols-3 gap-3 pt-1">
         <button id="btn-warmup-listen" class="py-3 bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold rounded-xl text-sm border border-slate-700 flex items-center justify-center gap-1.5 transition">
           🔊 Nghe mẫu
         </button>

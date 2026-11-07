@@ -35,7 +35,13 @@ var app = builder.Build();
 
 app.UseCors();
 app.UseDefaultFiles();
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    OnPrepareResponse = ctx =>
+    {
+        ctx.Context.Response.Headers.CacheControl = "no-cache";
+    }
+});
 
 // Curriculum Endpoints
 var curriculumApi = app.MapGroup("/api/curriculum");
@@ -51,6 +57,14 @@ curriculumApi.MapGet("/{day:int}", (int day, ICurriculumService curriculum) =>
 
 curriculumApi.MapGet("/sprint/{sprintId:int}", (int sprintId, ICurriculumService curriculum) =>
     Results.Ok(curriculum.GetLessonsBySprint(sprintId)));
+
+curriculumApi.MapGet("/cheatsheet/{sprintId:int}", (int sprintId, ICheatSheetService cheatSheetService) =>
+{
+    if (sprintId < 1 || sprintId > 6)
+        return Results.BadRequest(new { error = "Sprint ID must be between 1 and 6." });
+    return Results.Ok(cheatSheetService.GetSprintCheatSheet(sprintId));
+})
+.WithName("GetSprintCheatSheetFromCurriculum");
 
 // Progress & Telemetry Endpoints
 var progressApi = app.MapGroup("/api/progress");
@@ -230,11 +244,12 @@ speechApi.MapPost("/score", async ([FromBody] SpeechScoreRequest request, ISpeec
     return Results.Ok(response);
 });
 
-speechApi.MapPost("/transcribe", (HttpRequest req) =>
+speechApi.MapPost("/transcribe", async ([FromBody] SpeechTranscribeRequest? req, ISpeechScoringService speechService, CancellationToken ct) =>
 {
-    // Fallback phonetic transcription endpoint
-    return Results.Ok(new { TranscribedText = "test commit", Confidence = 0.92 });
-});
+    var result = await speechService.TranscribeFallbackAsync(req ?? new SpeechTranscribeRequest(), ct);
+    return Results.Ok(result);
+})
+.WithName("TranscribeSpeech");
 
 speechApi.MapGet("/scores/summary", async (ISpeechScoringService speechService, CancellationToken ct) =>
     Results.Ok(await speechService.GetSummaryAsync(ct)));
@@ -258,6 +273,12 @@ analyticsApi.MapGet("/velocity", async (IAnalyticsService analytics, Cancellatio
 
 analyticsApi.MapGet("/overview", async (IAnalyticsService analytics, CancellationToken ct) =>
     Results.Ok(await analytics.GetOverviewAsync(ct)));
+
+analyticsApi.MapGet("/blocks", async (IAnalyticsService analyticsService, CancellationToken ct) =>
+    Results.Ok((await analyticsService.GetOverviewAsync(ct)).BlockFrequency));
+
+analyticsApi.MapGet("/catchup", async (IAnalyticsService analyticsService, CancellationToken ct) =>
+    Results.Ok(await analyticsService.GetCatchUpPlanAsync(ct)));
 
 // Shadowing Endpoints (Feature 004)
 var shadowingApi = app.MapGroup("/api/shadowing");
@@ -308,51 +329,79 @@ var cheatSheetApi = app.MapGroup("/api/cheatsheet");
 cheatSheetApi.MapGet("/{sprintId:int}", (int sprintId, ICheatSheetService cheatSheet) =>
     Results.Ok(cheatSheet.GetSprintCheatSheet(sprintId)));
 
-// Auto-Complete 70% Threshold Endpoints (Feature 009)
+// Auto-Complete Configurable Threshold Endpoints (Feature 009)
 var drillApi = app.MapGroup("/api/drill");
-drillApi.MapPost("/check-threshold", ([FromBody] DrillThresholdCheckRequest request, ISrsService srs, IProgressService progress) =>
+drillApi.MapPost("/check-threshold", ([FromBody] DrillThresholdCheckRequest req, ISrsService srs, IProgressService progressService) =>
 {
-    var total = Math.Max(1, request.TotalWordsCount);
-    var correct = request.CorrectWordsCount;
-    var percentage = (int)Math.Round((double)correct / total * 100);
-    var reached = percentage >= 70;
+    var total = Math.Max(0, req.TotalWordsCount);
+    var correct = Math.Clamp(req.EffectiveCorrectCount, 0, Math.Max(1, total));
+    var validThreshold = req.ThresholdPercentage is 60 or 70 or 80 or 90 ? req.ThresholdPercentage : 70;
+    var requiredCount = total > 0 ? Math.Max(1, (int)Math.Floor(total * (validThreshold / 100.0))) : 0;
+    var percentage = total > 0 ? Math.Round((double)correct / total * 100.0, 1) : 0.0;
+    var reached = total > 0 && correct >= requiredCount;
+    var mode = (total > 0 && correct >= total) || percentage >= 100.0
+        ? "Perfect"
+        : (reached ? "AutoThreshold" : "Pending");
 
     var enrolled = new List<string>();
+    var marked = false;
+
     if (reached)
     {
-        // Auto-enroll failed words in SRS for tomorrow
-        foreach (var word in request.FailedWords)
+        if (req.FailedWords is { Count: > 0 })
         {
-            if (!string.IsNullOrWhiteSpace(word))
+            var targetPhoneme = string.IsNullOrWhiteSpace(req.TargetPhoneme) ? "/coda/" : req.TargetPhoneme;
+            foreach (var word in req.FailedWords.Distinct(StringComparer.OrdinalIgnoreCase))
             {
-                srs.AutoEnrollWeakSpot(new SrsEnrollRequest(word, request.TargetPhoneme, $"Day {request.DayNumber} 70% threshold auto-enroll", 50));
-                enrolled.Add(word);
+                if (!string.IsNullOrWhiteSpace(word))
+                {
+                    var trimmed = word.Trim();
+                    srs.AutoEnrollWeakSpot(new SrsEnrollRequest(
+                        trimmed,
+                        targetPhoneme,
+                        $"Day {req.DayNumber} {validThreshold}% threshold auto-enroll",
+                        50));
+                    enrolled.Add(trimmed);
+                }
             }
         }
 
-        // Auto mark session complete if not already completed
-        progress.CompleteSession(new CompleteSessionRequest(
-            DayNumber: request.DayNumber,
-            ActualMinutes: 15,
-            SelfRating: percentage >= 90 ? 5 : 4,
-            LearnerNotes: $"Auto-completed via 70% threshold ({correct}/{total} correct)",
-            AiFeedbackSnippet: "Good enough completion! Weak words queued in SRS."
-        ));
+        if (req.DayNumber > 0)
+        {
+            progressService.CompleteSession(new CompleteSessionRequest(
+                DayNumber: req.DayNumber,
+                ActualMinutes: 15,
+                SelfRating: percentage >= 90 ? 5 : 4,
+                LearnerNotes: $"Auto-completed via {validThreshold}% threshold ({correct}/{total} correct)",
+                AiFeedbackSnippet: mode == "Perfect"
+                    ? "Perfect drill accuracy! Session completed."
+                    : "Good enough completion! Weak words queued in SRS."
+            ));
+            marked = true;
+        }
     }
 
+    var currentStreak = progressService.GetSummary().CurrentStreakDays;
+    var nailedWords = req.CorrectWords ?? Array.Empty<string>();
+
     var message = reached
-        ? (percentage >= 90
+        ? (mode == "Perfect" || percentage >= 90
             ? $"🏆 Xuất sắc! {correct}/{total} ({percentage}%) — Đạt chuẩn xuất sắc! Phiên học hoàn tất."
             : $"🎉 Tuyệt vời! Bạn đã đạt {correct}/{total} ({percentage}%). Buổi học đã hoàn thành! {enrolled.Count} từ còn vấp đã được tự động lưu vào SRS ngày mai.")
-        : $"Đã đạt {correct}/{total} ({percentage}%). Cần đạt 70% để hoàn thành tự động.";
+        : $"Đã đạt {correct}/{total} ({percentage}%). Cần đạt {validThreshold}% ({requiredCount}/{total}) để hoàn thành tự động.";
 
     return Results.Ok(new DrillThresholdCheckResponse(
         ThresholdReached: reached,
         AccuracyPercentage: percentage,
-        AutoCompleted: reached,
+        AutoCompleted: marked,
         CelebrationMessage: message,
         EnrolledInSrsWords: enrolled,
-        CanKeepGoing: true
+        CanKeepGoing: true,
+        RequiredWordsCount: requiredCount,
+        CompletionMode: mode,
+        NailedWords: nailedWords,
+        CurrentStreakDays: currentStreak,
+        DayMarkedComplete: marked
     ));
 });
 

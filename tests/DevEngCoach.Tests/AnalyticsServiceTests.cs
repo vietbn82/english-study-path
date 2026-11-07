@@ -118,4 +118,71 @@ public class AnalyticsServiceTests : IDisposable
         week1.TotalMinutes.Should().Be(70);
         week1.AverageMinutesPerSession.Should().Be(35);
     }
+
+    [Fact]
+    public async Task GetBurndownAndVelocity_CountsCompletedPartialSessions()
+    {
+        progressService.CompleteSession(new CompleteSessionRequest(1, 30, 5, "Full day", null));
+        progressService.MicroCompleteSession(new MicroSessionRequest(2, "Phonetics", 10));
+
+        var burndown = await analyticsService.GetBurndownDataAsync();
+        burndown.CompletedDays.Should().Be(2);
+        burndown.Points[1].ActualRemainingDays.Should().Be(88);
+
+        var velocity = await analyticsService.GetWeeklyVelocityAsync();
+        var week1 = velocity.First(w => w.WeekNumber == 1);
+        week1.SessionsCompleted.Should().Be(2);
+        week1.TotalMinutes.Should().Be(40);
+    }
+
+    [Fact]
+    public async Task GetOverview_PopulatesBlockFrequencySummary()
+    {
+        progressService.CompleteSession(new CompleteSessionRequest(1, 30, 5, "Full", null, "Visual"));
+        progressService.MicroCompleteSession(new MicroSessionRequest(2, "Phonetics", 10));
+        progressService.CompleteSession(new CompleteSessionRequest(3, 15, 4, "Commute", null, "AudioOnly"));
+
+        var overview = await analyticsService.GetOverviewAsync();
+
+        overview.BlockFrequency.Should().NotBeNull();
+        overview.BlockFrequency!.FullSessionsCount.Should().Be(2);
+        overview.BlockFrequency.PartialSessionsCount.Should().Be(1);
+        overview.BlockFrequency.PhoneticsDays.Should().Be(3);
+        overview.BlockFrequency.FramesDays.Should().Be(2);
+        overview.BlockFrequency.OutputDays.Should().Be(2);
+        overview.BlockFrequency.AudioOnlySessionsCount.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task GetCatchUpPlan_WhenOnPace_ShouldReturnOnPacePlan()
+    {
+        progressService.CompleteSession(new CompleteSessionRequest(1, 30, 5, null, null));
+
+        var plan = await analyticsService.GetCatchUpPlanAsync();
+
+        plan.Should().NotBeNull();
+        plan.IsBehind.Should().BeFalse();
+        plan.DaysBehind.Should().Be(0);
+        plan.PacingStatus.Should().Be("OnPace");
+        plan.SeniorCoachAdvice.Should().NotBeNullOrWhiteSpace();
+    }
+
+    [Fact]
+    public async Task GetCatchUpPlan_WhenBehind_ShouldReturnPrioritizedMissedDaysAndStrategy()
+    {
+        // User has elapsed to Day 5 but only completed Day 1 (missed Day 2, 3, 4, 5)
+        progressService.RestoreSessions([
+            new SessionLog(1, DateTime.UtcNow.AddDays(-4), DateTime.UtcNow.AddDays(-4), 30, 30, "Completed", 5, null, null, "Visual"),
+            new SessionLog(5, DateTime.UtcNow, null, 30, 0, "Missed", null, null, null, "Visual")
+        ]);
+
+        var plan = await analyticsService.GetCatchUpPlanAsync();
+
+        plan.Should().NotBeNull();
+        plan.IsBehind.Should().BeTrue();
+        plan.DaysBehind.Should().BeGreaterThanOrEqualTo(3);
+        plan.PrioritizedCatchUpDays.Should().NotBeEmpty();
+        plan.PrioritizedCatchUpDays.Should().Contain(d => d.DayNumber == 2 || d.DayNumber == 3 || d.DayNumber == 4 || d.DayNumber == 5);
+        plan.SuggestedStrategy.Should().NotBeNullOrWhiteSpace();
+    }
 }
